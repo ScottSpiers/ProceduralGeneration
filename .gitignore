@@ -1,0 +1,20 @@
+
+#====================#
+# VS Generated Files #
+#====================#
+*.VC.db
+ExportedObj/
+*.svd
+*.userprefs
+*.pidb
+*.suo
+*.sln
+*.user
+*.vcxproj
+*.vcxproj.*
+.vs/
+
+#=============#
+# Other Files #
+#=============#
+data/

@@ -1,0 +1,83 @@
+////////////////////////////////////////////////////////////////////////////////
+// Filename: Reflect.ps
+////////////////////////////////////////////////////////////////////////////////
+
+
+/////////////
+// GLOBALS //
+/////////////
+
+cbuffer LightBuffer
+{
+	float4 ambientColour;
+	float4 diffuseColour;
+    float3 lightDirection;
+	float specularIntensity;
+	float4 specColour;
+
+};
+
+TextureCube shaderTexture;
+SamplerState SampleType;
+
+
+//////////////
+// TYPEDEFS //
+//////////////
+struct PixelInputType
+{
+    float4 position : SV_POSITION;
+    float4 tex : TEXCOORD0;
+	float3 normal : NORMAL;
+	float3 viewDir : TEXCOORD1;
+};
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Pixel Shader
+////////////////////////////////////////////////////////////////////////////////
+float4 LightPixelShader(PixelInputType input) : SV_TARGET
+{
+
+	float3 lightDir;
+	float lightIntensity;
+	float4 colour;
+	float4 specularColour;
+	float3 reflection;
+	float4 textureColour;
+
+	input.normal = normalize(input.normal);
+
+
+	float3 incident = -input.viewDir;
+	float3 refVec = reflect(incident, input.normal);
+	
+	textureColour = shaderTexture.Sample(SampleType, refVec);
+
+	
+	colour = ambientColour;
+
+	specularColour = float4(0.f, 0.f, 0.f, 0.f);
+
+
+	// Invert the light direction for calculations.
+    lightDir = -lightDirection;
+
+    // Calculate the amount of light on this pixel.
+    lightIntensity = saturate(dot(input.normal, lightDir));
+
+	if(lightIntensity > 0.0f) 
+	{
+		colour += (diffuseColour * lightIntensity);
+		colour = saturate(colour);
+
+		reflection = normalize(2* lightIntensity * input.normal - lightDir);
+		specularColour = pow(saturate(dot(reflection, input.viewDir)), specularIntensity);
+	}
+
+    
+	colour *= textureColour;
+	colour = saturate(colour +  (specularColour * specColour));	
+	
+    return colour;
+}
