@@ -1,0 +1,90 @@
+////////////////////////////////////////////////////////////////////////////////
+// Filename: graphicsclass.h
+////////////////////////////////////////////////////////////////////////////////
+#ifndef _GRAPHICSCLASS_H_
+#define _GRAPHICSCLASS_H_
+
+
+///////////////////////
+// MY CLASS INCLUDES //
+///////////////////////
+#include "D3D.h"
+#include "Camera.h"
+#include "Cubemap.h"
+#include "Input.h"
+#include "Model.h"
+#include "LightShader.h"
+#include "Light.h"
+#include "OrbitSphere.h"
+#include "ReflectShader.h"
+#include "ReflectiveSphere.h"
+#include "ResourceManager.h"
+#include "ShaderManager.h"
+#include "SkySphere.h"
+#include "SkySphereShader.h"
+#include "Text.h"
+
+#include <DirectXMath.h>
+#include <string>
+
+/////////////
+// GLOBALS //
+/////////////
+const bool FULL_SCREEN = false;
+const bool VSYNC_ENABLED = true;
+const float SCREEN_DEPTH = 1000.0f;
+const float SCREEN_NEAR = 0.1f;
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Class name: GraphicsClass
+////////////////////////////////////////////////////////////////////////////////
+class Graphics
+{
+public:
+	Graphics();
+	Graphics(const Graphics&);
+	~Graphics();
+
+	bool Initialize(int, int, HWND);
+	void Shutdown();
+	bool Frame();
+
+	void MoveCamera(XMFLOAT3);
+	void RotateCamera(XMFLOAT3);
+
+private:
+	bool RenderWithoutSphere();
+	bool Render(Camera*, bool);
+
+private:
+	D3D* m_D3D;
+	Camera* m_Camera;
+	Light* m_Light;
+	LightShader* m_LightShader;
+	//OrbitSphere* m_orbitSphere;
+	ReflectShader* m_ReflectShader;
+	//ReflectiveSphere* m_reflectiveSphere;
+	//SkySphere* m_SkySphere;
+	SkySphereShader* m_SkySphereShader;
+	Text* m_text;
+
+	Cubemap* m_cMap;
+	ID3D11ShaderResourceView* m_cMapSRV;
+
+	float m_passingTime;
+	float m_rotSpeed;
+	float m_rotation;
+
+	int m_fps, m_count;
+	unsigned long m_startTime;
+
+	HWND m_hwnd;
+	int m_screenWidth, m_screenHeight;
+	XMMATRIX m_view;
+
+	ResourceManager* m_resources;
+	ShaderManager* m_shaders;
+};
+
+#endif

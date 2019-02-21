@@ -1,7 +1,7 @@
 #pragma once
 
-#include "d3dclass.h"
-#include "cameraclass.h"
+#include "D3D.h"
+#include "Camera.h"
 #include <DirectXMath.h>
 #include <D3D11.h>
 
@@ -14,8 +14,8 @@ public:
 	void Initialise(ID3D11Device*);
 	void Shutdown();
 	D3D11_VIEWPORT getViewport() const;
-	CameraClass* getView(int i);
-	D3DXMATRIX getProjection() const;
+	Camera* getView(int i);
+	XMMATRIX getProjection() const;
 	ID3D11RenderTargetView* getRTV(int i) const;
 	ID3D11DepthStencilView* getDSV() const;
 	ID3D11ShaderResourceView* getSRV() const;
@@ -29,8 +29,8 @@ private:
 private:
 	const int CUBEMAP_SIZE = 256;
 
-	CameraClass m_views[6];
-	D3DXMATRIX m_proj;
+	Camera m_views[6];
+	XMMATRIX m_proj;
 	D3D11_VIEWPORT m_viewport;
 	ID3D11Texture2D* m_texture;
 	ID3D11Texture2D* m_depthTexture;

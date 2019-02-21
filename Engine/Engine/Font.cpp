@@ -30,8 +30,7 @@ void Font::Shutdown()
 {
 	if (m_texture)
 	{
-		m_texture->Shutdown();
-		delete m_texture;
+		m_texture->Release();
 		m_texture = 0;
 	}
 
@@ -76,19 +75,21 @@ bool Font::loadFont(char* filename)
 
 bool Font::loadTexture(ID3D11Device* device, WCHAR* filename)
 {
-	m_texture = new TextureClass;
+	
+	//D3DX11CreateShaderResourceViewFromFile(m_device, filename, NULL, NULL, &m_texture, NULL);
+	/*m_texture = new Texture;
 	if (!m_texture)
 		return false;
 
 	if (!m_texture->Initialize(device, filename))
-		return false;
+		return false;*/
 
 	return true;
 }
 
 ID3D11ShaderResourceView* Font::getTexture()
 {
-	return m_texture->GetTexture();
+	return m_texture;
 }
 
 void Font::buildVertexArray(void* vertices, const char* sentence, float x, float y)
@@ -112,29 +113,29 @@ void Font::buildVertexArray(void* vertices, const char* sentence, float x, float
 		else
 		{
 			//first triangle
-			ptr_vertex[index].pos = D3DXVECTOR3(x, y, 0.0f);
-			ptr_vertex[index].texture = D3DXVECTOR2(m_font[letter].left, 0.0f);
+			ptr_vertex[index].pos = XMFLOAT3(x, y, 0.0f);
+			ptr_vertex[index].texture = XMFLOAT2(m_font[letter].left, 0.0f);
 			++index;
 
-			ptr_vertex[index].pos = D3DXVECTOR3(x + m_font[letter].size, y - 16, 0.0f);
-			ptr_vertex[index].texture = D3DXVECTOR2(m_font[letter].right, 1.0f);
+			ptr_vertex[index].pos = XMFLOAT3(x + m_font[letter].size, y - 16, 0.0f);
+			ptr_vertex[index].texture = XMFLOAT2(m_font[letter].right, 1.0f);
 			++index;
 
-			ptr_vertex[index].pos = D3DXVECTOR3(x, y - 16, 0.0f);
-			ptr_vertex[index].texture = D3DXVECTOR2(m_font[letter].left, 1.0f);
+			ptr_vertex[index].pos = XMFLOAT3(x, y - 16, 0.0f);
+			ptr_vertex[index].texture = XMFLOAT2(m_font[letter].left, 1.0f);
 			++index;
 
 			//second triangle
-			ptr_vertex[index].pos = D3DXVECTOR3(x, y, 0.0f);
-			ptr_vertex[index].texture = D3DXVECTOR2(m_font[letter].left, 0.0f);
+			ptr_vertex[index].pos = XMFLOAT3(x, y, 0.0f);
+			ptr_vertex[index].texture = XMFLOAT2(m_font[letter].left, 0.0f);
 			++index;
 
-			ptr_vertex[index].pos = D3DXVECTOR3(x + m_font[letter].size, y, 0.0f);
-			ptr_vertex[index].texture = D3DXVECTOR2(m_font[letter].right, 0.0f);
+			ptr_vertex[index].pos = XMFLOAT3(x + m_font[letter].size, y, 0.0f);
+			ptr_vertex[index].texture = XMFLOAT2(m_font[letter].right, 0.0f);
 			++index;
 
-			ptr_vertex[index].pos = D3DXVECTOR3(x + m_font[letter].size, y - 16, 0.0f);
-			ptr_vertex[index].texture = D3DXVECTOR2(m_font[letter].right, 1.0f);
+			ptr_vertex[index].pos = XMFLOAT3(x + m_font[letter].size, y - 16, 0.0f);
+			ptr_vertex[index].texture = XMFLOAT2(m_font[letter].right, 1.0f);
 			++index;
 
 			x += m_font[letter].size + 1.0f;

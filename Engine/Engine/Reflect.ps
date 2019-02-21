@@ -7,16 +7,6 @@
 // GLOBALS //
 /////////////
 
-cbuffer LightBuffer
-{
-	float4 ambientColour;
-	float4 diffuseColour;
-    float3 lightDirection;
-	float specularIntensity;
-	float4 specColour;
-
-};
-
 TextureCube shaderTexture;
 SamplerState SampleType;
 
@@ -36,7 +26,7 @@ struct PixelInputType
 ////////////////////////////////////////////////////////////////////////////////
 // Pixel Shader
 ////////////////////////////////////////////////////////////////////////////////
-float4 LightPixelShader(PixelInputType input) : SV_TARGET
+float4 ReflectPixelShader(PixelInputType input) : SV_TARGET
 {
 
 	float3 lightDir;
@@ -54,7 +44,7 @@ float4 LightPixelShader(PixelInputType input) : SV_TARGET
 	
 	textureColour = shaderTexture.Sample(SampleType, refVec);
 
-	
+	/*
 	colour = ambientColour;
 
 	specularColour = float4(0.f, 0.f, 0.f, 0.f);
@@ -78,6 +68,7 @@ float4 LightPixelShader(PixelInputType input) : SV_TARGET
     
 	colour *= textureColour;
 	colour = saturate(colour +  (specularColour * specColour));	
+	*/
 	
-    return colour;
+    return textureColour;
 }

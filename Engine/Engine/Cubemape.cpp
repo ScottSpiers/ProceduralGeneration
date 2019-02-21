@@ -25,36 +25,34 @@ void Cubemap::Shutdown()
 	if (m_depthTexture)
 	{
 		m_depthTexture->Release();
-		delete m_depthTexture;
 		m_depthTexture = 0;
 	}
 
 	if (m_texture)
 	{
 		m_texture->Release();
-		delete m_texture;
 		m_texture = 0;
 	}
 
 	if (m_dynamicCubeSRV)
 	{
 		m_dynamicCubeSRV->Release();
-		delete m_dynamicCubeSRV;
 		m_dynamicCubeSRV = 0;
 	}
 
 	if (m_depthStencilView)
 	{
 		m_depthStencilView->Release();
-		delete m_depthStencilView;
 		m_depthStencilView = 0;
 	}
 
 	for (int i = 0; i < 6; ++i)
 	{
-		m_dynamicCubeRTV[i]->Release();
-		delete m_dynamicCubeRTV[i];
-		m_dynamicCubeRTV[i] = 0;
+		if (m_dynamicCubeRTV[i])
+		{
+			m_dynamicCubeRTV[i]->Release();
+			m_dynamicCubeRTV[i] = 0;
+		}
 	}
 }
 
@@ -153,44 +151,44 @@ void Cubemap::BuildViews(ID3D11Device* device)
 
 void Cubemap::InitCameras(float x, float y, float z)
 {
-	D3DXVECTOR3 centre{ x,y,z };
-	D3DXVECTOR3 targets[6]
+	XMVECTOR centre{ x,y,z };
+	XMVECTOR targets[6]
 	{
-		D3DXVECTOR3{ x + 1, y, z },
-		D3DXVECTOR3{ x - 1, y, z },
-		D3DXVECTOR3{ x, y + 1, z },
-		D3DXVECTOR3{ x, y - 1, z },
-		D3DXVECTOR3{ x, y, z + 1 },
-		D3DXVECTOR3{ x, y, z - 1 }
+		XMVECTOR{ x + 1, y, z },
+		XMVECTOR{ x - 1, y, z },
+		XMVECTOR{ x, y + 1, z },
+		XMVECTOR{ x, y - 1, z },
+		XMVECTOR{ x, y, z + 1 },
+		XMVECTOR{ x, y, z - 1 }
 	};
 
-	D3DXVECTOR3 ups[6]
+	XMVECTOR ups[6]
 	{
-		D3DXVECTOR3{0,1,0},
-		D3DXVECTOR3{0,1,0},
-		D3DXVECTOR3{0,0,-1},
-		D3DXVECTOR3{0,0,1},
-		D3DXVECTOR3{0,1,0},
-		D3DXVECTOR3{0,1,0}
+		XMVECTOR{0,1,0},
+		XMVECTOR{0,1,0},
+		XMVECTOR{0,0,-1},
+		XMVECTOR{0,0,1},
+		XMVECTOR{0,1,0},
+		XMVECTOR{0,1,0}
 	};
 
-	D3DXMATRIX view;
-	D3DXMatrixPerspectiveFovLH(&m_proj, D3DX_PI / 2, 1.0f, 0.1f, 200.f);
+	XMMATRIX view;
+	m_proj = XMMatrixPerspectiveFovLH(XM_PI / 2, 1.0f, 0.1f, 200.f);
 
 	for (int i = 0; i < 6; ++i)
 	{
-		D3DXMatrixLookAtLH(&view, &centre, &targets[i], &ups[i]);
+		view = XMMatrixLookAtLH(centre, targets[i], ups[i]);
 		m_views[i].setViewMatrix(view);
 		m_views[i].setProjMatrix(m_proj);
 	}
 }
 
-CameraClass* Cubemap::getView(int i)
+Camera* Cubemap::getView(int i)
 {
 	return &m_views[i];
 }
 
-D3DXMATRIX Cubemap::getProjection() const
+XMMATRIX Cubemap::getProjection() const
 {
 	return m_proj;
 }

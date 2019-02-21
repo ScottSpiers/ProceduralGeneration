@@ -1,10 +1,10 @@
 #pragma once
 
-#include "textureclass.h"
-
-#include <D3D11.h>
-#include <D3DX10math.h>
+#include <d3d11.h>
+#include <DirectXMath.h>
 #include <fstream>
+
+using namespace DirectX;
 
 ///Heavily influenced by rastertek tutorial on Font
 class Font
@@ -19,8 +19,8 @@ private:
 
 	struct VertexType
 	{
-		D3DXVECTOR3 pos;
-		D3DXVECTOR2 texture;
+		XMFLOAT3 pos;
+		XMFLOAT2 texture;
 	};
 
 public:
@@ -40,5 +40,5 @@ private:
 
 private:
 	FontType* m_font;
-	TextureClass* m_texture;
+	ID3D11ShaderResourceView* m_texture;
 };

@@ -63,7 +63,7 @@ void FontShader::Shutdown()
 	}
 }
 
-bool FontShader::Render(ID3D11DeviceContext* deviceContext, int indexCount, D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX projection, ID3D11ShaderResourceView* texture, D3DXVECTOR4 pixelColour)
+bool FontShader::Render(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX world, XMMATRIX view, XMMATRIX projection, ID3D11ShaderResourceView* texture, XMFLOAT4 pixelColour)
 {
 	if (!setShaderParams(deviceContext, world, view, projection, texture, pixelColour))
 		return false;
@@ -221,7 +221,7 @@ void FontShader::OutputShaderErrorMessage(ID3D10Blob* msg_error, HWND hwnd, WCHA
 	MessageBox(hwnd, L"Error compiling shader. Check shader-error.txt for message", shaderFile, MB_OK);
 }
 
-bool FontShader::setShaderParams(ID3D11DeviceContext* deviceContext, D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX projection, ID3D11ShaderResourceView* texture, D3DXVECTOR4 pixelColour)
+bool FontShader::setShaderParams(ID3D11DeviceContext* deviceContext, XMMATRIX world, XMMATRIX view, XMMATRIX projection, ID3D11ShaderResourceView* texture, XMFLOAT4 pixelColour)
 {
 	HRESULT res;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -235,9 +235,9 @@ bool FontShader::setShaderParams(ID3D11DeviceContext* deviceContext, D3DXMATRIX 
 
 	dataPtr = (ConstantBufferType*)mappedResource.pData;
 	
-	D3DXMatrixTranspose(&world, &world);
-	D3DXMatrixTranspose(&view, &view);
-	D3DXMatrixTranspose(&projection, &projection);
+	world = XMMatrixTranspose(world);
+	view = XMMatrixTranspose(view);
+	projection = XMMatrixTranspose(projection);
 
 	dataPtr->world = world;
 	dataPtr->view = view;

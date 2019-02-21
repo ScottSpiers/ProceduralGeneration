@@ -1,8 +1,10 @@
 #pragma once
 
-
+#include <DirectXMath.h>
 #include "Font.h"
 #include "FontShader.h"
+
+using namespace DirectX;
 
 class Text
 {
@@ -16,8 +18,8 @@ private:
 
 	struct VertexType
 	{
-		D3DXVECTOR3 pos;
-		D3DXVECTOR2 texture;
+		XMFLOAT3 pos;
+		XMFLOAT2 texture;
 	};
 
 public:
@@ -25,9 +27,9 @@ public:
 	Text(const Text&);
 	~Text();
 
-	bool Initialise(ID3D11Device*, ID3D11DeviceContext*, HWND, int, int, D3DXMATRIX);
+	bool Initialise(ID3D11Device*, ID3D11DeviceContext*, HWND, int, int, XMMATRIX);
 	void Shutdown();
-	bool Render(ID3D11DeviceContext*, D3DXMATRIX, D3DXMATRIX);
+	bool Render(ID3D11DeviceContext*, XMMATRIX, XMMATRIX);
 
 	bool setText(const char*, ID3D11DeviceContext*);
 
@@ -39,6 +41,6 @@ private:
 	Font* m_font;
 	FontShader* m_fontShader;
 	int m_screenWidth, m_screenHeight;
-	D3DXMATRIX m_viewMatrix;
+	XMMATRIX m_viewMatrix;
 	SentenceType* m_fpsSentence;
 };

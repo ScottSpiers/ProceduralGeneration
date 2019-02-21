@@ -20,11 +20,7 @@ cbuffer CameraBuffer
 	float pad;
 };
 
-cbuffer VariableBuffer
-{
-    float delta;
-	float3 padding;
-};
+
 //////////////
 // TYPEDEFS //
 //////////////

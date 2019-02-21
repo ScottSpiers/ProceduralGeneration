@@ -20,11 +20,6 @@ cbuffer CameraBuffer
 	float pad;
 };
 
-cbuffer VariableBuffer
-{
-    float delta;
-	float3 padding;
-};
 //////////////
 // TYPEDEFS //
 //////////////
@@ -47,7 +42,7 @@ struct PixelInputType
 ////////////////////////////////////////////////////////////////////////////////
 // Vertex Shader
 ////////////////////////////////////////////////////////////////////////////////
-PixelInputType LightVertexShader(VertexInputType input)
+PixelInputType ReflectVertexShader(VertexInputType input)
 {
     PixelInputType output;
 	float4 worldPos;

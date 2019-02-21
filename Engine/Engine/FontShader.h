@@ -1,23 +1,25 @@
 #pragma once
 
-#include <D3D11.h>
-#include <D3DX10math.h>
-#include <D3DX11async.h>
+#include <d3d11.h>
+#include <DirectXMath.h>
+#include <d3dx11.h>
 #include <fstream>
+
+using namespace DirectX;
 
 class FontShader
 {
 private:
 	struct ConstantBufferType
 	{
-		D3DXMATRIX world;
-		D3DXMATRIX view;
-		D3DXMATRIX projection;
+		XMMATRIX world;
+		XMMATRIX view;
+		XMMATRIX projection;
 	};
 
 	struct PixelBufferType
 	{
-		D3DXVECTOR4 pixelColour;
+		XMFLOAT4 pixelColour;
 	};
 
 public:
@@ -27,12 +29,12 @@ public:
 
 	bool Initialise(ID3D11Device*, HWND);
 	void Shutdown();
-	bool Render(ID3D11DeviceContext*, int, D3DXMATRIX, D3DXMATRIX, D3DXMATRIX, ID3D11ShaderResourceView*, D3DXVECTOR4);
+	bool Render(ID3D11DeviceContext*, int, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*, XMFLOAT4);
 
 private:
 	bool InitialiseShader(ID3D11Device*, HWND, WCHAR*, WCHAR*);
 	void OutputShaderErrorMessage(ID3D10Blob*, HWND, WCHAR*);
-	bool setShaderParams(ID3D11DeviceContext*, D3DXMATRIX, D3DXMATRIX, D3DXMATRIX, ID3D11ShaderResourceView*, D3DXVECTOR4);
+	bool setShaderParams(ID3D11DeviceContext*, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*, XMFLOAT4);
 
 private:
 	ID3D11VertexShader* m_vertexShader;

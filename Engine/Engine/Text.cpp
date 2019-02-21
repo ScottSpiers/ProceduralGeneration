@@ -16,7 +16,7 @@ Text::~Text()
 {
 }
 
-bool Text::Initialise(ID3D11Device* device, ID3D11DeviceContext* deviceContext, HWND hwnd, int screenWidth, int screenHeight, D3DXMATRIX view)
+bool Text::Initialise(ID3D11Device* device, ID3D11DeviceContext* deviceContext, HWND hwnd, int screenWidth, int screenHeight, XMMATRIX view)
 {
 	bool res;
 
@@ -102,10 +102,10 @@ bool Text::setText(const char* sentence, ID3D11DeviceContext* deviceContext)
 
 
 
-bool Text::Render(ID3D11DeviceContext* deviceContext, D3DXMATRIX world, D3DXMATRIX ortho)
+bool Text::Render(ID3D11DeviceContext* deviceContext, XMMATRIX world, XMMATRIX ortho)
 {
 	unsigned int stride, offset;
-	D3DXVECTOR4 pixelColor;
+	XMFLOAT4 pixelColor;
 	bool res;
 
 
@@ -123,7 +123,7 @@ bool Text::Render(ID3D11DeviceContext* deviceContext, D3DXMATRIX world, D3DXMATR
 	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// Create a pixel color vector with the input sentence color.
-	pixelColor = D3DXVECTOR4(m_fpsSentence->red, m_fpsSentence->green, m_fpsSentence->blue, 1.0f);
+	pixelColor = XMFLOAT4(m_fpsSentence->red, m_fpsSentence->green, m_fpsSentence->blue, 1.0f);
 
 	// Render the text using the font shader.
 	res = m_fontShader->Render(deviceContext, m_fpsSentence->indexCount, world, m_viewMatrix, ortho, m_font->getTexture(), pixelColor);
