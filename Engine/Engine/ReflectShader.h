@@ -6,7 +6,6 @@
 //////////////
 #include <d3d11.h>
 #include <DirectXMath.h>
-#include <d3dx11async.h>
 #include <fstream>
 
 

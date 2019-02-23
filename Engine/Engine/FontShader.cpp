@@ -92,7 +92,9 @@ bool FontShader::InitialiseShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFile
 	buf_vertexShader = 0;
 	buf_pixelShader = 0;
 
-	res = D3DX11CompileFromFile(vsFilename, NULL, NULL, "FontVertexShader", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, NULL, &buf_vertexShader, &msg_error, NULL);
+	//result = D3DCompileFromFile(filename, nullptr, nullptr, entryPoint, target, D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_DEBUG, 0, shader, &errorMsg);
+
+	res = D3DCompileFromFile(vsFilename, nullptr, nullptr, "FontVertexShader", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &buf_vertexShader, &msg_error);
 	if (FAILED(res))
 	{
 		if (msg_error)
@@ -107,7 +109,7 @@ bool FontShader::InitialiseShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFile
 		return false;
 	}
 
-	res = D3DX11CompileFromFile(psFilename, NULL, NULL, "FontPixelShader", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, NULL, &buf_pixelShader, &msg_error, NULL);
+	res = D3DCompileFromFile(psFilename, nullptr, nullptr, "FontPixelShader", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &buf_pixelShader, &msg_error);
 	if (FAILED(res))
 	{
 		if (msg_error)

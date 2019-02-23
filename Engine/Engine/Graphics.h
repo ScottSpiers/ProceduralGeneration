@@ -15,12 +15,9 @@
 #include "Model.h"
 #include "LightShader.h"
 #include "Light.h"
-#include "OrbitSphere.h"
 #include "ReflectShader.h"
-#include "ReflectiveSphere.h"
 #include "ResourceManager.h"
 #include "ShaderManager.h"
-#include "SkySphere.h"
 #include "SkySphereShader.h"
 #include "Text.h"
 

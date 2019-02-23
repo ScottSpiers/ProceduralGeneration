@@ -190,7 +190,7 @@ bool LightShader::Render(Model* model, Camera* cam, Light* light)
 
 	// Copy the lighting variables into the constant buffer.
 
-	XMFLOAT4 red(1.f, 0.f, 0.f, 1.f);
+	//XMFLOAT4 red(1.f, 0.f, 0.f, 1.f);
 	dataPtr2->ambientColour = light->GetAmbientColour();
 	dataPtr2->diffuseColour = light->GetDiffuseColor();
 	dataPtr2->lightDirection = light->GetDirection();

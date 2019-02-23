@@ -349,7 +349,7 @@ bool Graphics::Render(Camera* view, bool drawMirror)
 
 
 	orbitSphere->Render(m_D3D->GetDeviceContext());
-	result = m_shaders->RenderLight(orbitSphere, view, m_Light);
+	result = m_shaders->RenderLight(orbitSphere, m_Camera, m_Light);
 	if (!result)
 	{
 		return false;
@@ -362,11 +362,16 @@ bool Graphics::Render(Camera* view, bool drawMirror)
 		// Render the model using the light shader.
 		reflectiveSphere->Render(m_D3D->GetDeviceContext());
 		reflectiveSphere->SetTexture(m_cMapSRV);
-		result = m_shaders->RenderReflection(reflectiveSphere, view);
+		result = m_shaders->RenderReflection(reflectiveSphere, m_Camera);
 		if(!result)
 		{
 			return false;
 		}
+		/*result = m_shaders->RenderLight(reflectiveSphere, m_Camera, m_Light);
+		if (!result)
+		{
+			return false;
+		}*/
 	}
 
 	Model* skySphere = m_resources->GetModel(ResourceManager::SKY_DOME_MODEL);
@@ -378,7 +383,7 @@ bool Graphics::Render(Camera* view, bool drawMirror)
 
 
 	skySphere->Render(m_D3D->GetDeviceContext());
-	result = m_shaders->RenderSkySphere(skySphere, view);
+	result = m_shaders->RenderSkySphere(skySphere, m_Camera);
 	if (!result)
 	{
 		return false;

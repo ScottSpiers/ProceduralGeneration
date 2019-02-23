@@ -1,6 +1,6 @@
 #pragma once
 
-#include <d3dx11async.h>
+#include "DDSTextureLoader.h"
 #include <vector>
 
 #include "D3D.h"

@@ -137,15 +137,21 @@ bool Shader::Initialise(WCHAR* vsFilename, LPCSTR vsEntry, WCHAR* psFilename, LP
 	return true;
 }
 
-HRESULT Shader::CompileShaderFromFile(WCHAR* filename, LPCSTR entryPoint, LPCSTR target, ID3DBlob** shader)
+bool Shader::CompileShaderFromFile(WCHAR* filename, LPCSTR entryPoint, LPCSTR target, ID3DBlob** shader)
 {
 	HRESULT result;
 	ID3DBlob* errorMsg;
 
-	result = D3DCompileFromFile(filename, nullptr, nullptr, entryPoint, target, D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_DEBUG, 0, shader, &errorMsg);
+	result = D3DCompileFromFile(filename, nullptr, nullptr, entryPoint, target, D3DCOMPILE_ENABLE_STRICTNESS, 0, shader, &errorMsg);
+
+	if (FAILED(result))
+	{
+		OutputShaderErrorMessage(errorMsg, 0, filename);
+		return false;
+	}
 	
 	
-	return S_OK;
+	return true;
 }
 
 void Shader::OutputShaderErrorMessage(ID3D10Blob* errorMsg, HWND hwnd, WCHAR* shader)
@@ -176,12 +182,12 @@ bool Shader::SetMatrixBuffer(XMMATRIX worldMatrix, Camera* cam)
 {
 
 	MatrixBuffer* matBufData;
-	bool result;
+	HRESULT result;
 
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
 
 	result = m_context->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-	if (!result)
+	if (FAILED(result))
 	{
 		return false;
 	}
@@ -194,4 +200,5 @@ bool Shader::SetMatrixBuffer(XMMATRIX worldMatrix, Camera* cam)
 
 	m_context->Unmap(m_matrixBuffer, 0);
 	m_context->VSSetConstantBuffers(0, 1, &m_matrixBuffer);
+	return true;
 }

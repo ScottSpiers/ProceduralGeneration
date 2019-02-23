@@ -1,11 +1,11 @@
 #pragma once
 
-#pragma comment(lib, "d3dcompiler.lib")
 
 #include <d3d11.h>
 #include <d3dcompiler.h>
-#include "Camera.h"
+#pragma comment(lib, "d3dcompiler.lib")
 
+#include "Camera.h"
 
 using namespace DirectX;
 
@@ -28,7 +28,7 @@ public:
 protected:
 	void OutputShaderErrorMessage(ID3D10Blob*, HWND, WCHAR*);
 
-	HRESULT CompileShaderFromFile(WCHAR*, LPCSTR, LPCSTR, ID3DBlob**);
+	bool CompileShaderFromFile(WCHAR*, LPCSTR, LPCSTR, ID3DBlob**);
 	bool SetMatrixBuffer(XMMATRIX, Camera*);
 
 protected:

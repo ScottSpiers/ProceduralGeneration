@@ -103,17 +103,26 @@ bool ResourceManager::LoadTexture(TextureResource t)
 	{
 		case ORBIT_TEXTURE: 
 		{
-			D3DX11CreateShaderResourceViewFromFile(m_device, L"../Engine/data/seafloor.dds", NULL, NULL, &texture, NULL); 
+			CreateDDSTextureFromFile(m_device, L"../Engine/data/seafloor.dds", nullptr, &texture, 0 , nullptr);
+			//D3DX11CreateShaderResourceViewFromFile(m_device, L"../Engine/data/seafloor.dds", NULL, NULL, &texture, NULL); 
 			break;
 		}
 		case SKY_CUBE_TEXTURE:
 		{
 			bool res;
-			D3DX11_IMAGE_LOAD_INFO skyMapInfo;
-			skyMapInfo.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE;
+			/*D3DX11_IMAGE_LOAD_INFO skyMapInfo;
+			skyMapInfo.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE;*/
+
+			D3D11_TEXTURE2D_DESC textureDesc;
+			textureDesc.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE;
 
 			ID3D11Texture2D* texture_sky = 0;
-			res = D3DX11CreateTextureFromFile(m_device, L"../Engine/data/snowcube1024.dds", &skyMapInfo, 0, (ID3D11Resource**)&texture_sky, 0);
+			res = m_device->CreateTexture2D(&textureDesc, 0, &texture_sky);
+			if (FAILED(res))
+				return false;
+			
+			//res = D3DX11CreateTextureFromFile(m_device, L"../Engine/data/snowcube1024.dds", &skyMapInfo, 0, (ID3D11Resource**)&texture_sky, 0);
+			res = CreateDDSTextureFromFile(m_device, L"../Engine/data/snowcube1024.dds", (ID3D11Resource**)&texture_sky, nullptr);
 			if (FAILED(res))
 			{
 				return false;
