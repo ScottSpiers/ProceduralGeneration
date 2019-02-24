@@ -75,14 +75,11 @@ bool Font::loadFont(char* filename)
 
 bool Font::loadTexture(ID3D11Device* device, WCHAR* filename)
 {
+	HRESULT result;
 	
-	//D3DX11CreateShaderResourceViewFromFile(m_device, filename, NULL, NULL, &m_texture, NULL);
-	/*m_texture = new Texture;
-	if (!m_texture)
+	result = CreateDDSTextureFromFile(device, filename, nullptr, &m_texture, 0, nullptr);
+	if (FAILED(result))
 		return false;
-
-	if (!m_texture->Initialize(device, filename))
-		return false;*/
 
 	return true;
 }

@@ -29,7 +29,9 @@ protected:
 	void OutputShaderErrorMessage(ID3D10Blob*, HWND, WCHAR*);
 
 	bool CompileShaderFromFile(WCHAR*, LPCSTR, LPCSTR, ID3DBlob**);
+
 	bool SetMatrixBuffer(XMMATRIX, Camera*);
+	bool SetMatrixBuffer(XMMATRIX, XMMATRIX, XMMATRIX);
 
 protected:
 	ID3D11Device* m_device;

@@ -10,9 +10,7 @@
 /////////////
 
 #pragma comment(lib, "dxgi.lib")
-//#pragma comment(lib, "d3dx10.lib")
 #pragma comment(lib, "d3d11.lib")
-//#pragma comment(lib, "d3dx11.lib")
 #pragma comment(lib, "winmm.lib")
 
 
@@ -38,7 +36,6 @@ public:
 	~D3D();
 
 	bool Initialize(int, int, bool, HWND, bool, float, float);
-	void Shutdown();
 	
 	void BeginScene(float, float, float, float);
 	void EndScene();
@@ -57,10 +54,13 @@ public:
 
 	void TurnZBufferOn();
 	void TurnZBufferOff();
+
 	void SetDepthLessEqual();
 	void SetDepthLess();
+
 	void TurnOnCulling();
 	void TurnOffCulling();
+
 	void TurnOnAlphaBlending();
 	void TurnOffAlphaBlending();
 

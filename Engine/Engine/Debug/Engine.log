@@ -1,6 +1,1 @@
-﻿  Graphics.cpp
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\graphics.cpp(40): warning C4316: 'D3D': object allocated on the heap may not be aligned 16
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\graphics.cpp(55): warning C4316: 'Camera': object allocated on the heap may not be aligned 16
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\graphics.cpp(67): warning C4316: 'Text': object allocated on the heap may not be aligned 16
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\graphics.cpp(143): warning C4316: 'Cubemap': object allocated on the heap may not be aligned 16
-  Engine.vcxproj -> C:\Users\Scott\Documents\Uni\Abertay\CMP505\Assignment\Engine\Debug\Engine.exe
+﻿  Engine.vcxproj -> C:\Users\Scott\Documents\Uni\Abertay\CMP505\Assignment\Engine\Debug\Engine.exe

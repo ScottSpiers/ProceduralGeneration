@@ -181,6 +181,11 @@ void Shader::OutputShaderErrorMessage(ID3D10Blob* errorMsg, HWND hwnd, WCHAR* sh
 bool Shader::SetMatrixBuffer(XMMATRIX worldMatrix, Camera* cam)
 {
 
+	return SetMatrixBuffer(worldMatrix, cam->GetViewMatrix(), cam->GetProjMatrix());
+}
+
+bool Shader::SetMatrixBuffer(XMMATRIX world, XMMATRIX view, XMMATRIX proj)
+{
 	MatrixBuffer* matBufData;
 	HRESULT result;
 
@@ -194,9 +199,9 @@ bool Shader::SetMatrixBuffer(XMMATRIX worldMatrix, Camera* cam)
 
 	matBufData = (MatrixBuffer*)mappedResource.pData;
 
-	matBufData->worldMatrix = XMMatrixTranspose(worldMatrix);
-	matBufData->viewMatrix = XMMatrixTranspose(cam->GetViewMatrix());
-	matBufData->projectionMatrix = XMMatrixTranspose(cam->GetProjMatrix());
+	matBufData->worldMatrix = XMMatrixTranspose(world);
+	matBufData->viewMatrix = XMMatrixTranspose(view);
+	matBufData->projectionMatrix = XMMatrixTranspose(proj);
 
 	m_context->Unmap(m_matrixBuffer, 0);
 	m_context->VSSetConstantBuffers(0, 1, &m_matrixBuffer);

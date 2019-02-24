@@ -16,7 +16,6 @@ Graphics::Graphics() : m_rotSpeed(0.25f), m_passingTime(0.f), m_rotation(0.f), m
 	m_startTime = timeGetTime();
 }
 
-
 Graphics::Graphics(const Graphics& other)
 {
 }
@@ -24,6 +23,52 @@ Graphics::Graphics(const Graphics& other)
 
 Graphics::~Graphics()
 {
+	if (m_shaders)
+	{
+		delete m_shaders;
+		m_shaders = 0;
+	}
+
+	if (m_resources)
+	{
+		delete m_resources;
+		m_resources = 0;
+	}
+
+	if (m_cMap)
+	{
+		m_cMap->Shutdown();
+		delete m_cMap;
+		m_cMap = 0;
+	}
+
+	if (m_text)
+	{
+		m_text->Shutdown();
+		delete m_text;
+		m_text = 0;
+	}
+
+	// Release the light object.
+	if (m_Light)
+	{
+		delete m_Light;
+		m_Light = 0;
+	}
+
+	// Release the camera object.
+	if (m_Camera)
+	{
+		delete m_Camera;
+		m_Camera = 0;
+	}
+
+	// Release the D3D object.
+	if (m_D3D)
+	{
+		delete m_D3D;
+		m_D3D = 0;
+	}
 }
 
 
@@ -68,12 +113,6 @@ bool Graphics::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	if (!m_text)
 		return false;
 
-	result = m_text->Initialise(m_D3D->GetDevice(), m_D3D->GetDeviceContext(), hwnd, screenWidth, screenHeight, viewMatrix);
-	if (!result)
-	{
-		MessageBox(hwnd, L"Could not initialise the text object", L"Error", MB_OK);
-		return false;
-	}
 
 	m_resources = new ResourceManager(m_D3D->GetDevice(), m_D3D->GetDeviceContext());
 	if (!m_resources->LoadResources())
@@ -85,32 +124,12 @@ bool Graphics::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	if (!m_shaders->InitialiseShaders())
 		return false;
 
-	////m_orbitSphere = new OrbitSphere("../Engine/data/sphere.txt");
-	//if (!m_orbitSphere)
-	//	return false;
-
-	/*result = m_orbitSphere->Initialize(m_D3D->GetDevice(), L"../Engine/data/seafloor.dds");
+	result = m_text->Initialise(m_D3D->GetDevice(), m_D3D->GetDeviceContext(), hwnd, screenWidth, screenHeight, viewMatrix);
 	if (!result)
 	{
-		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+		MessageBox(hwnd, L"Could not initialise the text object", L"Error", MB_OK);
 		return false;
-	}*/
-
-	// Create the reflective sphere object.
-	/*m_reflectiveSphere = new ReflectiveSphere("../Engine/data/sphere.txt");
-	if(!m_reflectiveSphere)
-	{
-		return false;
-	}*/
-
-	//// Initialize the model object.
-	//result = m_reflectiveSphere->Initialize(m_D3D->GetDevice(), L"../Engine/data/seafloor.dds");
-	//if(!result)
-	//{
-	//	MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
-	//	return false;
-	//}
-
+	}
 	// Create the light object.
 	m_Light = new Light;
 	if(!m_Light)
@@ -125,106 +144,12 @@ bool Graphics::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Light->SetSpecIntensity(20.0f);
 	m_Light->SetSpecColour(1.0f, 1.0f, 1.0f, 1.0f);
 
-	/*m_SkySphere = new SkySphere("../Engine/data/skydome.txt");
-	if (!m_SkySphere)
-		return false;*/
-
-	//Left over from initial sky sphere creation
-	/*m_SkySphere->setApexColour(0.0f, 0.05f, 0.6f, 1.0f);
-	m_SkySphere->setCentreColour(0.0f, 0.5f, 0.8f, 1.0f);*/
-
-	//result = m_SkySphere->Initialize(m_D3D->GetDevice());
-	//if (!result)
-	//{
-	//	MessageBox(hwnd, L"Could not initialise the sky sphere object", L"Error", MB_OK);
-	//	return false;
-	//}
-
 	m_cMap = new Cubemap;
 	if (!m_cMap)
 		return false;
 
 
 	return true;
-}
-
-
-void Graphics::Shutdown()
-{
-
-	if (m_shaders)
-	{
-		delete m_shaders;
-		m_shaders = 0;
-	}
-
-	if (m_resources)
-	{
-		delete m_resources;
-		m_resources = 0;
-	}
-
-	if (m_cMap)
-	{
-		m_cMap->Shutdown();
-		delete m_cMap;
-		m_cMap = 0;
-	}
-
-	if (m_text)
-	{
-		m_text->Shutdown();
-		delete m_text;
-		m_text = 0;
-	}
-
-	/*if (m_SkySphere)
-	{
-		m_SkySphereShader->Shutdown();
-		delete m_SkySphereShader;
-		m_SkySphereShader = 0;
-	}
-*/
-
-	// Release the light object.
-	if(m_Light)
-	{
-		delete m_Light;
-		m_Light = 0;
-	}
-
-	// Release the reflective sphere object.
-	/*if(m_reflectiveSphere)
-	{
-		m_reflectiveSphere->Shutdown();
-		delete m_reflectiveSphere;
-		m_reflectiveSphere = 0;
-	}*/
-
-	//Release the orbiting sphere object
-	/*if (m_orbitSphere)
-	{
-		m_orbitSphere->Shutdown();
-		delete m_orbitSphere;
-		m_orbitSphere = 0;
-	}*/
-
-	// Release the camera object.
-	if(m_Camera)
-	{
-		delete m_Camera;
-		m_Camera = 0;
-	}
-
-	// Release the D3D object.
-	if(m_D3D)
-	{
-		m_D3D->Shutdown();
-		delete m_D3D;
-		m_D3D = 0;
-	}
-
-	return;
 }
 
 
@@ -240,7 +165,7 @@ bool Graphics::Frame()
 		m_startTime = timeGetTime();
 	}
 	// Render the graphics scene.
-	result = RenderWithoutSphere();
+	result = RenderCubemap();
 	if(!result)
 	{
 		return false;
@@ -250,13 +175,8 @@ bool Graphics::Frame()
 }
 
 
-
-
-//render without sphere should be called called where "draw" is it shouldn't include the set up code
-//it gets clled when everything is set up and then we draw the whole scene after completion
-bool Graphics::RenderWithoutSphere()
-{
-	
+bool Graphics::RenderCubemap()
+{	
 	D3D11_VIEWPORT vport;
 	UINT num_viewps = 1;
 	ID3D11RenderTargetView* defRTV = m_D3D->getRenderTargetView();
@@ -349,7 +269,7 @@ bool Graphics::Render(Camera* view, bool drawMirror)
 
 
 	orbitSphere->Render(m_D3D->GetDeviceContext());
-	result = m_shaders->RenderLight(orbitSphere, m_Camera, m_Light);
+	result = m_shaders->RenderLight(orbitSphere, view, m_Light);
 	if (!result)
 	{
 		return false;
@@ -383,7 +303,7 @@ bool Graphics::Render(Camera* view, bool drawMirror)
 
 
 	skySphere->Render(m_D3D->GetDeviceContext());
-	result = m_shaders->RenderSkySphere(skySphere, m_Camera);
+	result = m_shaders->RenderSkySphere(skySphere, view);
 	if (!result)
 	{
 		return false;

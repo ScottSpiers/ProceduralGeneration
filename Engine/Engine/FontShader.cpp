@@ -1,30 +1,14 @@
 
 #include "FontShader.h"
 
-FontShader::FontShader()
+FontShader::FontShader(ID3D11Device* device, ID3D11DeviceContext* context) : Shader(device, context)
 {
-	m_vertexShader = 0;
 	m_pixelBuffer = 0;
-	m_layout = 0;
-	m_pixelBuffer = 0;
-	m_constantBuffer = 0;
 	m_sampleState = 0;
 }
 
-FontShader::FontShader(const FontShader&)
-{
-}
 
 FontShader::~FontShader()
-{
-}
-
-bool FontShader::Initialise(ID3D11Device* device, HWND hwnd)
-{
-	return InitialiseShader(device, hwnd, L"../Engine/Font.vs", L"../Engine/Font.ps");
-}
-
-void FontShader::Shutdown()
 {
 	if (m_sampleState)
 	{
@@ -32,51 +16,14 @@ void FontShader::Shutdown()
 		m_sampleState = 0;
 	}
 
-	if (m_constantBuffer)
-	{
-		m_constantBuffer->Release();
-		m_constantBuffer = 0;
-	}
-
 	if (m_pixelBuffer)
 	{
 		m_pixelBuffer->Release();
 		m_pixelBuffer = 0;
 	}
-
-	if (m_layout)
-	{
-		m_layout->Release();
-		m_layout = 0;
-	}
-
-	if (m_pixelShader)
-	{
-		m_pixelShader->Release();
-		m_pixelShader = 0;
-	}
-
-	if (m_vertexShader)
-	{
-		m_vertexShader->Release();
-		m_vertexShader = 0;
-	}
 }
 
-bool FontShader::Render(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX world, XMMATRIX view, XMMATRIX projection, ID3D11ShaderResourceView* texture, XMFLOAT4 pixelColour)
-{
-	if (!setShaderParams(deviceContext, world, view, projection, texture, pixelColour))
-		return false;
-
-	deviceContext->IASetInputLayout(m_layout);
-	deviceContext->VSSetShader(m_vertexShader, NULL, 0);
-	deviceContext->PSSetShader(m_pixelShader, NULL, 0);
-	deviceContext->PSSetSamplers(0, 1, &m_sampleState);
-	deviceContext->DrawIndexed(indexCount, 0, 0);
-	return true;
-}
-
-bool FontShader::InitialiseShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename)
+bool FontShader::Initialise(ID3D11Device* device, HWND hwnd)
 {
 	HRESULT res;
 	ID3D10Blob* msg_error;
@@ -91,46 +38,6 @@ bool FontShader::InitialiseShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFile
 	msg_error = 0;
 	buf_vertexShader = 0;
 	buf_pixelShader = 0;
-
-	//result = D3DCompileFromFile(filename, nullptr, nullptr, entryPoint, target, D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_DEBUG, 0, shader, &errorMsg);
-
-	res = D3DCompileFromFile(vsFilename, nullptr, nullptr, "FontVertexShader", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &buf_vertexShader, &msg_error);
-	if (FAILED(res))
-	{
-		if (msg_error)
-		{
-			OutputShaderErrorMessage(msg_error, hwnd, vsFilename);
-		}
-		// If there was  nothing in the error message then it simply could not find the shader file itself.
-		else
-		{
-			MessageBox(hwnd, vsFilename, L"Missing Shader File", MB_OK);
-		}
-		return false;
-	}
-
-	res = D3DCompileFromFile(psFilename, nullptr, nullptr, "FontPixelShader", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &buf_pixelShader, &msg_error);
-	if (FAILED(res))
-	{
-		if (msg_error)
-		{
-			OutputShaderErrorMessage(msg_error, hwnd, psFilename);
-		}
-		// If there was  nothing in the error message then it simply could not find the shader file itself.
-		else
-		{
-			MessageBox(hwnd, psFilename, L"Missing Shader File", MB_OK);
-		}
-		return false;
-	}
-
-	res = device->CreateVertexShader(buf_vertexShader->GetBufferPointer(), buf_vertexShader->GetBufferSize(), NULL, &m_vertexShader);
-	if (FAILED(res))
-		return false;
-
-	res = device->CreatePixelShader(buf_pixelShader->GetBufferPointer(), buf_pixelShader->GetBufferSize(), NULL, &m_pixelShader);
-	if (FAILED(res))
-		return false;
 
 	polygonLayout[0].SemanticName = "POSITION";
 	polygonLayout[0].SemanticIndex = 0;
@@ -150,25 +57,7 @@ bool FontShader::InitialiseShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFile
 
 	numElems = sizeof(polygonLayout) / sizeof(polygonLayout[0]);
 
-	res = device->CreateInputLayout(polygonLayout, numElems, buf_vertexShader->GetBufferPointer(), buf_vertexShader->GetBufferSize(), &m_layout);
-	if (FAILED(res))
-		return false;
-
-	buf_vertexShader->Release();
-	buf_vertexShader = 0;
-	buf_pixelShader->Release();
-	buf_pixelShader = 0;
-
-	desc_constantBuffer.Usage = D3D11_USAGE_DYNAMIC;
-	desc_constantBuffer.ByteWidth = sizeof(ConstantBufferType);
-	desc_constantBuffer.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	desc_constantBuffer.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	desc_constantBuffer.MiscFlags = 0;
-	desc_constantBuffer.StructureByteStride = 0;
-
-	res = device->CreateBuffer(&desc_constantBuffer, NULL, &m_constantBuffer);
-	if (FAILED(res))
-		return false;
+	Shader::Initialise(L"Font.vs", "FontVertexShader", L"Font.ps", "FontPixelShader", polygonLayout, numElems);
 
 	desc_sampler.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 	desc_sampler.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
@@ -202,66 +91,34 @@ bool FontShader::InitialiseShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFile
 	return true;
 }
 
-void FontShader::OutputShaderErrorMessage(ID3D10Blob* msg_error, HWND hwnd, WCHAR* shaderFile)
-{
-	char* compileErrors;
-	unsigned long bufferSize;
-	std::ofstream fout;
 
-	compileErrors = (char*)(msg_error->GetBufferPointer());
-	bufferSize = msg_error->GetBufferSize();
-	fout.open("shader-error.txt");
-	for (int i = 0; i < bufferSize; ++i)
-	{
-		fout << compileErrors[i];
-	}
-	fout.close();
-
-	msg_error->Release();
-	msg_error = 0;
-
-	MessageBox(hwnd, L"Error compiling shader. Check shader-error.txt for message", shaderFile, MB_OK);
-}
-
-bool FontShader::setShaderParams(ID3D11DeviceContext* deviceContext, XMMATRIX world, XMMATRIX view, XMMATRIX projection, ID3D11ShaderResourceView* texture, XMFLOAT4 pixelColour)
+bool FontShader::Render(int indexCount, XMMATRIX world, XMMATRIX view, XMMATRIX projection, ID3D11ShaderResourceView* texture, XMFLOAT4 pixelColour)
 {
 	HRESULT res;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
-	ConstantBufferType* dataPtr;
-	PixelBufferType* dataPtr2;
+	PixelBufferType* dataPtr;
 	unsigned int bufferNumber;
 
-	res = deviceContext->Map(m_constantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	Shader::SetMatrixBuffer(world, view, projection);
+
+	res = m_context->Map(m_pixelBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 	if (FAILED(res))
 		return false;
 
-	dataPtr = (ConstantBufferType*)mappedResource.pData;
-	
-	world = XMMatrixTranspose(world);
-	view = XMMatrixTranspose(view);
-	projection = XMMatrixTranspose(projection);
+	dataPtr = (PixelBufferType*)mappedResource.pData;
+	dataPtr->pixelColour = pixelColour;
 
-	dataPtr->world = world;
-	dataPtr->view = view;
-	dataPtr->projection = projection;
-
-	deviceContext->Unmap(m_constantBuffer, 0);
-
-	bufferNumber = 0;
-	deviceContext->VSSetConstantBuffers(bufferNumber, 1, &m_constantBuffer);
-
-	deviceContext->PSSetShaderResources(0, 1, &texture);
-
-	res = deviceContext->Map(m_pixelBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-	if (FAILED(res))
-		return false;
-
-	dataPtr2 = (PixelBufferType*)mappedResource.pData;
-	dataPtr2->pixelColour = pixelColour;
-
-	deviceContext->Unmap(m_pixelBuffer, 0);
+	m_context->Unmap(m_pixelBuffer, 0);
 	bufferNumber = 0;
 
-	deviceContext->PSSetConstantBuffers(bufferNumber, 1, &m_pixelBuffer);
+	m_context->PSSetConstantBuffers(bufferNumber, 1, &m_pixelBuffer);
+	//m_context->PSSetShaderResources(0, 1, &texture);
+
+	m_context->IASetInputLayout(m_inputLayout);
+	m_context->VSSetShader(m_vShader, NULL, 0);
+	m_context->PSSetShader(m_pShader, NULL, 0);
+	m_context->PSSetSamplers(0, 1, &m_sampleState);
+	m_context->DrawIndexed(indexCount, 0, 0);
 	return true;
 }
+

@@ -28,14 +28,14 @@ bool Text::Initialise(ID3D11Device* device, ID3D11DeviceContext* deviceContext, 
 	if (!m_font)
 		return false;
 
-	res = m_font->Initialise(device, "../Engine/data/fontdata.txt", L"../Engine/data/font.dds");
+	res = m_font->Initialise(device, "../Engine/data/fontdata.txt", L"../Engine/data/font2.dds");
 	if (!res)
 	{
 		MessageBox(hwnd, L"Could not initialise the font object", L"Error", MB_OK);
 		return false;
 	}
 
-	m_fontShader = new FontShader;
+	m_fontShader = new FontShader(device, deviceContext);
 	if(!m_fontShader)
 		return false;
 
@@ -82,7 +82,6 @@ void Text::Shutdown()
 
 	if (m_fontShader)
 	{
-		m_fontShader->Shutdown();
 		delete m_fontShader;
 		m_fontShader = 0;
 	}
@@ -99,7 +98,6 @@ bool Text::setText(const char* sentence, ID3D11DeviceContext* deviceContext)
 {
 	return updateSentence(m_fpsSentence, sentence, 10, 10, 0.01f, 0.01f, 0.01f, deviceContext);
 }
-
 
 
 bool Text::Render(ID3D11DeviceContext* deviceContext, XMMATRIX world, XMMATRIX ortho)
@@ -126,7 +124,7 @@ bool Text::Render(ID3D11DeviceContext* deviceContext, XMMATRIX world, XMMATRIX o
 	pixelColor = XMFLOAT4(m_fpsSentence->red, m_fpsSentence->green, m_fpsSentence->blue, 1.0f);
 
 	// Render the text using the font shader.
-	res = m_fontShader->Render(deviceContext, m_fpsSentence->indexCount, world, m_viewMatrix, ortho, m_font->getTexture(), pixelColor);
+	res = m_fontShader->Render(m_fpsSentence->indexCount, world, m_viewMatrix, ortho, m_font->getTexture(), pixelColor);
 	if (!res)
 		return false;
 

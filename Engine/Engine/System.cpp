@@ -88,7 +88,6 @@ void System::Shutdown()
 	// Release the graphics object.
 	if(m_Graphics)
 	{
-		m_Graphics->Shutdown();
 		delete m_Graphics;
 		m_Graphics = 0;
 	}

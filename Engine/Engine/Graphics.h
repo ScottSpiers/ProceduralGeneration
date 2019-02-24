@@ -21,7 +21,7 @@
 #include "SkySphereShader.h"
 #include "Text.h"
 
-#include <DirectXMath.h>
+#include <directxmath.h>
 #include <string>
 
 /////////////
@@ -44,14 +44,13 @@ public:
 	~Graphics();
 
 	bool Initialize(int, int, HWND);
-	void Shutdown();
 	bool Frame();
 
 	void MoveCamera(XMFLOAT3);
 	void RotateCamera(XMFLOAT3);
 
 private:
-	bool RenderWithoutSphere();
+	bool RenderCubemap();
 	bool Render(Camera*, bool);
 
 private:
@@ -59,10 +58,7 @@ private:
 	Camera* m_Camera;
 	Light* m_Light;
 	LightShader* m_LightShader;
-	//OrbitSphere* m_orbitSphere;
 	ReflectShader* m_ReflectShader;
-	//ReflectiveSphere* m_reflectiveSphere;
-	//SkySphere* m_SkySphere;
 	SkySphereShader* m_SkySphereShader;
 	Text* m_text;
 

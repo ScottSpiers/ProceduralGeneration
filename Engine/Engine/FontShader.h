@@ -5,42 +5,26 @@
 #include <DirectXMath.h>
 #include <fstream>
 
+#include "Shader.h"
+
 using namespace DirectX;
 
-class FontShader
+class FontShader : Shader
 {
 private:
-	struct ConstantBufferType
-	{
-		XMMATRIX world;
-		XMMATRIX view;
-		XMMATRIX projection;
-	};
-
 	struct PixelBufferType
 	{
 		XMFLOAT4 pixelColour;
 	};
 
 public:
-	FontShader();
-	FontShader(const FontShader&);
+	FontShader(ID3D11Device*, ID3D11DeviceContext*);
 	~FontShader();
 
 	bool Initialise(ID3D11Device*, HWND);
-	void Shutdown();
-	bool Render(ID3D11DeviceContext*, int, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*, XMFLOAT4);
+	bool Render(int, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*, XMFLOAT4);
 
 private:
-	bool InitialiseShader(ID3D11Device*, HWND, WCHAR*, WCHAR*);
-	void OutputShaderErrorMessage(ID3D10Blob*, HWND, WCHAR*);
-	bool setShaderParams(ID3D11DeviceContext*, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*, XMFLOAT4);
-
-private:
-	ID3D11VertexShader* m_vertexShader;
-	ID3D11PixelShader* m_pixelShader;
-	ID3D11InputLayout* m_layout;
-	ID3D11Buffer* m_constantBuffer;
 	ID3D11Buffer* m_pixelBuffer;
 	ID3D11SamplerState* m_sampleState;
 };
