@@ -1,16 +1,17 @@
 
 #include "Scene.h"
 
-//Scene::Scene()
-//{
-//}
-//
-//Scene::~Scene()
-//{
-//}
+Scene::Scene() : m_sceneGraph(), m_sceneLayers()
+{
+}
 
-bool Scene::Render()
+Scene::~Scene()
+{
+}
+
+void Scene::Render()
 {
 	//TODO: Copy Render code from graphics here after updated to handle scene graph
-	return false;
+	m_sceneGraph.draw();
+	
 }

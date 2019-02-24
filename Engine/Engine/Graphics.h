@@ -24,6 +24,10 @@
 #include <directxmath.h>
 #include <string>
 
+//TEMP
+#include "SceneNode.h"
+#include <array>
+
 /////////////
 // GLOBALS //
 /////////////
@@ -78,6 +82,19 @@ private:
 
 	ResourceManager* m_resources;
 	ShaderManager* m_shaders;
+
+	//TEMP
+	enum Layers
+	{
+		BACKGROUND,
+		FOREGROUND,
+		SKY,
+		MAX_LAYER_COUNT
+	};
+
+
+	SceneNode m_sceneGraph;
+	std::array<SceneNode*, MAX_LAYER_COUNT> m_layers;
 };
 
 #endif

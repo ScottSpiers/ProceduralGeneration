@@ -31,8 +31,13 @@ Model::~Model()
 	}
 }
 
+ void Model::drawCurrent(ID3D11DeviceContext* context) const
+{
+	 Render(context);
+}
 
-void Model::Render(ID3D11DeviceContext* deviceContext)
+
+void Model::Render(ID3D11DeviceContext* deviceContext) const
 {
 	unsigned int stride;
 	unsigned int offset;
@@ -172,15 +177,15 @@ void Model::ReleaseModel()
 	return;
 }
 
-void Model::setWorldMatrix(XMMATRIX world)
-{
-	m_worldMatrix = world;
-}
+//void Model::setWorldMatrix(XMMATRIX world)
+//{
+//	m_worldMatrix = world;
+//}
 
-XMMATRIX Model::getWorldMatrix()
-{
-	return m_worldMatrix;
-}
+//XMMATRIX Model::getWorldMatrix()
+//{
+//	return m_worldMatrix;
+//}
 
 void Model::SetModelData(ModelData* data)
 {

@@ -4,7 +4,7 @@
 #include "Graphics.h"
 
 
-Graphics::Graphics() : m_rotSpeed(0.25f), m_passingTime(0.f), m_rotation(0.f), m_fps(0), m_startTime(0), m_count(0)
+Graphics::Graphics() : m_rotSpeed(0.25f), m_passingTime(0.f), m_rotation(0.f), m_fps(0), m_startTime(0), m_count(0), m_sceneGraph()
 {
 	m_D3D = 0;
 	m_Camera = 0;
@@ -148,6 +148,13 @@ bool Graphics::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	if (!m_cMap)
 		return false;
 
+	for (int i = 0; i < MAX_LAYER_COUNT; ++i)
+	{
+		SceneNode::uSceneNode layer(new SceneNode());
+		m_layers[i] = layer.get();
+		m_sceneGraph.addChild(std::move(layer));
+	}
+
 
 	return true;
 }
@@ -261,14 +268,15 @@ bool Graphics::Render(Camera* view, bool drawMirror)
 
 	Model* orbitSphere = m_resources->GetModel(ResourceManager::ORBIT_MODEL);
 	temp = XMMatrixRotationRollPitchYaw((m_rotSpeed * m_passingTime), 0.f, 0.f);
-	orbitSphere->setWorldMatrix(XMMatrixTranslation(radius * cos(m_rotSpeed*m_passingTime), 0.f, radius * sin(m_rotSpeed * m_passingTime)));
+	orbitSphere->SetWorldMatrix(XMMatrixTranslation(radius * cos(m_rotSpeed*m_passingTime), 0.f, radius * sin(m_rotSpeed * m_passingTime)));
 
-	orbitSphere->setWorldMatrix(XMMatrixMultiply(temp, orbitSphere->getWorldMatrix()));
+	orbitSphere->SetWorldMatrix(XMMatrixMultiply(temp, orbitSphere->GetWorldMatrix()));
 	temp = XMMatrixScaling(0.5f, 0.5f, 0.5f);
-	orbitSphere->setWorldMatrix(XMMatrixMultiply(temp, orbitSphere->getWorldMatrix()));
+	orbitSphere->SetWorldMatrix(XMMatrixMultiply(temp, orbitSphere->GetWorldMatrix()));
 
+	m_layers[FOREGROUND]->addChild(SceneNode::uSceneNode(orbitSphere));
 
-	orbitSphere->Render(m_D3D->GetDeviceContext());
+	//orbitSphere->Render(m_D3D->GetDeviceContext());
 	result = m_shaders->RenderLight(orbitSphere, view, m_Light);
 	if (!result)
 	{
@@ -277,32 +285,35 @@ bool Graphics::Render(Camera* view, bool drawMirror)
 
 	Model* reflectiveSphere = m_resources->GetModel(ResourceManager::REFLECTIVE_MODEL);
 
-	if (drawMirror)
+	reflectiveSphere->SetEnabled(drawMirror);
+	reflectiveSphere->SetTexture(m_cMapSRV);
+
+	m_layers[FOREGROUND]->addChild(SceneNode::uSceneNode(reflectiveSphere));
+
+	// Render the model using the light shader.
+	//reflectiveSphere->Render(m_D3D->GetDeviceContext());
+	result = m_shaders->RenderReflection(reflectiveSphere, m_Camera);
+	if(!result)
 	{
-		// Render the model using the light shader.
-		reflectiveSphere->Render(m_D3D->GetDeviceContext());
-		reflectiveSphere->SetTexture(m_cMapSRV);
-		result = m_shaders->RenderReflection(reflectiveSphere, m_Camera);
-		if(!result)
-		{
-			return false;
-		}
-		/*result = m_shaders->RenderLight(reflectiveSphere, m_Camera, m_Light);
-		if (!result)
-		{
-			return false;
-		}*/
+		return false;
 	}
+	/*result = m_shaders->RenderLight(reflectiveSphere, m_Camera, m_Light);
+	if (!result)
+	{
+		return false;
+	}*/
 
 	Model* skySphere = m_resources->GetModel(ResourceManager::SKY_DOME_MODEL);
 
-	skySphere->setWorldMatrix(XMMatrixTranslation(cameraPos.x, cameraPos.y, cameraPos.z));
+	skySphere->SetWorldMatrix(XMMatrixTranslation(cameraPos.x, cameraPos.y, cameraPos.z));
+
+	m_layers[SKY]->addChild(SceneNode::uSceneNode(skySphere));
 
 	m_D3D->TurnOffCulling();
 	m_D3D->SetDepthLessEqual();
 
 
-	skySphere->Render(m_D3D->GetDeviceContext());
+	//skySphere->Render(m_D3D->GetDeviceContext());
 	result = m_shaders->RenderSkySphere(skySphere, view);
 	if (!result)
 	{
@@ -311,6 +322,8 @@ bool Graphics::Render(Camera* view, bool drawMirror)
 
 	m_D3D->TurnOnCulling();
 	m_D3D->SetDepthLess();
+
+	m_sceneGraph.draw(m_D3D->GetDeviceContext());
 
 	return true;
 }

@@ -31,7 +31,6 @@ bool FontShader::Initialise(ID3D11Device* device, HWND hwnd)
 	ID3D10Blob* buf_pixelShader;
 	D3D11_INPUT_ELEMENT_DESC polygonLayout[2];
 	unsigned int numElems;
-	D3D11_BUFFER_DESC desc_constantBuffer;
 	D3D11_BUFFER_DESC desc_pixelBuffer;
 	D3D11_SAMPLER_DESC desc_sampler;
 
@@ -112,7 +111,7 @@ bool FontShader::Render(int indexCount, XMMATRIX world, XMMATRIX view, XMMATRIX 
 	bufferNumber = 0;
 
 	m_context->PSSetConstantBuffers(bufferNumber, 1, &m_pixelBuffer);
-	//m_context->PSSetShaderResources(0, 1, &texture);
+	m_context->PSSetShaderResources(0, 1, &texture);
 
 	m_context->IASetInputLayout(m_inputLayout);
 	m_context->VSSetShader(m_vShader, NULL, 0);

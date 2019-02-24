@@ -8,10 +8,11 @@ class Scene
 {
 
 public:
+
 	Scene();
 	~Scene();
 
-	bool Render();
+	virtual void Render();
 	//bool Update(); //add once we have time stuff working
 
 private:
@@ -23,7 +24,7 @@ private:
 		MAX_LAYER_COUNT
 	};
 
-private:
+protected:
 	SceneNode m_sceneGraph;
 	std::array<SceneNode*, MAX_LAYER_COUNT> m_sceneLayers;
 };

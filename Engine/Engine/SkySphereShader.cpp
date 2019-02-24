@@ -98,7 +98,7 @@ bool SkySphereShader::Render(Model* model, Camera* cam)
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
 	unsigned int bufferNumber;
 
-	Shader::SetMatrixBuffer(model->getWorldMatrix(), cam);
+	Shader::SetMatrixBuffer(model->GetWorldMatrix(), cam);
 
 
 	//TALKING POINT

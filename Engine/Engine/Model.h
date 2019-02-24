@@ -13,12 +13,14 @@
 #include <d3d11.h>
 #include <fstream>
 
+#include "SceneNode.h"
+
 using namespace DirectX;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: ModelClass
 ////////////////////////////////////////////////////////////////////////////////
-class Model
+class Model : public SceneNode
 {
 
 public:
@@ -43,12 +45,12 @@ public:
 	~Model();
 
 	bool InitializeBuffers(ID3D11Device*);
-	void Render(ID3D11DeviceContext*);
+	void Render(ID3D11DeviceContext*) const;
 
 	int GetIndexCount();
 
-	void setWorldMatrix(XMMATRIX);
-	XMMATRIX getWorldMatrix();
+	//void setWorldMatrix(XMMATRIX);
+	//XMMATRIX GetWorldMatrix();
 
 	void SetTexture(ID3D11ShaderResourceView*);
 	ID3D11ShaderResourceView* GetTexture();
@@ -56,6 +58,9 @@ public:
 	void SetModelData(ModelData*);
 	void SetVertexCount(int);
 	void SetIndexCount(int);
+
+protected:
+	virtual void drawCurrent(ID3D11DeviceContext*) const;
 
 private:
 	void ReleaseBuffers();
@@ -67,7 +72,7 @@ private:
 	int m_vertexCount, m_indexCount;
 	ModelData* m_model;
 
-	XMMATRIX m_worldMatrix;
+	//XMMATRIX m_worldMatrix;
 	ID3D11ShaderResourceView* m_texture;
 };
 

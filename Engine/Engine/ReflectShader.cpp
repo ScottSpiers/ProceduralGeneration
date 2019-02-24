@@ -124,7 +124,7 @@ bool ReflectShader::Render(Model* model, Camera* cam)
 	CameraBufferType* dataPtr;
 
 
-	Shader::SetMatrixBuffer(model->getWorldMatrix(), cam);
+	Shader::SetMatrixBuffer(model->GetWorldMatrix(), cam);
 
 	//Lock the camera constant buffer so it can be written to
 	result = m_context->Map(m_cameraBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
