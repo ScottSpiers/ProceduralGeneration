@@ -20,7 +20,7 @@ using namespace DirectX;
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: ModelClass
 ////////////////////////////////////////////////////////////////////////////////
-class Model : public SceneNode
+class Model
 {
 
 public:
@@ -49,8 +49,8 @@ public:
 
 	int GetIndexCount();
 
-	//void setWorldMatrix(XMMATRIX);
-	//XMMATRIX GetWorldMatrix();
+	void SetWorldMatrix(XMMATRIX);
+	XMMATRIX GetWorldMatrix();
 
 	void SetTexture(ID3D11ShaderResourceView*);
 	ID3D11ShaderResourceView* GetTexture();
@@ -72,7 +72,7 @@ private:
 	int m_vertexCount, m_indexCount;
 	ModelData* m_model;
 
-	//XMMATRIX m_worldMatrix;
+	XMMATRIX m_worldMatrix;
 	ID3D11ShaderResourceView* m_texture;
 };
 

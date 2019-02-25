@@ -177,15 +177,15 @@ void Model::ReleaseModel()
 	return;
 }
 
-//void Model::setWorldMatrix(XMMATRIX world)
-//{
-//	m_worldMatrix = world;
-//}
+void Model::SetWorldMatrix(XMMATRIX world)
+{
+	m_worldMatrix = world;
+}
 
-//XMMATRIX Model::getWorldMatrix()
-//{
-//	return m_worldMatrix;
-//}
+XMMATRIX Model::GetWorldMatrix()
+{
+	return m_worldMatrix;
+}
 
 void Model::SetModelData(ModelData* data)
 {

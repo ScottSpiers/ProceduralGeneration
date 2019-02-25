@@ -1,10 +1,11 @@
 
 #include  "ResourceManager.h"
 
-ResourceManager::ResourceManager(ID3D11Device* device, ID3D11DeviceContext* context)
+ResourceManager::ResourceManager(ID3D11Device* device, ID3D11DeviceContext* context, ManagerScene scene)
 {
 	m_device = device;
 	m_context = context;
+	m_scene = scene;
 }
 
 ResourceManager::~ResourceManager()
@@ -31,51 +32,60 @@ bool ResourceManager::LoadResources()
 {
 	bool result;
 
-	//Load the orbitting sphere texture and model
-	if (!LoadTexture(ORBIT_TEXTURE))
+	switch (m_scene)
 	{
-		return false;
-	}
+		case WINTER_REFLECTION:
+		{
+			//Load the orbitting sphere texture and model
+			if (!LoadTexture(ORBIT_TEXTURE))
+			{
+				return false;
+			}
 
-	if (!LoadModel(ORBIT_MODEL))
-	{
-		return false;
-	}
+			if (!LoadModel(ORBIT_MODEL))
+			{
+				return false;
+			}
 
-	m_models[ORBIT_MODEL]->SetTexture(m_textures[ORBIT_TEXTURE]);
+			m_models[ORBIT_MODEL]->SetTexture(m_textures[ORBIT_TEXTURE]);
 
-	//load the sky sphere texture and model
-	if (!LoadTexture(SKY_CUBE_TEXTURE))
-	{
-		return false;
-	}
+			//load the sky sphere texture and model
+			if (!LoadTexture(SKY_CUBE_TEXTURE))
+			{
+				return false;
+			}
 
-	if (!LoadModel(SKY_DOME_MODEL))
-	{
-		return false;
-	}
+			if (!LoadModel(SKY_DOME_MODEL))
+			{
+				return false;
+			}
 
-	m_models[SKY_DOME_MODEL]->SetTexture(m_textures[SKY_CUBE_TEXTURE]);
+			m_models[SKY_DOME_MODEL]->SetTexture(m_textures[SKY_CUBE_TEXTURE]);
 
-	// load the refelctive sphere model
-	if (!LoadModel(REFLECTIVE_MODEL))
-	{
-		return false;
-	}
+			// load the refelctive sphere model
+			if (!LoadModel(REFLECTIVE_MODEL))
+			{
+				return false;
+			}
 
-	if (!m_models[ORBIT_MODEL]->InitializeBuffers(m_device))
-	{
-		return false;
-	}
+			if (!m_models[ORBIT_MODEL]->InitializeBuffers(m_device))
+			{
+				return false;
+			}
 
-	if (!m_models[REFLECTIVE_MODEL]->InitializeBuffers(m_device))
-	{
-		return false;
-	}
+			if (!m_models[REFLECTIVE_MODEL]->InitializeBuffers(m_device))
+			{
+				return false;
+			}
 
-	if (!m_models[SKY_DOME_MODEL]->InitializeBuffers(m_device))
-	{
-		return false;
+			if (!m_models[SKY_DOME_MODEL]->InitializeBuffers(m_device))
+			{
+				return false;
+			}
+			break;
+		}
+		case PROCEDURAL: break;
+		default: return false;
 	}
 
 	return true;

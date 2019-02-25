@@ -9,24 +9,14 @@
 // MY CLASS INCLUDES //
 ///////////////////////
 #include "D3D.h"
-#include "Camera.h"
-#include "Cubemap.h"
 #include "Input.h"
 #include "Model.h"
-#include "LightShader.h"
-#include "Light.h"
-#include "ReflectShader.h"
-#include "ResourceManager.h"
-#include "ShaderManager.h"
-#include "SkySphereShader.h"
+#include "Scene.h"
 #include "Text.h"
+#include "WinterReflection.h"
 
 #include <directxmath.h>
 #include <string>
-
-//TEMP
-#include "SceneNode.h"
-#include <array>
 
 /////////////
 // GLOBALS //
@@ -54,24 +44,15 @@ public:
 	void RotateCamera(XMFLOAT3);
 
 private:
-	bool RenderCubemap();
-	bool Render(Camera*, bool);
+	bool Render();
 
 private:
 	D3D* m_D3D;
-	Camera* m_Camera;
-	Light* m_Light;
+	Scene* m_Scene;
 	LightShader* m_LightShader;
 	ReflectShader* m_ReflectShader;
 	SkySphereShader* m_SkySphereShader;
 	Text* m_text;
-
-	Cubemap* m_cMap;
-	ID3D11ShaderResourceView* m_cMapSRV;
-
-	float m_passingTime;
-	float m_rotSpeed;
-	float m_rotation;
 
 	int m_fps, m_count;
 	unsigned long m_startTime;
@@ -79,22 +60,6 @@ private:
 	HWND m_hwnd;
 	int m_screenWidth, m_screenHeight;
 	XMMATRIX m_view;
-
-	ResourceManager* m_resources;
-	ShaderManager* m_shaders;
-
-	//TEMP
-	enum Layers
-	{
-		BACKGROUND,
-		FOREGROUND,
-		SKY,
-		MAX_LAYER_COUNT
-	};
-
-
-	SceneNode m_sceneGraph;
-	std::array<SceneNode*, MAX_LAYER_COUNT> m_layers;
 };
 
 #endif

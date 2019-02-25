@@ -10,6 +10,13 @@
 class ResourceManager
 {
 public:
+	enum ManagerScene
+	{
+		WINTER_REFLECTION,
+		PROCEDURAL,
+		SCENES_MAX
+	};
+
 	enum TextureResource
 	{
 		ORBIT_TEXTURE,
@@ -27,7 +34,7 @@ public:
 
 public:
 
-	ResourceManager(ID3D11Device*, ID3D11DeviceContext*);
+	ResourceManager(ID3D11Device*, ID3D11DeviceContext*, ManagerScene);
 	~ResourceManager();
 
 	bool LoadResources();
@@ -44,5 +51,6 @@ private:
 	std::vector<ID3D11ShaderResourceView*> m_textures;
 	std::vector<Model*> m_models;
 
+	ManagerScene m_scene;
 
 };
