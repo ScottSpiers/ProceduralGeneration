@@ -143,14 +143,14 @@ bool WinterReflection::RenderScene(D3D* d3d, Camera* view, bool drawMirror)
 		{
 			return false;
 		}
-
+		//This will try to use the texture but light.ps uses Texture2D not TextureCube
+		/*result = m_shaders->RenderLight(reflectiveSphere, m_Camera, m_Light);
+		if (!result)
+		{
+			return false;
+		}*/
 	}
 	// Render the model using the light shader.
-	/*result = m_shaders->RenderLight(reflectiveSphere, m_Camera, m_Light);
-	if (!result)
-	{
-		return false;
-	}*/
 
 	Model* skySphere = m_resources->GetModel(ResourceManager::SKY_DOME_MODEL);
 

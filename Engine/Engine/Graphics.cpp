@@ -58,7 +58,7 @@ bool Graphics::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}	
 
-	m_Scene = new WinterReflection(ResourceManager::WINTER_REFLECTION);
+	m_Scene = new WinterReflection();
 	result = m_Scene->Initialise(m_D3D->GetDevice(), m_D3D->GetDeviceContext());
 	if (!result)
 	{
