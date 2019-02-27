@@ -9,10 +9,13 @@
 // MY CLASS INCLUDES //
 ///////////////////////
 #include "D3D.h"
-#include "Input.h"
+//#include "Input.h"
 #include "Model.h"
 #include "Scene.h"
 #include "Text.h"
+
+//Scenes
+#include "ProceduralScene.h"
 #include "WinterReflection.h"
 
 #include <directxmath.h>

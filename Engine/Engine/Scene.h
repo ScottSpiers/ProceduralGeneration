@@ -29,7 +29,7 @@ public:
 	void RotateCamera(XMFLOAT3);
 
 	//Think of a better way to handle this stuff
-	XMMATRIX GetView();
+	XMMATRIX GetView() const;
 
 private:
 	/*enum Layer 

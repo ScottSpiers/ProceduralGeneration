@@ -12,8 +12,8 @@ class Terrain
 private:
 	struct VertexType
 	{
-		XMFLOAT3 pos;
-		XMFLOAT3 normal;
+		XMVECTOR pos;
+		XMVECTOR normal;
 	};
 
 public:
@@ -23,6 +23,10 @@ public:
 	bool Initialise(ID3D11Device*);
 	bool Render(ID3D11DeviceContext*);
 
+	void GenRandom();
+	void GenSinWave();
+
+	XMMATRIX GetWorldMatrix();
 	int GetIndexCount();
 
 private:
@@ -37,5 +41,7 @@ private:
 
 	std::vector<VertexType> m_vertices;
 	std::vector<int> m_indices;
+
+	XMMATRIX m_worldMatrix;
 
 };

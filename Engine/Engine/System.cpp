@@ -184,6 +184,11 @@ void System::Run()
 		rotation.x += mouseMov.x * 1/30;
 		rotation.y += mouseMov.y * 1/30;
 		m_Graphics->RotateCamera(rotation);
+
+		if (m_Input->IsSpacePressed())
+		{
+			//m_Graphics->SetTerrainGen();
+		}
 	}
 
 	return;

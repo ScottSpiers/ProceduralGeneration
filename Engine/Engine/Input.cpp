@@ -237,6 +237,14 @@ bool Input::IsEscapePressed()
 	return false;
 }
 
+bool Input::IsSpacePressed()
+{
+	if (m_keyboardState[DIK_SPACE] & 0x80)
+		return true;
+
+	return false;
+}
+
 bool Input::IsWPressed()
 {
 	if (m_keyboardState[DIK_W] & 0x80)

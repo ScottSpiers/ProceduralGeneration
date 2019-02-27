@@ -84,7 +84,26 @@ bool ResourceManager::LoadResources()
 			}
 			break;
 		}
-		case PROCEDURAL: break;
+		case PROCEDURAL:
+		{
+			if (!LoadTexture(ORBIT_TEXTURE))
+			{
+				return false;
+			}
+
+			if (!LoadModel(ORBIT_MODEL))
+			{
+				return false;
+			}
+
+			m_models[ORBIT_MODEL]->SetTexture(m_textures[ORBIT_TEXTURE]);
+
+			if (!m_models[ORBIT_MODEL]->InitializeBuffers(m_device))
+			{
+				return false;
+			}
+			break;
+		}
 		default: return false;
 	}
 

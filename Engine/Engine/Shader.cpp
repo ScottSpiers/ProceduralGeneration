@@ -105,8 +105,7 @@ bool Shader::Initialise(WCHAR* vsFilename, LPCSTR vsEntry, WCHAR* psFilename, LP
 	}
 
 	// Create the vertex input layout.
-	result = m_device->CreateInputLayout(polygonLayout, numElems, vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(),
-		&m_inputLayout);
+	result = m_device->CreateInputLayout(polygonLayout, numElems, vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), &m_inputLayout);
 	if (FAILED(result))
 	{
 		return false;

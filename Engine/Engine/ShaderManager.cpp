@@ -6,10 +6,17 @@ ShaderManager::ShaderManager(ID3D11Device* device, ID3D11DeviceContext* context)
 	m_lightShader = new LightShader(device, context);
 	m_reflectShader = new ReflectShader(device, context);
 	m_skyShader = new SkySphereShader(device, context);
+	m_terrainShader = new TerrainShader(device, context);
 }
 
 ShaderManager::~ShaderManager()
 {
+	if (m_terrainShader)
+	{
+		delete m_terrainShader;
+		m_terrainShader = 0;
+	}
+
 	if (m_skyShader)
 	{
 		delete m_skyShader;
@@ -31,19 +38,25 @@ ShaderManager::~ShaderManager()
 
 bool ShaderManager::InitialiseShaders()
 {
-	HRESULT result;
+	bool result;
 
 	result = m_lightShader->Initialise();
-	if (FAILED(result))
+	if (!result)
 		return false;
 
 	result = m_reflectShader->Initialise();
-	if (FAILED(result))
+	if (!result)
 		return false;
 
 	result = m_skyShader->Initialise();
-	if (FAILED(result))
+	if (!result)
 		return false;
+
+	result = m_terrainShader->Initialise();
+	if (!result)
+		return false;
+
+	return true;
 }
 
 bool ShaderManager::RenderLight(Model* model, Camera* cam, Light* light)
@@ -59,4 +72,9 @@ bool ShaderManager::RenderReflection(Model* model, Camera* cam)
 bool ShaderManager::RenderSkySphere(Model* model, Camera* cam)
 {
 	return m_skyShader->Render(model, cam);
+}
+
+bool ShaderManager::RenderTerrain(Terrain* t, Camera* cam, Light* light)
+{
+	return m_terrainShader->Render(t, cam, light);
 }

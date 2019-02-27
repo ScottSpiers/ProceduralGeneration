@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Scene.h"
+#include "Terrain.h"
 
 class ProceduralScene : public Scene
 {
@@ -12,5 +13,5 @@ public:
 	virtual bool Render(D3D*) final;
 
 private:
-	//Stuff might be needed here
+	Terrain* m_terrain;
 };

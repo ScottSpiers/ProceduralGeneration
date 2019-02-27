@@ -75,7 +75,7 @@ bool Scene::Initialise(ID3D11Device* device, ID3D11DeviceContext* context)
 	return true;
 }
 
-XMMATRIX Scene::GetView()
+XMMATRIX Scene::GetView() const
 {
 	return m_Camera->GetViewMatrix();
 }

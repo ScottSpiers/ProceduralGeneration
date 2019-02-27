@@ -8,6 +8,7 @@
 #include "ReflectShader.h"
 #include "FontShader.h"
 #include "SkySphereShader.h"
+#include "TerrainShader.h"
 
 class ShaderManager
 {
@@ -19,12 +20,14 @@ public:
 	bool RenderLight(Model*, Camera*, Light*);
 	bool RenderSkySphere(Model*, Camera*);
 	bool RenderReflection(Model*, Camera*);
+	bool RenderTerrain(Terrain*, Camera*, Light*);
 	//bool RenderFont();
 
 private:
 	LightShader* m_lightShader;
 	SkySphereShader* m_skyShader;
 	ReflectShader* m_reflectShader;
+	TerrainShader* m_terrainShader;
 	//FontShader* m_fontShader; Do I want this to be managed here?
 	//Font does the shading itself but is that nice?
 	//Do I not want it to be here as it is a shader?

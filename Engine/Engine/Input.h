@@ -40,6 +40,7 @@ public:
 	bool Frame();
 
 	bool IsEscapePressed();
+	bool IsSpacePressed();
 	bool IsWPressed();
 	bool IsSPressed();
 	bool IsAPressed();
