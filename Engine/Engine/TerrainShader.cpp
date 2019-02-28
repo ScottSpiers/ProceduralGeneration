@@ -4,10 +4,17 @@
 TerrainShader::TerrainShader(ID3D11Device* device, ID3D11DeviceContext* context) : Shader(device, context)
 {
 	m_lightBuffer = 0;
+	m_camBuffer = 0;
 }
 
 TerrainShader::~TerrainShader()
 {
+	if (m_camBuffer)
+	{
+		m_camBuffer->Release();
+		m_camBuffer = 0;
+	}
+
 	if (m_lightBuffer)
 	{
 		m_lightBuffer->Release();
@@ -24,6 +31,7 @@ bool TerrainShader::Initialise()
 	D3D11_INPUT_ELEMENT_DESC polygonLayout[2];
 	unsigned int numElems;
 	D3D11_BUFFER_DESC lightBufferDesc;
+	D3D11_BUFFER_DESC camBufferDesc;
 
 	errorMessage = 0;
 	vertexShaderBuffer = 0;
@@ -62,11 +70,22 @@ bool TerrainShader::Initialise()
 	lightBufferDesc.StructureByteStride = 0;
 
 	// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
-	result = m_device->CreateBuffer(&lightBufferDesc, NULL, &m_lightBuffer);
+	result = m_device->CreateBuffer(&lightBufferDesc, nullptr, &m_lightBuffer);
 	if (FAILED(result))
 	{
 		return false;
 	}
+
+	camBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	camBufferDesc.ByteWidth = sizeof(CameraBufferType);
+	camBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	camBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	camBufferDesc.MiscFlags = 0;
+	camBufferDesc.StructureByteStride = 0;
+
+	result = m_device->CreateBuffer(&camBufferDesc, nullptr, &m_camBuffer);
+	if (FAILED(result))
+		return false;
 
 	return true;
 }
@@ -77,6 +96,7 @@ bool TerrainShader::Render(Terrain* t, Camera* cam, Light* light)
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
 	unsigned int bufferNumber;
 	LightBufferType* dataPtr;
+	CameraBufferType* dataPtr2;
 
 	Shader::SetMatrixBuffer(t->GetWorldMatrix(), cam);
 
@@ -97,8 +117,9 @@ bool TerrainShader::Render(Terrain* t, Camera* cam, Light* light)
 	//XMFLOAT4 red(1.f, 0.f, 0.f, 1.f);
 	dataPtr->ambientColour = light->GetAmbientColour();
 	dataPtr->diffuseColour = light->GetDiffuseColor();
+	dataPtr->specColour = light->GetSpecColour();
 	dataPtr->lightDirection = light->GetDirection();
-	dataPtr->pad = .0f; // AAAAAAAAAAAAAGHHHHHH!
+	dataPtr->specIntensity = light->GetSpecIntensity(); // AAAAAAAAAAAAAGHHHHHH!
 
 	// Unlock the constant buffer.
 	m_context->Unmap(m_lightBuffer, 0);
@@ -109,6 +130,19 @@ bool TerrainShader::Render(Terrain* t, Camera* cam, Light* light)
 	// Finally set the light constant buffer in the pixel shader with the updated values.
 	m_context->PSSetConstantBuffers(bufferNumber, 1, &m_lightBuffer);
 
+	result = m_context->Map(m_camBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	if (FAILED(result))
+		return false;
+
+	dataPtr2 = (CameraBufferType*)mappedResource.pData;
+
+	dataPtr2->cameraPos = cam->GetPosition();
+	dataPtr2->pad = .0f; //AAAAAAAAAAAAAAAAAAAAGH
+	m_context->Unmap(m_camBuffer, 0);
+	//Don't forget the matrix buffer
+	bufferNumber = 1;
+
+	m_context->VSSetConstantBuffers(bufferNumber, 1, &m_camBuffer);
 	/*ID3D11ShaderResourceView* texture = t->GetTexture();
 	m_context->PSSetShaderResources(0, 1, &texture);*/
 

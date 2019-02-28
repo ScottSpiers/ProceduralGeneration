@@ -1,4 +1,25 @@
 ﻿  ProceduralScene.cpp
 c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(26): warning C4316: 'Terrain': object allocated on the heap may not be aligned 16
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(36): warning C4715: 'ProceduralScene::Initialise': not all control paths return a value
+  Terrain.cpp
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\terrain.cpp(24): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\terrain.cpp(146): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\terrain.cpp(153): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\terrain.cpp(214): warning C4244: 'argument': conversion from 'float' to 'const _Ty', possible loss of data
+          with
+          [
+              _Ty=int
+          ]
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\terrain.cpp(215): warning C4244: 'argument': conversion from 'float' to 'const _Ty', possible loss of data
+          with
+          [
+              _Ty=int
+          ]
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\terrain.cpp(216): warning C4244: 'argument': conversion from 'float' to 'const _Ty', possible loss of data
+          with
+          [
+              _Ty=int
+          ]
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\terrain.cpp(235): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  Generating Code...
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(38): warning C4715: 'ProceduralScene::Initialise': not all control paths return a value
   Engine.vcxproj -> C:\Users\Scott\Documents\Uni\Abertay\CMP505\Assignment\Engine\Debug\Engine.exe

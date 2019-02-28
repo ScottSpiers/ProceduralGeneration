@@ -143,14 +143,14 @@ void Terrain::CalcNormals()
 			XMFLOAT3 n;
 			XMStoreFloat3(&n, normal);
 			//Store the face, normal pair
-			faces[r].push_back(std::make_pair(XMFLOAT3(topLeft, topRight, bottomLeft), n));
+			faces[r].push_back(std::make_pair(XMFLOAT3(topLeft, bottomLeft, topRight), n));
 
 			//Calculate normal for bottom right triangle face
 			ab = m_vertices[topRight].pos - m_vertices[bottomRight].pos;
 			ac = m_vertices[bottomLeft].pos - m_vertices[bottomRight].pos;
 			normal = XMVector3Cross(ab, ac);
 			XMStoreFloat3(&n, normal);
-			faces[r].push_back(std::make_pair(XMFLOAT3(bottomLeft, topRight, bottomRight), n));
+			faces[r].push_back(std::make_pair(XMFLOAT3(bottomLeft, bottomRight, topRight), n));
 		}
 	}
 
@@ -188,7 +188,15 @@ void Terrain::CalcNormals()
 			}
 
 			normalSum /= facesFound;
-			normalSum = XMVector3Normalize(normalSum);
+			//Ask about this
+
+			/*XMFLOAT3 n;
+			XMVECTOR l = XMVector3Length(normalSum);*/
+			//XMStoreFloat3(&n, l);
+			/*if (fabs(n.x) > 0.0001f)
+			{
+			}*/
+			//normalSum = XMVector3Normalize(normalSum);
 			m_vertices[index].normal = normalSum;
 		}
 	}
@@ -225,7 +233,7 @@ void Terrain::GenRandom()
 				index = (i * m_width) + j;
 
 				float r = (double)rand() / (RAND_MAX + 1);
-				XMFLOAT3 pos = XMFLOAT3((float)j, r * 2, (float)i);
+				XMFLOAT3 pos = XMFLOAT3((float)j, r * 3, (float)i);
 
 				m_vertices[index].pos = XMLoadFloat3(&pos);
 			}

@@ -23,13 +23,15 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 	if (!result)
 		return false;
 
-	m_terrain = new Terrain(64, 64);
+	m_terrain = new Terrain(65, 65);
 	//m_terrain->GenRandom();
 	m_terrain->GenSinWave();
 
 	m_Light->SetAmbientColour(0.15f, 0.15f, 0.15f, 1.0f);
 	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
-	m_Light->SetDirection(0.0f, 0.0f, 1.0f);
+	m_Light->SetSpecColour(.4f, .4f, .4f, 1.f);
+	m_Light->SetSpecIntensity(.5f);
+	m_Light->SetDirection(0.0f, 0.8f, 0.2f);
 	//m_terrain->Initialise(device);
 	m_Camera->SetPosition(50.0f, 2.0f, -7.0f);
 	
@@ -64,7 +66,7 @@ bool ProceduralScene::Render(D3D* d3d)
 	if (!result)
 		return false;
 
-	d3d->TurnOffCulling();
+	//d3d->TurnOffCulling();
 
 	result = m_terrain->Render(d3d->GetDeviceContext());
 	if (!result)
@@ -74,7 +76,7 @@ bool ProceduralScene::Render(D3D* d3d)
 	if (!result)
 		return false;
 
-	d3d->TurnOnCulling();
+	//d3d->TurnOnCulling();
 
 	//Model* orbitSphere = m_resources->GetModel(ResourceManager::ORBIT_MODEL);
 	////orbitSphere->SetWorldMatrix(XMMatrixTranslation(0.f, 0.f, -.f));

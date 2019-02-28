@@ -12,8 +12,14 @@ private:
 	{
 		XMFLOAT4 ambientColour;
 		XMFLOAT4 diffuseColour;
+		XMFLOAT4 specColour;
 		XMFLOAT3 lightDirection;		
-		float pad; //AAAAAAAAAAAAGGGHHHHHHHH!
+		float specIntensity;
+	};
+	struct CameraBufferType
+	{
+		XMFLOAT3 cameraPos;
+		float pad; //AAAAAAAAAAAAAGH!
 	};
 
 public:
@@ -25,4 +31,5 @@ public:
 
 private:
 	ID3D11Buffer* m_lightBuffer;
+	ID3D11Buffer* m_camBuffer;
 };
