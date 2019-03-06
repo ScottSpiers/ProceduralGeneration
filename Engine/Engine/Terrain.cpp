@@ -136,19 +136,20 @@ void Terrain::CalcNormals()
 			int bottomRight = bottomLeft + 1;
 
 			//Calculate vectors for top left triangle face
-			XMVECTOR ab = m_vertices[topLeft].pos - m_vertices[topRight].pos;
-			XMVECTOR ac = m_vertices[bottomLeft].pos - m_vertices[topRight].pos;
+			
+			XMVECTOR ab = XMVectorSubtract(m_vertices[topLeft].pos, m_vertices[topRight].pos);
+			XMVECTOR ac = XMVectorSubtract(m_vertices[bottomLeft].pos, m_vertices[topRight].pos);
 			//Calculate the normal
-			XMVECTOR normal = XMVector3Cross(ab, ac);
+			XMVECTOR normal = XMVector3Cross(ac, ab);
 			XMFLOAT3 n;
 			XMStoreFloat3(&n, normal);
 			//Store the face, normal pair
 			faces[r].push_back(std::make_pair(XMFLOAT3(topLeft, bottomLeft, topRight), n));
 
 			//Calculate normal for bottom right triangle face
-			ab = m_vertices[topRight].pos - m_vertices[bottomRight].pos;
-			ac = m_vertices[bottomLeft].pos - m_vertices[bottomRight].pos;
-			normal = XMVector3Cross(ab, ac);
+			ab = XMVectorSubtract(m_vertices[topRight].pos, m_vertices[bottomRight].pos);
+			ac = XMVectorSubtract(m_vertices[bottomLeft].pos, m_vertices[bottomRight].pos);
+			normal = XMVector3Cross(ac, ab);
 			XMStoreFloat3(&n, normal);
 			faces[r].push_back(std::make_pair(XMFLOAT3(bottomLeft, bottomRight, topRight), n));
 		}
@@ -187,23 +188,30 @@ void Terrain::CalcNormals()
 					break;
 			}
 
-			normalSum /= facesFound;
+			//normalSum /= facesFound;
 			//Ask about this
 
-			/*XMFLOAT3 n;
-			XMVECTOR l = XMVector3Length(normalSum);*/
-			//XMStoreFloat3(&n, l);
+			normalSum = XMVector3Normalize(normalSum);
+			XMFLOAT3 n;
+			XMVECTOR l = XMVector3Length(normalSum);
+			XMStoreFloat3(&n, l);
 			/*if (fabs(n.x) > 0.0001f)
 			{
 			}*/
-			//normalSum = XMVector3Normalize(normalSum);
+			if (n.x > 1)
+			{
+				XMFLOAT3 thisIsJustATest = n;
+				thisIsJustATest.x += 5;
+				thisIsJustATest.y += 3;
+				thisIsJustATest.z += 7;
+			}
 			m_vertices[index].normal = normalSum;
 		}
 	}
 
 	//Store the indices in order
 	m_indices.clear();
-	m_indices.reserve(m_height * m_width * 2);
+	m_indices.reserve(m_height * m_width * 6);
 
 	//go through the rows of faces
 	for (auto row : faces)

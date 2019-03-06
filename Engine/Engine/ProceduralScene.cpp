@@ -23,17 +23,21 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 	if (!result)
 		return false;
 
-	m_terrain = new Terrain(65, 65);
+	m_terrain = new Terrain(129,129);
 	//m_terrain->GenRandom();
 	m_terrain->GenSinWave();
 
 	m_Light->SetAmbientColour(0.15f, 0.15f, 0.15f, 1.0f);
 	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
-	m_Light->SetSpecColour(.4f, .4f, .4f, 1.f);
+	m_Light->SetSpecColour(.2f, .2f, .2f, 1.f);
 	m_Light->SetSpecIntensity(.5f);
-	m_Light->SetDirection(0.0f, 0.8f, 0.2f);
+	m_Light->SetDirection(01.0f, .8f, 0.1f);
 	//m_terrain->Initialise(device);
 	m_Camera->SetPosition(50.0f, 2.0f, -7.0f);
+
+	result = m_terrain->Initialise(device);
+	if (!result)
+		return false;
 	
 }
 
@@ -52,29 +56,25 @@ bool ProceduralScene::Render(D3D* d3d)
 	d3d->GetProjectionMatrix(projMatrix);
 	m_Camera->setProjMatrix(projMatrix);
 
-	d3d->BeginScene(0.0f, 0.0f, 0.1f, 1.0f);
+	d3d->BeginScene(0.0f, 0.0f, 0.4f, 1.0f);
 	//m_Camera->Render();
 
 	/*d3d->GetDeviceContext()->ClearRenderTargetView(defRTV, colour);
 	d3d->GetDeviceContext()->ClearDepthStencilView(defDSV, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);*/
 
 	//d3d->TurnOffCulling();
-	
-	
-
-	result = m_terrain->Initialise(d3d->GetDevice());
-	if (!result)
-		return false;
-
-	//d3d->TurnOffCulling();
 
 	result = m_terrain->Render(d3d->GetDeviceContext());
 	if (!result)
 		return false;
-
+	
 	result = m_shaders->RenderTerrain(m_terrain, m_Camera, m_Light);
 	if (!result)
-		return false;
+		return false;	
+
+	//d3d->TurnOffCulling();
+
+	
 
 	//d3d->TurnOnCulling();
 
