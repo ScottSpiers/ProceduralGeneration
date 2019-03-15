@@ -53,7 +53,7 @@ float4 TerrainPixelShader(PixelInputType input) : SV_TARGET
 
 
 	// Invert the light direction for calculations.
-    lightDir = -lightDirection;
+    lightDir = lightDirection;
 
     // Calculate the amount of light on this pixel.
     lightIntensity = saturate(dot(input.normal, lightDir));

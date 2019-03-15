@@ -21,7 +21,7 @@ Terrain::Terrain(int rows, int columns)
 		{
 			//i is rows which is the "depth" ie z
 			//j is the columns which is the width ie x
-			XMFLOAT3 pos = XMFLOAT3(j, 0, i);
+			XMFLOAT3 pos = XMFLOAT3(j, 0.f, i);
 			vert.pos = XMLoadFloat3(&pos);
 			m_vertices.push_back(vert);
 		}
@@ -137,8 +137,8 @@ void Terrain::CalcNormals()
 
 			//Calculate vectors for top left triangle face
 			
-			XMVECTOR ab = XMVectorSubtract(m_vertices[topLeft].pos, m_vertices[topRight].pos);
-			XMVECTOR ac = XMVectorSubtract(m_vertices[bottomLeft].pos, m_vertices[topRight].pos);
+			XMVECTOR ab = XMVectorSubtract(m_vertices[topLeft].pos, m_vertices[bottomLeft].pos);
+			XMVECTOR ac = XMVectorSubtract(m_vertices[topRight].pos, m_vertices[bottomLeft].pos);
 			//Calculate the normal
 			XMVECTOR normal = XMVector3Cross(ac, ab);
 			XMFLOAT3 n;
@@ -147,8 +147,8 @@ void Terrain::CalcNormals()
 			faces[r].push_back(std::make_pair(XMFLOAT3(topLeft, bottomLeft, topRight), n));
 
 			//Calculate normal for bottom right triangle face
-			ab = XMVectorSubtract(m_vertices[topRight].pos, m_vertices[bottomRight].pos);
-			ac = XMVectorSubtract(m_vertices[bottomLeft].pos, m_vertices[bottomRight].pos);
+			ab = XMVectorSubtract(m_vertices[bottomLeft].pos, m_vertices[bottomRight].pos);
+			ac = XMVectorSubtract(m_vertices[topRight].pos, m_vertices[bottomRight].pos);
 			normal = XMVector3Cross(ac, ab);
 			XMStoreFloat3(&n, normal);
 			faces[r].push_back(std::make_pair(XMFLOAT3(bottomLeft, bottomRight, topRight), n));
@@ -192,19 +192,6 @@ void Terrain::CalcNormals()
 			//Ask about this
 
 			normalSum = XMVector3Normalize(normalSum);
-			XMFLOAT3 n;
-			XMVECTOR l = XMVector3Length(normalSum);
-			XMStoreFloat3(&n, l);
-			/*if (fabs(n.x) > 0.0001f)
-			{
-			}*/
-			if (n.x > 1)
-			{
-				XMFLOAT3 thisIsJustATest = n;
-				thisIsJustATest.x += 5;
-				thisIsJustATest.y += 3;
-				thisIsJustATest.z += 7;
-			}
 			m_vertices[index].normal = normalSum;
 		}
 	}
@@ -224,7 +211,6 @@ void Terrain::CalcNormals()
 			m_indices.push_back(face.first.z);
 		}
 	}
-
 }
 
 void Terrain::GenRandom()

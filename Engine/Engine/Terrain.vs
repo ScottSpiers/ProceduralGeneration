@@ -41,7 +41,7 @@ struct PixelInputType
 ////////////////////////////////////////////////////////////////////////////////
 PixelInputType TerrainVertexShader(VertexInputType input)
 {
-   PixelInputType output;
+	PixelInputType output;
 	float4 worldPos;
     
 
