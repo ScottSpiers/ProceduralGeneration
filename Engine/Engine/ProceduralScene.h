@@ -1,5 +1,6 @@
 #pragma once
 
+#include "L-System.h"
 #include "Scene.h"
 #include "Terrain.h"
 
@@ -14,4 +15,5 @@ public:
 
 private:
 	Terrain* m_terrain;
+	LSystem* m_lsystem;
 };

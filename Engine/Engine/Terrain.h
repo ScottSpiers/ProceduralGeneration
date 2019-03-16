@@ -3,7 +3,7 @@
 #include <d3d11.h>
 #include <directxmath.h>
 #include <vector>
-
+#include <time.h>
 
 using namespace DirectX;
 

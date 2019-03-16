@@ -108,7 +108,7 @@ bool TerrainShader::Render(Terrain* t, Camera* cam, Light* light)
 	dataPtr2 = (CameraBufferType*)mappedResource.pData;
 
 	dataPtr2->cameraPos = cam->GetPosition();
-	dataPtr2->pad = .0f; //AAAAAAAAAAAAAAAAAAAAGH
+	dataPtr2->pad = 0.0f; //AAAAAAAAAAAAAAAAAAAAGH
 	m_context->Unmap(m_camBuffer, 0);
 	//Don't forget the matrix buffer
 	bufferNumber = 1;
@@ -132,7 +132,7 @@ bool TerrainShader::Render(Terrain* t, Camera* cam, Light* light)
 	dataPtr->diffuseColour = light->GetDiffuseColor();
 	dataPtr->specColour = light->GetSpecColour();
 	dataPtr->lightDirection = light->GetDirection();
-	dataPtr->specIntensity = light->GetSpecIntensity(); // AAAAAAAAAAAAAGHHHHHH!
+	dataPtr->specIntensity = light->GetSpecIntensity();
 
 	// Unlock the constant buffer.
 	m_context->Unmap(m_lightBuffer, 0);

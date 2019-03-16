@@ -4,10 +4,17 @@
 ProceduralScene::ProceduralScene(ResourceManager::ManagerScene sceneResources) : Scene(sceneResources)
 {
 	m_terrain = 0;
+	m_lsystem = 0;
 }
 
 ProceduralScene::~ProceduralScene()
 {
+	if (m_lsystem)
+	{
+		delete m_lsystem;
+		m_lsystem = 0;
+	}
+
 	if (m_terrain)
 	{
 		delete m_terrain;
@@ -24,21 +31,28 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 		return false;
 
 	m_terrain = new Terrain(129,129);
-	//m_terrain->GenRandom();
-	m_terrain->GenSinWave();
+	m_terrain->GenRandom();
+	//      m_terrain->GenSinWave();
 
 	m_Light->SetAmbientColour(0.15f, 0.15f, 0.15f, 1.0f);
 	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
-	m_Light->SetSpecColour(1.f, 1.f, 1.f, 1.f);
+	m_Light->SetSpecColour(1.f, 0.f, 0.f, 1.f);
 	m_Light->SetSpecIntensity(30.f);
-	m_Light->SetDirection(.0f, .0f, .3f);
-	//m_terrain->Initialise(device);
+	m_Light->SetDirection(0.0f, 1.0f, 0.0f);
+	
 	m_Camera->SetPosition(50.0f, 2.0f, -7.0f);
 
 	result = m_terrain->Initialise(device);
 	if (!result)
 		return false;
-	
+
+	m_lsystem = new LSystem("FA");
+	m_lsystem->AddRule('F', "A");
+	m_lsystem->AddRule('A', "B");
+	m_lsystem->AddRule('B', "FF", 0.5f);
+	std::string testLSystem = m_lsystem->RunSystem(5);
+
+	return true;	
 }
 
 bool ProceduralScene::Render(D3D* d3d)
@@ -52,7 +66,7 @@ bool ProceduralScene::Render(D3D* d3d)
 	
 	d3d->GetProjectionMatrix(projMatrix);
 	m_Camera->setProjMatrix(projMatrix);
-	m_Camera->Render();
+	//m_Camera->Render();
 	
 
 	d3d->BeginScene(0.0f, 0.0f, 0.4f, 1.0f);
@@ -71,9 +85,7 @@ bool ProceduralScene::Render(D3D* d3d)
 	if (!result)
 		return false;	
 
-	//d3d->TurnOffCulling();
-
-	
+	//d3d->TurnOffCulling();	
 
 	//d3d->TurnOnCulling();
 

@@ -14,7 +14,6 @@ cbuffer LightBuffer
 	float4 specColour;
     float3 lightDirection;
 	float specIntensity;
-
 };
 
 
@@ -25,7 +24,7 @@ struct PixelInputType
 {
     float4 position : SV_POSITION;
 	float3 normal : NORMAL;
-	float3 viewDir : TEXCOORD1;
+	float3 viewDir : TEXCOORD;
 };
 
 
@@ -40,20 +39,19 @@ float4 TerrainPixelShader(PixelInputType input) : SV_TARGET
 	float4 colour;
 	float4 specularColour;
 	float3 reflection;
-	float4 textureColour;
+	//float4 textureColour;
 
 	input.normal = normalize(input.normal);
 	
 	//textureColour = shaderTexture.Sample(SampleType, input.tex);
 
-	
 	colour = ambientColour;
 
 	specularColour = float4(0.f, 0.f, 0.f, 0.f);
 
 
 	// Invert the light direction for calculations.
-    lightDir = lightDirection;
+    lightDir = -lightDirection;
 
     // Calculate the amount of light on this pixel.
     lightIntensity = saturate(dot(input.normal, lightDir));
@@ -63,13 +61,13 @@ float4 TerrainPixelShader(PixelInputType input) : SV_TARGET
 		colour += (diffuseColour * lightIntensity);
 		colour = saturate(colour);
 
-		reflection = normalize(2* lightIntensity * input.normal - lightDir);
-		specularColour = pow(saturate(dot(reflection, input.viewDir)), specIntensity);
+		//reflection = normalize(reflect(lightDirection, input.normal));
+		//specularColour = pow(saturate(dot(reflection, input.viewDir)), specIntensity);
 	}
 
     
 	//colour *= textureColour;
-	colour = saturate(colour +  (specularColour * specColour));	
+	//colour = saturate(colour +  (specularColour * specColour));	
 	
     return colour;
 }

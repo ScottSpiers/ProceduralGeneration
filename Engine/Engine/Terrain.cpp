@@ -1,6 +1,7 @@
 
 #include "Terrain.h"
 
+
 Terrain::Terrain(int rows, int columns)
 {
 	m_height = rows;
@@ -215,6 +216,7 @@ void Terrain::CalcNormals()
 
 void Terrain::GenRandom()
 {	
+	srand(time(nullptr));
 	if (!m_toggleGenerated)
 	{
 		int index;

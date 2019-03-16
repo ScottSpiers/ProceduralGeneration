@@ -61,7 +61,7 @@ float4 ReflectPixelShader(PixelInputType input) : SV_TARGET
 		colour += (diffuseColour * lightIntensity);
 		colour = saturate(colour);
 
-		reflection = normalize(2* lightIntensity * input.normal - lightDir);
+		reflection = normalize(reflect(lightDirection, input.normal));
 		specularColour = pow(saturate(dot(reflection, input.viewDir)), specularIntensity);
 	}
 

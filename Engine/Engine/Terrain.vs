@@ -32,7 +32,7 @@ struct PixelInputType
 {
     float4 position : SV_POSITION;
 	float3 normal : NORMAL;
-	float3 viewDir : TEXCOORD1;
+	float3 viewDir : TEXCOORD;
 };
 
 
