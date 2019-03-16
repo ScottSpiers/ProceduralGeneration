@@ -44,8 +44,14 @@ std::string LSystem::RunSystem(int iterations)
 bool LSystem::AddRule(char pre, std::string suc, float prob)
 {
 	for (ProductionRule r : m_rules)
+	{
 		if (r.predecessor == pre)
-			return false;
+		{
+			if (prob >= 1.0f || suc == r.successor)
+				return false;
+		}
+	}
+			
 
 	m_rules.push_back(ProductionRule(pre, suc, prob));
 	return true;

@@ -46,10 +46,10 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 	if (!result)
 		return false;
 
-	m_lsystem = new LSystem("FA");
-	m_lsystem->AddRule('F', "A");
-	m_lsystem->AddRule('A', "B");
-	m_lsystem->AddRule('B', "FF", 0.5f);
+	m_lsystem = new LSystem("F");
+	m_lsystem->AddRule('F', "F[+F]F[-F]F", 0.33f);
+	m_lsystem->AddRule('F', "F[+F]F", 0.33f);
+	m_lsystem->AddRule('F', "F[-F]F", 0.34);
 	std::string testLSystem = m_lsystem->RunSystem(5);
 
 	return true;	
