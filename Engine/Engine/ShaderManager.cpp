@@ -7,10 +7,17 @@ ShaderManager::ShaderManager(ID3D11Device* device, ID3D11DeviceContext* context)
 	m_reflectShader = new ReflectShader(device, context);
 	m_skyShader = new SkySphereShader(device, context);
 	m_terrainShader = new TerrainShader(device, context);
+	m_lTreeShader = new LTreeShader(device, context);
 }
 
 ShaderManager::~ShaderManager()
 {
+	if (m_lTreeShader)
+	{
+		delete m_lTreeShader;
+		m_lTreeShader = 0;
+	}
+
 	if (m_terrainShader)
 	{
 		delete m_terrainShader;
@@ -56,6 +63,10 @@ bool ShaderManager::InitialiseShaders()
 	if (!result)
 		return false;
 
+	result = m_lTreeShader->Initialise();
+	if (!result)
+		return false;
+
 	return true;
 }
 
@@ -77,4 +88,9 @@ bool ShaderManager::RenderSkySphere(Model* model, Camera* cam)
 bool ShaderManager::RenderTerrain(Terrain* t, Camera* cam, Light* light)
 {
 	return m_terrainShader->Render(t, cam, light);
+}
+
+bool ShaderManager::RenderLTree(LTree* t, Camera* cam, Light* light)
+{
+	return m_lTreeShader->Render(t, cam, light);
 }

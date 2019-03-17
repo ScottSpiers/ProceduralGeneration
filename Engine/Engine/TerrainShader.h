@@ -18,9 +18,9 @@ private:
 	{
 		XMFLOAT4 ambientColour;
 		XMFLOAT4 diffuseColour;
-		XMFLOAT4 specColour;
 		XMFLOAT3 lightDirection;		
 		float specIntensity;
+		XMFLOAT4 specColour;
 	};
 
 public:

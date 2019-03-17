@@ -26,19 +26,19 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 {
 	bool result;
 
-	result = Scene::Initialise(device, context);
+	result = Scene::Initialise(device, context);  
 	if (!result)
 		return false;
 
 	m_terrain = new Terrain(129,129);
 	m_terrain->GenRandom();
-	//      m_terrain->GenSinWave();
+	//m_terrain->GenSinWave();
 
 	m_Light->SetAmbientColour(0.15f, 0.15f, 0.15f, 1.0f);
 	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
 	m_Light->SetSpecColour(1.f, 0.f, 0.f, 1.f);
 	m_Light->SetSpecIntensity(30.f);
-	m_Light->SetDirection(0.0f, 1.0f, 0.0f);
+	m_Light->SetDirection(0.0f, -.5f, 0.0f);
 	
 	m_Camera->SetPosition(50.0f, 2.0f, -7.0f);
 
@@ -47,10 +47,12 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 		return false;
 
 	m_lsystem = new LSystem("F");
-	m_lsystem->AddRule('F', "F[+F]F[-F]F", 0.33f);
-	m_lsystem->AddRule('F', "F[+F]F", 0.33f);
-	m_lsystem->AddRule('F', "F[-F]F", 0.34);
-	std::string testLSystem = m_lsystem->RunSystem(5);
+	m_lsystem->AddRule('F', "FF-[-F+F+F]+[+F-F-F]");
+	std::string testLSystem = m_lsystem->RunSystem(4);
+
+	m_lTree = new LTree();
+	m_lTree->InterpretSystem(testLSystem, 1, (22.5f * XM_PI) / 180);
+	m_lTree->Initialise(device);
 
 	return true;	
 }
@@ -66,10 +68,10 @@ bool ProceduralScene::Render(D3D* d3d)
 	
 	d3d->GetProjectionMatrix(projMatrix);
 	m_Camera->setProjMatrix(projMatrix);
-	//m_Camera->Render();
+	m_Camera->Render();
 	
 
-	d3d->BeginScene(0.0f, 0.0f, 0.4f, 1.0f);
+	d3d->BeginScene(0.0f, 0.0f, .8f, 1.0f);
 	//m_Camera->Render();
 
 	/*d3d->GetDeviceContext()->ClearRenderTargetView(defRTV, colour);
@@ -77,6 +79,7 @@ bool ProceduralScene::Render(D3D* d3d)
 
 	//d3d->TurnOffCulling();
 
+	//TERRAIN TURN BACK ON EVENTUALLY
 	result = m_terrain->Render(d3d->GetDeviceContext());
 	if (!result)
 		return false;
@@ -84,6 +87,12 @@ bool ProceduralScene::Render(D3D* d3d)
 	result = m_shaders->RenderTerrain(m_terrain, m_Camera, m_Light);
 	if (!result)
 		return false;	
+
+	m_lTree->Render(d3d->GetDeviceContext());
+	result = m_shaders->RenderLTree(m_lTree, m_Camera, m_Light);
+	if (!result)
+		return false;
+
 
 	//d3d->TurnOffCulling();	
 

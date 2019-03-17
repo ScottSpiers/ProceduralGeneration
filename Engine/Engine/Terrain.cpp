@@ -23,10 +23,12 @@ Terrain::Terrain(int rows, int columns)
 			//i is rows which is the "depth" ie z
 			//j is the columns which is the width ie x
 			XMFLOAT3 pos = XMFLOAT3(j, 0.f, i);
-			vert.pos = XMLoadFloat3(&pos);
+			//vert.pos = XMLoadFloat3(&pos);
+			vert.pos = pos;
 			m_vertices.push_back(vert);
 		}
 	}
+	srand(time(nullptr));
 }
 
 Terrain::~Terrain()
@@ -127,32 +129,41 @@ void Terrain::CalcNormals()
 	}
 
 	//Calculate indices for the square
-	for (int r = 0; r < m_height - 1; ++r)
+	for (int row = 0; row < m_height - 1; ++row)
 	{
-		for (int c = 0; c < m_width - 1; ++c)
+		for (int col = 0; col < m_width - 1; ++col)
 		{
-			int topLeft = (r * m_width) + c;
+			int topLeft = (row * m_width) + col;
 			int topRight = topLeft + 1;
-			int bottomLeft = ((r + 1) * m_width) + c;
+			int bottomLeft = ((row + 1) * m_width) + col;
 			int bottomRight = bottomLeft + 1;
 
 			//Calculate vectors for top left triangle face
 			
-			XMVECTOR ab = XMVectorSubtract(m_vertices[topLeft].pos, m_vertices[bottomLeft].pos);
-			XMVECTOR ac = XMVectorSubtract(m_vertices[topRight].pos, m_vertices[bottomLeft].pos);
+			XMVECTOR a = XMLoadFloat3(&m_vertices[topLeft].pos);
+			XMVECTOR b = XMLoadFloat3(&m_vertices[bottomLeft].pos);
+			XMVECTOR c = XMLoadFloat3(&m_vertices[topRight].pos);
+
+			XMVECTOR ab = XMVectorSubtract(a, b); //XMVectorSubtract(m_vertices[topLeft].pos, m_vertices[bottomLeft].pos);
+			XMVECTOR cb = XMVectorSubtract(c, b); //XMVectorSubtract(m_vertices[topRight].pos, m_vertices[bottomLeft].pos);
 			//Calculate the normal
-			XMVECTOR normal = XMVector3Cross(ac, ab);
+			XMVECTOR normal = XMVector3Cross(cb, ab);
 			XMFLOAT3 n;
 			XMStoreFloat3(&n, normal);
 			//Store the face, normal pair
-			faces[r].push_back(std::make_pair(XMFLOAT3(topLeft, bottomLeft, topRight), n));
+			faces[row].push_back(std::make_pair(XMFLOAT3(topLeft, bottomLeft, topRight), n));
+
+			a = XMLoadFloat3(&m_vertices[bottomLeft].pos);
+			b = XMLoadFloat3(&m_vertices[bottomRight].pos);
+			c = XMLoadFloat3(&m_vertices[topRight].pos);
 
 			//Calculate normal for bottom right triangle face
-			ab = XMVectorSubtract(m_vertices[bottomLeft].pos, m_vertices[bottomRight].pos);
-			ac = XMVectorSubtract(m_vertices[topRight].pos, m_vertices[bottomRight].pos);
-			normal = XMVector3Cross(ac, ab);
+			ab = XMVectorSubtract(a, b); //XMVectorSubtract(m_vertices[bottomLeft].pos, m_vertices[bottomRight].pos);
+			cb = XMVectorSubtract(c, b); //XMVectorSubtract(m_vertices[topRight].pos, m_vertices[bottomRight].pos);
+
+			normal = XMVector3Cross(cb, ab);
 			XMStoreFloat3(&n, normal);
-			faces[r].push_back(std::make_pair(XMFLOAT3(bottomLeft, bottomRight, topRight), n));
+			faces[row].push_back(std::make_pair(XMFLOAT3(bottomLeft, bottomRight, topRight), n));
 		}
 	}
 
@@ -193,7 +204,8 @@ void Terrain::CalcNormals()
 			//Ask about this
 
 			normalSum = XMVector3Normalize(normalSum);
-			m_vertices[index].normal = normalSum;
+			XMStoreFloat3(&m_vertices[index].normal, normalSum);
+			//m_vertices[index].normal = normalSum;
 		}
 	}
 
@@ -216,7 +228,6 @@ void Terrain::CalcNormals()
 
 void Terrain::GenRandom()
 {	
-	srand(time(nullptr));
 	if (!m_toggleGenerated)
 	{
 		int index;
@@ -231,7 +242,8 @@ void Terrain::GenRandom()
 				float r = (double)rand() / (RAND_MAX + 1);
 				XMFLOAT3 pos = XMFLOAT3((float)j, r * 3, (float)i);
 
-				m_vertices[index].pos = XMLoadFloat3(&pos);
+				//m_vertices[index].pos = XMLoadFloat3(&pos);
+				m_vertices[index].pos = pos;
 			}
 		}
 		m_toggleGenerated = true;
@@ -256,7 +268,8 @@ void Terrain::GenSinWave()
 				index = (m_height * j) + i;
 
 				XMFLOAT3 pos = XMFLOAT3((float)i, (float)(sin((float)i / (m_width / 12))*3.0) * (float)(cos((float)j / (m_height / 12))*3.0), (float)j);
-				m_vertices[index].pos = XMLoadFloat3(&pos);
+				//m_vertices[index].pos = XMLoadFloat3(&pos);
+				m_vertices[index].pos = pos;
 			}
 		}
 		m_toggleGenerated = true;

@@ -12,8 +12,9 @@ class Terrain
 private:
 	struct VertexType
 	{
-		XMVECTOR pos;
-		XMVECTOR normal;
+		XMFLOAT3 pos;
+		XMFLOAT2 tex;
+		XMFLOAT3 normal;
 	};
 
 public:
