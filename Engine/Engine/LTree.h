@@ -36,6 +36,7 @@ public:
 	bool Render(ID3D11DeviceContext*);
 	void InterpretSystem(std::string, int, float);
 
+	void SetWorldMatrix(XMMATRIX);
 	XMMATRIX GetWorldMatrix();
 	int GetIndexCount();
 

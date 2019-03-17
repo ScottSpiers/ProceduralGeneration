@@ -193,6 +193,11 @@ void LTree::InterpretSystem(std::string lResult, int stepSize, float angleDelta)
 	}
 }
 
+void LTree::SetWorldMatrix(XMMATRIX world)
+{
+	m_worldMatrix = world;
+}
+
 XMMATRIX LTree::GetWorldMatrix()
 {
 	return m_worldMatrix;

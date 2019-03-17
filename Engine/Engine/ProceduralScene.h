@@ -5,6 +5,8 @@
 #include "Scene.h"
 #include "Terrain.h"
 
+#include <array>
+
 class ProceduralScene : public Scene
 {
 public:
@@ -17,5 +19,5 @@ public:
 private:
 	Terrain* m_terrain;
 	LSystem* m_lsystem;
-	LTree* m_lTree;
+	std::array<LTree*, 5> m_trees;
 };
