@@ -44,14 +44,14 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 	if (!result)
 		return false;
 
-	m_terrain = new Terrain(129,129);
-	m_terrain->GenRandom();
-	//m_terrain->GenSinWave();
+	m_terrain = new Terrain(513,513);
+	//m_terrain->GenRandom();
+	m_terrain->GenSinWave();
 
 	m_Light->SetAmbientColour(0.15f, 0.15f, 0.15f, 1.0f);
 	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
-	m_Light->SetSpecColour(1.f, 0.f, 0.f, 1.f);
-	m_Light->SetSpecIntensity(30.f);
+	m_Light->SetSpecColour(0.5f, .5f, .5f, 1.f);
+	m_Light->SetSpecIntensity(2.f);
 	m_Light->SetDirection(0.0f, -.5f, 0.0f);
 	
 	m_Camera->SetPosition(50.0f, 2.0f, -7.0f);
@@ -60,36 +60,69 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 	if (!result)
 		return false;
 
-	m_lsystem = new LSystem("F");
-	m_lsystem->AddRule('F', "F[+F]F[-F][F]", 0.33f);
-	m_lsystem->AddRule('F', "F[+F]F", 0.33f);
-	m_lsystem->AddRule('F', "F[-F]F", 0.34f);
-	std::string testLSystem = m_lsystem->RunSystem(5);
+	//The cube!
+	//m_lsystem = new LSystem("A");
+	/*m_lsystem->AddRule('A', "B-F+CFC+F-D&F^D-F+&&CFC+F+B//");
+	m_lsystem->AddRule('B', "A&F^CFB^F^D^^-F-D^|F^B|FC^F^A//");
+	m_lsystem->AddRule('C', "|D^|F^B-F+C^F^A&&FA&F^C+F+B^F^D//");
+	m_lsystem->AddRule('D', "|CFB-F+B|FA&F^A&&FB-F+B|FC//");*/
 
-	int stepSize = 2;
-	float angleDelta = (20.0f * XM_PI) / 180;
+	/*m_lsystem = new LSystem("F[X][Y][Z]");
+	m_lsystem->AddRule('F', "F[+[X][Y][Z]][-[X][Y][Z]][^[X][Y][Z]][&[X][Y][Z]][/[X][Y][Z]][[X][Y][Z]]");
+	m_lsystem->AddRule('Z', "FZ[+FZ][/FX][^FY]F", 0.5f);
+	m_lsystem->AddRule('Z', "FZ[-FZ][\FX][&FY]F", 0.5f);
+	m_lsystem->AddRule('X', "FX[+FZ][/FX][^FY]F", 0.5f);
+	m_lsystem->AddRule('X', "FX[-FZ][\FX][&FY]F", 0.5f);
+	m_lsystem->AddRule('Y', "FY[+FZ][/FX][^FY]F", 0.5f);
+	m_lsystem->AddRule('Y', "FY[-FZ][\FX][&FY]F", 0.5f);*/
 
+	/*m_lsystem = new LSystem("A");
+	m_lsystem->AddRule('A', "[&FL!A]/////'[&FL!A]////////'[&FL!A]");
+	m_lsystem->AddRule('F', "S/////F");
+	m_lsystem->AddRule('S', "FL");
+	m_lsystem->AddRule('L', "['''^^{-f+f+f-|-f+f+f}]");*/
+
+	m_lsystem = new LSystem("P");
+	m_lsystem->AddRule('P', "I+[P+H]--//[--L]I[++L]-[PH]++PH");
+	m_lsystem->AddRule('I', "FS[//&&L][//^^L]FS");
+	m_lsystem->AddRule('S', "S[//&&L][//^^L]FS", 0.33f);
+	m_lsystem->AddRule('S', "SFS", 0.33f);
+	m_lsystem->AddRule('S', "S", 0.34f);
+	m_lsystem->AddRule('L', "['{+f-ff-f+|+f-ff-f}]");
+	m_lsystem->AddRule('H', "[&&&D'/W////W/////W////W////W]");
+	m_lsystem->AddRule('D', "FF");
+	m_lsystem->AddRule('W', "['^F][{&&&&-f+f|-f+f}]");
+
+
+
+	int numIts = 5;
+
+	int stepSize = 1;
+	float angleDelta = (18.0f * XM_PI) / 180;
+	float terrainSize = 513.0f;
+
+	std::string testLSystem = m_lsystem->RunSystem(numIts);
 	m_trees[0]->InterpretSystem(testLSystem, stepSize, angleDelta);
 	m_trees[0]->Initialise(device);
 
-	XMMATRIX newPos = XMMatrixTranslation(129.0f, 0.0f, 0.0f);
+	XMMATRIX newPos = XMMatrixTranslation(terrainSize, 0.0f, 0.0f);
 	m_trees[1]->SetWorldMatrix(newPos);
-	m_trees[1]->InterpretSystem(m_lsystem->RunSystem(5), stepSize, angleDelta);
+	m_trees[1]->InterpretSystem(m_lsystem->RunSystem(numIts), stepSize, angleDelta);
 	m_trees[1]->Initialise(device);
 
-	newPos = XMMatrixTranslation(0.0f, 0.0f, 129.0f);
+	newPos = XMMatrixTranslation(0.0f, 0.0f, terrainSize);
 	m_trees[2]->SetWorldMatrix(newPos);
-	m_trees[2]->InterpretSystem(m_lsystem->RunSystem(5), stepSize, angleDelta);
+	m_trees[2]->InterpretSystem(m_lsystem->RunSystem(numIts), stepSize, angleDelta);
 	m_trees[2]->Initialise(device);
 
-	newPos = XMMatrixTranslation(129.0f, 0.0f, 129.0f);
+	newPos = XMMatrixTranslation(terrainSize, 0.0f, terrainSize);
 	m_trees[3]->SetWorldMatrix(newPos);
-	m_trees[3]->InterpretSystem(m_lsystem->RunSystem(5), stepSize, angleDelta);
+	m_trees[3]->InterpretSystem(m_lsystem->RunSystem(numIts), stepSize, angleDelta);
 	m_trees[3]->Initialise(device);
 
-	newPos = XMMatrixTranslation(64.5f, 0.0f, 64.5f);
+	newPos = XMMatrixTranslation(terrainSize / 2, 0.0f, terrainSize / 2);
 	m_trees[4]->SetWorldMatrix(newPos);
-	m_trees[4]->InterpretSystem(m_lsystem->RunSystem(5), stepSize, angleDelta);
+	m_trees[4]->InterpretSystem(m_lsystem->RunSystem(numIts), stepSize, angleDelta);
 	m_trees[4]->Initialise(device);
 
 	return true;	
@@ -133,7 +166,10 @@ bool ProceduralScene::Render(D3D* d3d)
 		if (!result)
 			return false;
 	}
-
+	/*m_trees[0]->Render(d3d->GetDeviceContext());
+	result = m_shaders->RenderLTree(m_trees[0], m_Camera, m_Light);
+	if (!result)
+		return false;*/
 
 	//d3d->TurnOffCulling();	
 

@@ -162,12 +162,27 @@ void LTree::InterpretSystem(std::string lResult, int stepSize, float angleDelta)
 			}
 			case '&':
 			{
-				rotMatrix *= XMMatrixRotationAxis(rotMatrix.r[1], angleDelta);
+				rotMatrix *= XMMatrixRotationAxis(rotMatrix.r[0], angleDelta);
 				break;
 			}
 			case '^':
 			{
+				rotMatrix *= XMMatrixRotationAxis(rotMatrix.r[0], -angleDelta);
+				break;
+			}
+			case '\\':
+			{
+				rotMatrix *= XMMatrixRotationAxis(rotMatrix.r[1], angleDelta);
+				break;
+			}
+			case '/':
+			{
 				rotMatrix *= XMMatrixRotationAxis(rotMatrix.r[1], -angleDelta);
+				break;
+			}
+			case '|':
+			{
+				rotMatrix *= XMMatrixRotationAxis(rotMatrix.r[2], (180.0f * XM_PI) / 180);
 				break;
 			}
 			case '[':
