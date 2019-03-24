@@ -13,6 +13,23 @@ Model::Model()
 	m_worldMatrix = XMMatrixIdentity();
 }
 
+Model::Model(Cylinder& c)
+{
+	for (int i = 0; i < c.GetNumVertices(); ++i)
+	{
+		m_model[i].x = c.GetPosition(i).x;
+		m_model[i].y = c.GetPosition(i).y;
+		m_model[i].z = c.GetPosition(i).z;
+		m_model[i].tu = c.GetTexCoord(i).x;
+		m_model[i].tv = c.GetTexCoord(i).y;
+		m_model[i].nx = c.GetNormal(i).x;
+		m_model[i].ny = c.GetNormal(i).y;
+		m_model[i].nz = c.GetNormal(i).z;
+	}
+
+	m_indices = c.GetIndices();
+}
+
 Model::Model(const Model& other)
 {
 }
@@ -67,7 +84,7 @@ int Model::GetIndexCount()
 bool Model::InitializeBuffers(ID3D11Device* device)
 {
 	VertexType* vertices;
-	unsigned long* indices;
+	//unsigned long* indices;
 	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
     D3D11_SUBRESOURCE_DATA vertexData, indexData;
 	HRESULT result;
@@ -82,20 +99,20 @@ bool Model::InitializeBuffers(ID3D11Device* device)
 	}
 
 	// Create the index array.
-	indices = new unsigned long[m_indexCount];
-	if(!indices)
+	//indices = new unsigned long[m_indexCount];
+	/*if(!indices)
 	{
 		return false;
-	}
+	}*/
 
 	// Load the vertex array and index array with data.
-	for(i=0; i<m_vertexCount; i++)
+	for(i = 0; i < m_vertexCount; ++i)
 	{
 		vertices[i].position = XMFLOAT3(m_model[i].x, m_model[i].y, m_model[i].z);
 		vertices[i].texture = XMFLOAT2(m_model[i].tu, m_model[i].tv);
 		vertices[i].normal = XMFLOAT3(m_model[i].nx, m_model[i].ny, m_model[i].nz);
 
-		indices[i] = i;
+		m_indices.push_back(i);
 	}
 
 	// Set up the description of the static vertex buffer.
@@ -127,7 +144,7 @@ bool Model::InitializeBuffers(ID3D11Device* device)
 	indexBufferDesc.StructureByteStride = 0;
 
 	// Give the subresource structure a pointer to the index data.
-    indexData.pSysMem = indices;
+    indexData.pSysMem = m_indices.data();
 	indexData.SysMemPitch = 0;
 	indexData.SysMemSlicePitch = 0;
 
@@ -142,8 +159,6 @@ bool Model::InitializeBuffers(ID3D11Device* device)
 	delete [] vertices;
 	vertices = 0;
 
-	delete [] indices;
-	indices = 0;
 
 	return true;
 }

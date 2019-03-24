@@ -45,8 +45,8 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 		return false;
 
 	m_terrain = new Terrain(513,513);
-	//m_terrain->GenRandom();
-	m_terrain->GenSinWave();
+	m_terrain->GenRandom();
+	//m_terrain->GenSinWave();
 
 	m_Light->SetAmbientColour(0.15f, 0.15f, 0.15f, 1.0f);
 	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -92,9 +92,7 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 	m_lsystem->AddRule('H', "[&&&D'/W////W/////W////W////W]");
 	m_lsystem->AddRule('D', "FF");
 	m_lsystem->AddRule('W', "['^F][{&&&&-f+f|-f+f}]");
-
-
-
+	   
 	int numIts = 5;
 
 	int stepSize = 1;

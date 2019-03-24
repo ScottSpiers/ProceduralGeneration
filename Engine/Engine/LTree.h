@@ -5,6 +5,10 @@
 #include <stack>
 #include <vector>
 
+#include "LightShader.h"
+#include "Model.h"
+
+
 using namespace DirectX;
 
 class LTree
@@ -14,6 +18,8 @@ private:
 	{
 		XMVECTOR pos;
 		XMVECTOR dir = XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f);
+		int stepSize;
+		int radius;
 		XMMATRIX rotation;
 	};
 
@@ -22,7 +28,7 @@ private:
 	{
 		VertexType() {};
 		VertexType(XMFLOAT3 position) : pos(position) {};
-
+		//g_XMIdentityR1 is this the up vector?
 		XMFLOAT3 pos;
 		XMFLOAT2 tex;
 		XMFLOAT3 normal;
@@ -36,6 +42,8 @@ public:
 	bool Render(ID3D11DeviceContext*);
 	void InterpretSystem(std::string, int, float);
 
+	std::vector<Model*>& GetModels();
+
 	void SetWorldMatrix(XMMATRIX);
 	XMMATRIX GetWorldMatrix();
 	int GetIndexCount();
@@ -44,7 +52,8 @@ private:
 	ID3D11Buffer* m_vBuffer, *m_iBuffer;
 	std::vector<VertexType> m_vertices;
 	std::vector<int> m_indices;
+	std::vector<Model*> m_models;
 
 	XMMATRIX m_worldMatrix;
-
+	bool m_isModel;
 };
