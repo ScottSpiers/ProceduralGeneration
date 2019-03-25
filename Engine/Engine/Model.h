@@ -42,7 +42,7 @@ protected:
 
 public:
 	Model();
-	Model(Cylinder&);
+	Model(Cylinder);
 	Model(const Model&);
 	~Model();
 

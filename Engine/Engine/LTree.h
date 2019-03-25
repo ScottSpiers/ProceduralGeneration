@@ -42,7 +42,7 @@ public:
 	bool Render(ID3D11DeviceContext*);
 	void InterpretSystem(std::string, int, float);
 
-	std::vector<Model*>& GetModels();
+	std::vector<Model*> GetModels();
 
 	void SetWorldMatrix(XMMATRIX);
 	XMMATRIX GetWorldMatrix();

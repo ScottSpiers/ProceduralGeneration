@@ -102,6 +102,8 @@ void LTree::InterpretSystem(std::string lResult, int stepSize, float angleDelta)
 	TurtleState nextState;
 	curState.pos = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
 	curState.rotation = XMMatrixIdentity();
+	curState.stepSize = stepSize;
+	curState.radius = 2;
 
 	std::stack<int> indexStack;
 	std::stack<TurtleState> turtleStack;
@@ -139,6 +141,7 @@ void LTree::InterpretSystem(std::string lResult, int stepSize, float angleDelta)
 			return;
 		}
 	***************************************SUCCESS!******************************************/
+	Cylinder cyl;
 
 	for (char c : lResult)
 	{
@@ -166,16 +169,16 @@ void LTree::InterpretSystem(std::string lResult, int stepSize, float angleDelta)
 				}
 				else
 				{
-					Cylinder c(curState.radius, curState.stepSize, 10);
-					c.Rotate(rotMatrix);
-					c.Translate(curState.pos);
-					m_models.push_back(&Model(c));
+					cyl.GenCylinder(curState.radius, curState.stepSize, 10);
+					//cyl.Rotate(rotMatrix);
+					cyl.Translate(curState.pos);
+					m_models.push_back(new Model(cyl));
 				}
 				break;
 			}
 			case 'f':
 			{
-				nextState.pos += stepSize * rotated;
+				nextState.pos += curState.stepSize * rotated;
 				index = m_indices.size(); //need to increase the index, in case we  go back or just so we don't draw where we shouldn't 
 				break;
 			}
@@ -238,7 +241,7 @@ void LTree::InterpretSystem(std::string lResult, int stepSize, float angleDelta)
 	}
 }
 
-std::vector<Model*>& LTree::GetModels()
+std::vector<Model*> LTree::GetModels()
 {
 	return m_models;
 }

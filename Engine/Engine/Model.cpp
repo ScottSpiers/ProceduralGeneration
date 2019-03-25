@@ -13,8 +13,10 @@ Model::Model()
 	m_worldMatrix = XMMatrixIdentity();
 }
 
-Model::Model(Cylinder& c)
+Model::Model(Cylinder c) : Model()
 {
+	m_worldMatrix = XMMatrixTranslationFromVector(XMVectorSet(c.GetPosition(0).x, c.GetPosition(0).y, c.GetPosition(0).z, 1.0f));
+	m_model = new ModelData[c.GetNumVertices()];
 	for (int i = 0; i < c.GetNumVertices(); ++i)
 	{
 		m_model[i].x = c.GetPosition(i).x;
@@ -27,7 +29,9 @@ Model::Model(Cylinder& c)
 		m_model[i].nz = c.GetNormal(i).z;
 	}
 
+	m_vertexCount = c.GetNumVertices();
 	m_indices = c.GetIndices();
+	m_indexCount = m_indices.size();
 }
 
 Model::Model(const Model& other)

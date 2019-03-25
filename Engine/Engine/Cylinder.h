@@ -16,9 +16,12 @@ private:
 	};
 
 public:
+	Cylinder();
 	Cylinder(int, int, int);
 	~Cylinder();
 
+	void GenCaps(int, int, int, bool);
+	void GenCylinder(int, int, int);
 	void Rotate(XMMATRIX);
 	void Translate(XMVECTOR);
 
@@ -28,10 +31,9 @@ public:
 	XMFLOAT3 GetNormal(int);
 
 	int GetNumVertices();
-	std::vector<int>& GetIndices();
+	std::vector<int> GetIndices();
 
 private:
-	void GenCylinder(int, int, int);
 	inline XMVECTOR GetCircleVector(int, int);
 
 private:
