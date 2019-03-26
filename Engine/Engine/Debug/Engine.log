@@ -1,6 +1,47 @@
-﻿  LTree.cpp
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\ltree.cpp(155): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\ltree.cpp(175): warning C4316: 'Model': object allocated on the heap may not be aligned 16
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\ltree.cpp(181): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+﻿  Cylinder.cpp
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\cylinder.cpp(63): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\cylinder.cpp(87): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\cylinder.cpp(115): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\cylinder.cpp(116): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\cylinder.cpp(126): warning C4018: '<': signed/unsigned mismatch
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\cylinder.cpp(145): warning C4018: '<': signed/unsigned mismatch
+  Graphics.cpp
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\graphics.cpp(47): warning C4316: 'D3D': object allocated on the heap may not be aligned 16
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\graphics.cpp(71): warning C4316: 'Text': object allocated on the heap may not be aligned 16
+  LTree.cpp
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\ltree.cpp(154): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\ltree.cpp(172): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\ltree.cpp(187): warning C4316: 'Model': object allocated on the heap may not be aligned 16
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\ltree.cpp(193): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  LTreeShader.cpp
+  LightShader.cpp
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\lightshader.cpp(48): warning C4101: 'matrixBufferDesc': unreferenced local variable
+  Model.cpp
+  ProceduralScene.cpp
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(9): warning C4018: '<': signed/unsigned mismatch
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(11): warning C4316: 'LTree': object allocated on the heap may not be aligned 16
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(47): warning C4316: 'Terrain': object allocated on the heap may not be aligned 16
+  ReflectShader.cpp
+  ResourceManager.cpp
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\resourcemanager.cpp(33): warning C4101: 'result': unreferenced local variable
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\resourcemanager.cpp(126): warning C4101: 'result': unreferenced local variable
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\resourcemanager.cpp(129): warning C4101: 'filename': unreferenced local variable
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\resourcemanager.cpp(187): warning C4316: 'Model': object allocated on the heap may not be aligned 16
+  Scene.cpp
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\scene.cpp(43): warning C4316: 'Camera': object allocated on the heap may not be aligned 16
+  ShaderManager.cpp
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\shadermanager.cpp(98): warning C4101: 'res': unreferenced local variable
+  SkySphereShader.cpp
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\skysphereshader.cpp(26): warning C4101: 'matrixBufferDesc': unreferenced local variable
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\skysphereshader.cpp(27): warning C4101: 'gradientBufferDesc': unreferenced local variable
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\skysphereshader.cpp(99): warning C4101: 'bufferNumber': unreferenced local variable
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\skysphereshader.cpp(97): warning C4101: 'res': unreferenced local variable
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\skysphereshader.cpp(98): warning C4101: 'mappedResource': unreferenced local variable
+  System.cpp
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\system.cpp(54): warning C4316: 'Graphics': object allocated on the heap may not be aligned 16
+  WinterReflection.cpp
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\winterreflection.cpp(35): warning C4316: 'Cubemap': object allocated on the heap may not be aligned 16
+  main.cpp
+  Generating Code...
 c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\ltree.cpp(97): warning C4715: 'LTree::Render': not all control paths return a value
   Engine.vcxproj -> C:\Users\Scott\Documents\Uni\Abertay\CMP505\Assignment\Engine\Debug\Engine.exe

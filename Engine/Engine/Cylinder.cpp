@@ -19,13 +19,13 @@ Cylinder::~Cylinder()
 //Implemented with help from https://github.com/Microsoft/DirectXTK/blob/master/Src/Geometry.cpp
 inline XMVECTOR Cylinder::GetCircleVector(int i, int t)
 {
-	float angle = i * XM_2PI / t;
+	float angle = (i * XM_2PI) / t;
 	float deltaX;
 	float deltaZ;
 
 	XMScalarSinCos(&deltaX, &deltaZ, angle);
 
-	return XMVectorSet(deltaX, 0, deltaZ, 1.f);
+	return XMVectorSet(deltaX, 0, deltaZ, 0.f);
 }
 
 void Cylinder::GenCaps(int r, int h, int t, bool isTop)
@@ -93,26 +93,32 @@ void Cylinder::GenCylinder(int r, int h, int t)
 		XMStoreFloat3(&v.pos, XMVectorAdd(offsetSide, offsetTop));
 		XMStoreFloat3(&v.normal, normal);
 		XMStoreFloat2(&v.tex, texCoord);
-		m_vertices.push_back(v);
+		m_vertices.push_back(Vertex(v.pos, v.normal, v.tex));
+
+		//m_vertices[i].pos = XMFLOAT3(m_vertices[i].normal.x * r, i / t , m_vertices[i].normal.z * r);
 
 		XMStoreFloat3(&v.pos, XMVectorSubtract(offsetSide, offsetTop));
 		XMStoreFloat3(&v.normal, normal);
 		XMStoreFloat2(&v.tex, XMVectorAdd(texCoord, g_XMIdentityR1));
-		
+		m_vertices.push_back(Vertex(v.pos, v.normal, v.tex));
 		
 		//fully stolen from the link above
+		m_indices.push_back(i * 2 + 1);
+		m_indices.push_back((i * 2 + 2) % (stride * 2));
 		m_indices.push_back(i * 2);
-		m_indices.push_back((i * 2 + 2) % (stride * 2));
-		m_indices.push_back(i * 2 + 1);
 
-		m_indices.push_back(i * 2 + 1);
-		m_indices.push_back((i * 2 + 2) % (stride * 2));
 		m_indices.push_back((i * 2 + 3) % (stride * 2));
+		m_indices.push_back((i * 2 + 2) % (stride * 2));
+		m_indices.push_back(i * 2 + 1);
 	}
 
 	GenCaps(r, height, t, true);
 	GenCaps(r, height, t, false);
 
+	for (auto it = m_vertices.begin(); it != m_vertices.end(); ++it)
+	{
+		it->tex.x = (1.f - it->tex.x);
+	}
 }
 
 void Cylinder::Rotate(XMMATRIX rotation)
@@ -144,17 +150,17 @@ void Cylinder::Translate(XMVECTOR dir)
 	}
 }
 
-XMFLOAT3 Cylinder::GetPosition(int i)
+XMFLOAT3& Cylinder::GetPosition(int i)
 {
 	return m_vertices[i].pos;
 }
 
-XMFLOAT2 Cylinder::GetTexCoord(int i)
+XMFLOAT2& Cylinder::GetTexCoord(int i)
 {
 	return m_vertices[i].tex;
 }
 
-XMFLOAT3 Cylinder::GetNormal(int i)
+XMFLOAT3& Cylinder::GetNormal(int i)
 {
 	return m_vertices[i].normal;
 }

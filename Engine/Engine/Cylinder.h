@@ -10,6 +10,10 @@ class Cylinder
 private:
 	struct Vertex
 	{
+		Vertex() {};
+		Vertex(XMFLOAT3 position) : pos(position) {};
+		Vertex(XMFLOAT3 position, XMFLOAT3 n, XMFLOAT2 texCoord) : pos(position), normal(n), tex(texCoord) {};
+
 		XMFLOAT3 pos;
 		XMFLOAT2 tex;
 		XMFLOAT3 normal;
@@ -26,9 +30,9 @@ public:
 	void Translate(XMVECTOR);
 
 	//This Will change when VertexType is out into a header of its own
-	XMFLOAT3 GetPosition(int);
-	XMFLOAT2 GetTexCoord(int);
-	XMFLOAT3 GetNormal(int);
+	XMFLOAT3& GetPosition(int);
+	XMFLOAT2& GetTexCoord(int);
+	XMFLOAT3& GetNormal(int);
 
 	int GetNumVertices();
 	std::vector<int> GetIndices();

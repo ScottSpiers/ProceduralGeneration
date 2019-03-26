@@ -19,7 +19,7 @@ private:
 		XMVECTOR pos;
 		XMVECTOR dir = XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f);
 		int stepSize;
-		int radius;
+		float radius;
 		XMMATRIX rotation;
 	};
 
@@ -48,11 +48,15 @@ public:
 	XMMATRIX GetWorldMatrix();
 	int GetIndexCount();
 
+	bool IsModel();
+
 private:
 	ID3D11Buffer* m_vBuffer, *m_iBuffer;
 	std::vector<VertexType> m_vertices;
 	std::vector<int> m_indices;
 	std::vector<Model*> m_models;
+
+	std::vector<Cylinder*> m_fuckMe;
 
 	XMMATRIX m_worldMatrix;
 	bool m_isModel;

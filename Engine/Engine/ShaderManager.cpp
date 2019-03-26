@@ -92,11 +92,19 @@ bool ShaderManager::RenderTerrain(Terrain* t, Camera* cam, Light* light)
 
 bool ShaderManager::RenderLTree(LTree* t, Camera* cam, Light* light)
 {
-	bool res;
-	for (Model* m : t->GetModels())
+
+	if (t->IsModel())
 	{
-		if (!m_lightShader->Render(m, cam, light))
-			return false;
+		bool res;
+		for (Model* m : t->GetModels())
+		{
+			if (!m_lightShader->Render(m, cam, light))
+				return false;
+		}
+		return true;
 	}
-	return true;
+	else
+	{
+		return m_lTreeShader->Render(t, cam, light);
+	}
 }

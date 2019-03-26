@@ -13,7 +13,7 @@ Model::Model()
 	m_worldMatrix = XMMatrixIdentity();
 }
 
-Model::Model(Cylinder c) : Model()
+Model::Model(Cylinder& c) : Model()
 {
 	m_worldMatrix = XMMatrixTranslationFromVector(XMVectorSet(c.GetPosition(0).x, c.GetPosition(0).y, c.GetPosition(0).z, 1.0f));
 	m_model = new ModelData[c.GetNumVertices()];

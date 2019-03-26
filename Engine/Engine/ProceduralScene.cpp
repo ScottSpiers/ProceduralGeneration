@@ -100,8 +100,8 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 	float terrainSize = 513.0f;
 
 	std::string testLSystem = m_lsystem->RunSystem(numIts);
-	XMMATRIX newPos = XMMatrixTranslation(terrainSize, 0.0f, 0.0f);
-	m_trees[0]->SetWorldMatrix(newPos);
+	//XMMATRIX newPos = XMMatrixTranslation(terrainSize, 0.0f, 0.0f);
+	//m_trees[0]->SetWorldMatrix(newPos);
 	m_trees[0]->InterpretSystem(testLSystem, stepSize, angleDelta);
 	m_trees[0]->Initialise(device);
 
@@ -171,9 +171,9 @@ bool ProceduralScene::Render(D3D* d3d)
 	if (!result)
 		return false;
 
-	//d3d->TurnOffCulling();	
+	d3d->TurnOffCulling();	
 
-	d3d->TurnOnCulling();
+	//d3d->TurnOnCulling();
 
 	//Model* orbitSphere = m_resources->GetModel(ResourceManager::ORBIT_MODEL);
 	////orbitSphere->SetWorldMatrix(XMMatrixTranslation(0.f, 0.f, -.f));
