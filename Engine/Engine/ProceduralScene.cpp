@@ -95,7 +95,7 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 	   
 	int numIts = 5;
 
-	int stepSize = 10;
+	int stepSize = 5;
 	float angleDelta = (18.0f * XM_PI) / 180;
 	float terrainSize = 513.0f;
 
@@ -105,7 +105,7 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 	m_trees[0]->InterpretSystem(testLSystem, stepSize, angleDelta);
 	m_trees[0]->Initialise(device);
 
-	/*XMMATRIX newPos = XMMatrixTranslation(terrainSize, 0.0f, 0.0f);
+	XMMATRIX newPos = XMMatrixTranslation(terrainSize, 0.0f, 0.0f);
 	m_trees[1]->SetWorldMatrix(newPos);
 	m_trees[1]->InterpretSystem(m_lsystem->RunSystem(numIts), stepSize, angleDelta);
 	m_trees[1]->Initialise(device);
@@ -123,7 +123,7 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 	newPos = XMMatrixTranslation(terrainSize / 2, 0.0f, terrainSize / 2);
 	m_trees[4]->SetWorldMatrix(newPos);
 	m_trees[4]->InterpretSystem(m_lsystem->RunSystem(numIts), stepSize, angleDelta);
-	m_trees[4]->Initialise(device);*/
+	m_trees[4]->Initialise(device);
 
 	return true;	
 }

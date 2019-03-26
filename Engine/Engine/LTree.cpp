@@ -103,7 +103,7 @@ void LTree::InterpretSystem(std::string lResult, int stepSize, float angleDelta)
 	curState.pos = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
 	curState.rotation = XMMatrixIdentity();
 	curState.stepSize = stepSize;
-	curState.radius = 2.0f;
+	curState.radius = 1.0f;
 
 	std::stack<int> indexStack;
 	std::stack<TurtleState> turtleStack;
@@ -170,7 +170,7 @@ void LTree::InterpretSystem(std::string lResult, int stepSize, float angleDelta)
 				{
 					Cylinder cyl;
 					cyl.GenCylinder(curState.radius, curState.stepSize, 24);
-					for (int i = 0; i < cyl.GetNumVertices(); ++i)
+					/*for (int i = 0; i < cyl.GetNumVertices(); ++i)
 					{
 						XMVECTOR norm = XMLoadFloat3(&cyl.GetNormal(i));
 						norm = XMVector3TransformNormal(norm, rotMatrix);
@@ -180,11 +180,13 @@ void LTree::InterpretSystem(std::string lResult, int stepSize, float angleDelta)
 						pos = XMVector3Transform(pos, rotMatrix);
 						XMStoreFloat3(&cyl.GetPosition(i), pos);
 						XMStoreFloat3(&cyl.GetPosition(i), XMVectorAdd(pos, curState.pos));
-					}
+					}*/
 					//cyl.Rotate(rotMatrix);
 					//cyl.Translate(curState.pos);
 
 					m_models.push_back(new Model(cyl));
+					//m_models.back()->SetWorldMatrix(rotMatrix);
+					m_models.back()->SetWorldMatrix(XMMatrixMultiply(rotMatrix, XMMatrixTranslationFromVector(curState.pos)));
 				}
 				break;
 			}
