@@ -67,6 +67,8 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 	m_lsystem->AddRule('C', "|D^|F^B-F+C^F^A&&FA&F^C+F+B^F^D//");
 	m_lsystem->AddRule('D', "|CFB-F+B|FA&F^A&&FB-F+B|FC//");*/
 
+	//a=90, n = 3 (or 5 if you want to eb stupid)
+
 	/*m_lsystem = new LSystem("F[X][Y][Z]");
 	m_lsystem->AddRule('F', "F[+[X][Y][Z]][-[X][Y][Z]][^[X][Y][Z]][&[X][Y][Z]][/[X][Y][Z]][[X][Y][Z]]");
 	m_lsystem->AddRule('Z', "FZ[+FZ][/FX][^FY]F", 0.5f);
@@ -75,14 +77,17 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 	m_lsystem->AddRule('X', "FX[-FZ][\FX][&FY]F", 0.5f);
 	m_lsystem->AddRule('Y', "FY[+FZ][/FX][^FY]F", 0.5f);
 	m_lsystem->AddRule('Y', "FY[-FZ][\FX][&FY]F", 0.5f);*/
+	//this is a mess
+
 
 	/*m_lsystem = new LSystem("A");
 	m_lsystem->AddRule('A', "[&FL!A]/////'[&FL!A]////////'[&FL!A]");
 	m_lsystem->AddRule('F', "S/////F");
 	m_lsystem->AddRule('S', "FL");
 	m_lsystem->AddRule('L', "['''^^{-f+f+f-|-f+f+f}]");*/
+	//n = 7, a = 22.5
 
-	m_lsystem = new LSystem("P");
+	/*m_lsystem = new LSystem("P");
 	m_lsystem->AddRule('P', "I+[P+H]--//[--L]I[++L]-[PH]++PH");
 	m_lsystem->AddRule('I', "FS[//&&L][//^^L]FS");
 	m_lsystem->AddRule('S', "S[//&&L][//^^L]FS", 0.33f);
@@ -91,12 +96,23 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 	m_lsystem->AddRule('L', "['{+f-ff-f+|+f-ff-f}]");
 	m_lsystem->AddRule('H', "[&&&D'/W////W/////W////W////W]");
 	m_lsystem->AddRule('D', "FF");
-	m_lsystem->AddRule('W', "['^F][{&&&&-f+f|-f+f}]");
+	m_lsystem->AddRule('W', "['^F][{&&&&-f+f|-f+f}]");*/
+	//n = 5, a = 18.0
 	   
+	/*m_lsystem = new LSystem("X");
+	m_lsystem->AddRule('X', "F[+X][-X][^X][&X]FX");
+	m_lsystem->AddRule('F', "FF");*/
+	//n = 6, a = 25.7
+
+	m_lsystem = new LSystem("F");
+	m_lsystem->AddRule('F', "F[+F]F[-F]F", 0.33f);
+	m_lsystem->AddRule('F', "F[+F]F", 0.33f);
+	m_lsystem->AddRule('F', "F[-F]F", 0.33f);
+
 	int numIts = 5;
 
-	int stepSize = 5;
-	float angleDelta = (18.0f * XM_PI) / 180;
+	float stepSize = 3.0f;
+	float angleDelta = (20.0f * XM_PI) / 180;
 	float terrainSize = 513.0f;
 
 	std::string testLSystem = m_lsystem->RunSystem(numIts);
@@ -159,17 +175,17 @@ bool ProceduralScene::Render(D3D* d3d)
 		return false;	
 
 	d3d->TurnOffCulling();
-	/*for (LTree* lt : m_trees)
+	for (LTree* lt : m_trees)
 	{
 		lt->Render(d3d->GetDeviceContext());
 		result = m_shaders->RenderLTree(lt, m_Camera, m_Light);
 		if (!result)
 			return false;
-	}*/
-	m_trees[0]->Render(d3d->GetDeviceContext());
-	result = m_shaders->RenderLTree(m_trees[0], m_Camera, m_Light);
-	if (!result)
-		return false;
+	}
+	//m_trees[0]->Render(d3d->GetDeviceContext());
+	//result = m_shaders->RenderLTree(m_trees[0], m_Camera, m_Light);
+	//if (!result)
+	//	return false;
 
 	d3d->TurnOffCulling();	
 

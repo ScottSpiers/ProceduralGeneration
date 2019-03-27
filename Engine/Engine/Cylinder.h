@@ -24,8 +24,8 @@ public:
 	Cylinder(int, int, int);
 	~Cylinder();
 
-	void GenCaps(int, int, int, bool);
-	void GenCylinder(int, int, int);
+	void GenCaps(int, float, int, bool);
+	void GenCylinder(int, float, int);
 	void Rotate(XMMATRIX);
 	void Translate(XMVECTOR);
 

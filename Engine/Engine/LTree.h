@@ -18,7 +18,7 @@ private:
 	{
 		XMVECTOR pos;
 		XMVECTOR dir = XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f);
-		int stepSize;
+		float stepSize;
 		float radius;
 		XMMATRIX rotation;
 	};
@@ -40,7 +40,7 @@ public:
 
 	bool Initialise(ID3D11Device*);
 	bool Render(ID3D11DeviceContext*);
-	void InterpretSystem(std::string, int, float);
+	void InterpretSystem(std::string, float, float);
 
 	std::vector<Model*> GetModels();
 

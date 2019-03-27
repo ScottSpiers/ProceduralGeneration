@@ -28,7 +28,7 @@ inline XMVECTOR Cylinder::GetCircleVector(int i, int t)
 	return XMVectorSet(deltaX, 0, deltaZ, 0.f);
 }
 
-void Cylinder::GenCaps(int r, int h, int t, bool isTop)
+void Cylinder::GenCaps(int r, float h, int t, bool isTop)
 {
 	for (int i = 0; i < t - 2; ++i)
 	{
@@ -70,7 +70,7 @@ void Cylinder::GenCaps(int r, int h, int t, bool isTop)
 	}
 }
 
-void Cylinder::GenCylinder(int r, int h, int t)
+void Cylinder::GenCylinder(int r, float h, int t)
 {
 	m_vertices.clear();
 	m_indices.clear();

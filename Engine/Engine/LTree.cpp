@@ -17,6 +17,7 @@ bool LTree::Initialise(ID3D11Device* device)
 	{
 		for (Model* m : m_models)
 		{
+			m->SetWorldMatrix(m->GetWorldMatrix() * m_worldMatrix);
 			m->InitializeBuffers(device);
 		}
 	}
@@ -96,7 +97,7 @@ bool LTree::Render(ID3D11DeviceContext* context)
 	}
 }
 
-void LTree::InterpretSystem(std::string lResult, int stepSize, float angleDelta)
+void LTree::InterpretSystem(std::string lResult, float stepSize, float angleDelta)
 {
 	TurtleState curState;
 	TurtleState nextState;
