@@ -112,6 +112,12 @@ void LTree::InterpretSystem(std::string lResult, float stepSize, float angleDelt
 	XMMATRIX rotMatrix = XMMatrixIdentity();
 	int index = 0;
 
+	float origRad = curState.radius;
+	float origStepSize = curState.stepSize;
+
+	Cylinder cyl;
+	cyl.GenCylinder(origRad, origStepSize, 24);
+
 	//Simple Math implementation of stuff
 	/*Vector3 Up() const { return Vector3(_21, _22, _23); }
 	void Up(const Vector3& v) { _21 = v.x; _22 = v.y; _23 = v.z; }
@@ -142,6 +148,7 @@ void LTree::InterpretSystem(std::string lResult, float stepSize, float angleDelt
 			return;
 		}
 	***************************************SUCCESS!******************************************/
+	//Cylinder cyl;
 
 	for (char c : lResult)
 	{
@@ -169,25 +176,11 @@ void LTree::InterpretSystem(std::string lResult, float stepSize, float angleDelt
 				}
 				else
 				{
-					Cylinder cyl;
-					cyl.GenCylinder(curState.radius, curState.stepSize, 24);
-					/*for (int i = 0; i < cyl.GetNumVertices(); ++i)
-					{
-						XMVECTOR norm = XMLoadFloat3(&cyl.GetNormal(i));
-						norm = XMVector3TransformNormal(norm, rotMatrix);
-						XMStoreFloat3(&cyl.GetNormal(i), norm);
-
-						XMVECTOR pos = XMLoadFloat3(&cyl.GetPosition(i));
-						pos = XMVector3Transform(pos, rotMatrix);
-						XMStoreFloat3(&cyl.GetPosition(i), pos);
-						XMStoreFloat3(&cyl.GetPosition(i), XMVectorAdd(pos, curState.pos));
-					}*/
-					//cyl.Rotate(rotMatrix);
-					//cyl.Translate(curState.pos);
-
+					//cyl.GenCylinder(curState.radius, curState.stepSize, 24);
 					m_models.push_back(new Model(cyl));
-					//m_models.back()->SetWorldMatrix(rotMatrix);
-					m_models.back()->SetWorldMatrix(XMMatrixMultiply(rotMatrix, XMMatrixTranslationFromVector(curState.pos)));
+					//m_models.back()->SetWorldMatrix(XMMatrixScaling(curState.radius / origRad, curState.stepSize / origStepSize, curState.radius / origRad));
+					m_models.back()->SetWorldMatrix(XMMatrixMultiply(XMMatrixMultiply(XMMatrixScaling(curState.radius / origRad, curState.stepSize / origStepSize, curState.radius / origRad), rotMatrix), XMMatrixTranslationFromVector(curState.pos)));
+					
 				}
 				break;
 			}
@@ -235,6 +228,8 @@ void LTree::InterpretSystem(std::string lResult, float stepSize, float angleDelt
 			}
 			case '[':
 			{
+				//nextState.stepSize = curState.stepSize + 1.0f;
+				nextState.radius = curState.radius - 0.3f;
 				curState.rotation = rotMatrix;
 				turtleStack.push(curState);
 				indexStack.push(index);

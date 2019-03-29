@@ -1,5 +1,4 @@
 ﻿  LTree.cpp
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\ltree.cpp(173): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\ltree.cpp(188): warning C4316: 'Model': object allocated on the heap may not be aligned 16
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\ltree.cpp(180): warning C4316: 'Model': object allocated on the heap may not be aligned 16
 c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\ltree.cpp(98): warning C4715: 'LTree::Render': not all control paths return a value
   Engine.vcxproj -> C:\Users\Scott\Documents\Uni\Abertay\CMP505\Assignment\Engine\Debug\Engine.exe

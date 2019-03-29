@@ -24,15 +24,15 @@ public:
 	Cylinder(int, int, int);
 	~Cylinder();
 
-	void GenCaps(int, float, int, bool);
-	void GenCylinder(int, float, int);
+	void GenCaps(float, float, int, bool);
+	void GenCylinder(float, float, int);
 	void Rotate(XMMATRIX);
 	void Translate(XMVECTOR);
 
 	//This Will change when VertexType is out into a header of its own
-	XMFLOAT3& GetPosition(int);
-	XMFLOAT2& GetTexCoord(int);
-	XMFLOAT3& GetNormal(int);
+	XMFLOAT3 GetPosition(int);
+	XMFLOAT2 GetTexCoord(int);
+	XMFLOAT3 GetNormal(int);
 
 	int GetNumVertices();
 	std::vector<int> GetIndices();

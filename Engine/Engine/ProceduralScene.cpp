@@ -99,20 +99,21 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 	m_lsystem->AddRule('W', "['^F][{&&&&-f+f|-f+f}]");*/
 	//n = 5, a = 18.0
 	   
-	/*m_lsystem = new LSystem("X");
+	m_lsystem = new LSystem("X");
 	m_lsystem->AddRule('X', "F[+X][-X][^X][&X]FX");
-	m_lsystem->AddRule('F', "FF");*/
+	m_lsystem->AddRule('F', "FF");
 	//n = 6, a = 25.7
 
-	m_lsystem = new LSystem("F");
+	/*m_lsystem = new LSystem("F");
 	m_lsystem->AddRule('F', "F[+F]F[-F]F", 0.33f);
 	m_lsystem->AddRule('F', "F[+F]F", 0.33f);
-	m_lsystem->AddRule('F', "F[-F]F", 0.33f);
+	m_lsystem->AddRule('F', "F[-F]F", 0.33f);*/
+	//n = 5, a = 20.0
 
-	int numIts = 5;
+	int numIts = 6;
 
-	float stepSize = 3.0f;
-	float angleDelta = (20.0f * XM_PI) / 180;
+	float stepSize = 1.5f;
+	float angleDelta = (25.7f * XM_PI) / 180;
 	float terrainSize = 513.0f;
 
 	std::string testLSystem = m_lsystem->RunSystem(numIts);
@@ -121,7 +122,7 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 	m_trees[0]->InterpretSystem(testLSystem, stepSize, angleDelta);
 	m_trees[0]->Initialise(device);
 
-	XMMATRIX newPos = XMMatrixTranslation(terrainSize, 0.0f, 0.0f);
+	/*XMMATRIX newPos = XMMatrixTranslation(terrainSize, 0.0f, 0.0f);
 	m_trees[1]->SetWorldMatrix(newPos);
 	m_trees[1]->InterpretSystem(m_lsystem->RunSystem(numIts), stepSize, angleDelta);
 	m_trees[1]->Initialise(device);
@@ -139,7 +140,7 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 	newPos = XMMatrixTranslation(terrainSize / 2, 0.0f, terrainSize / 2);
 	m_trees[4]->SetWorldMatrix(newPos);
 	m_trees[4]->InterpretSystem(m_lsystem->RunSystem(numIts), stepSize, angleDelta);
-	m_trees[4]->Initialise(device);
+	m_trees[4]->Initialise(device);*/
 
 	return true;	
 }
@@ -174,20 +175,20 @@ bool ProceduralScene::Render(D3D* d3d)
 	if (!result)
 		return false;	
 
-	d3d->TurnOffCulling();
-	for (LTree* lt : m_trees)
+	//d3d->TurnOffCulling();
+	/*for (LTree* lt : m_trees)
 	{
 		lt->Render(d3d->GetDeviceContext());
 		result = m_shaders->RenderLTree(lt, m_Camera, m_Light);
 		if (!result)
 			return false;
-	}
-	//m_trees[0]->Render(d3d->GetDeviceContext());
-	//result = m_shaders->RenderLTree(m_trees[0], m_Camera, m_Light);
-	//if (!result)
-	//	return false;
+	}*/
+	m_trees[0]->Render(d3d->GetDeviceContext());
+	result = m_shaders->RenderLTree(m_trees[0], m_Camera, m_Light);
+	if (!result)
+		return false;
 
-	d3d->TurnOffCulling();	
+	//d3d->TurnOffCulling();	
 
 	//d3d->TurnOnCulling();
 

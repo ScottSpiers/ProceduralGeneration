@@ -24,11 +24,11 @@ inline XMVECTOR Cylinder::GetCircleVector(int i, int t)
 	float deltaZ;
 
 	XMScalarSinCos(&deltaX, &deltaZ, angle);
-
+	
 	return XMVectorSet(deltaX, 0, deltaZ, 0.f);
 }
 
-void Cylinder::GenCaps(int r, float h, int t, bool isTop)
+void Cylinder::GenCaps(float r, float h, int t, bool isTop)
 {
 	for (int i = 0; i < t - 2; ++i)
 	{
@@ -70,7 +70,7 @@ void Cylinder::GenCaps(int r, float h, int t, bool isTop)
 	}
 }
 
-void Cylinder::GenCylinder(int r, float h, int t)
+void Cylinder::GenCylinder(float r, float h, int t)
 {
 	m_vertices.clear();
 	m_indices.clear();
@@ -150,17 +150,17 @@ void Cylinder::Translate(XMVECTOR dir)
 	}
 }
 
-XMFLOAT3& Cylinder::GetPosition(int i)
+XMFLOAT3 Cylinder::GetPosition(int i)
 {
 	return m_vertices[i].pos;
 }
 
-XMFLOAT2& Cylinder::GetTexCoord(int i)
+XMFLOAT2 Cylinder::GetTexCoord(int i)
 {
 	return m_vertices[i].tex;
 }
 
-XMFLOAT3& Cylinder::GetNormal(int i)
+XMFLOAT3 Cylinder::GetNormal(int i)
 {
 	return m_vertices[i].normal;
 }
