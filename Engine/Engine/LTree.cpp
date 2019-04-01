@@ -93,8 +93,8 @@ bool LTree::Render(ID3D11DeviceContext* context)
 		// Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
 		context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 
-		return true;
 	}
+	return true;
 }
 
 void LTree::InterpretSystem(std::string lResult, float stepSize, float angleDelta)

@@ -51,6 +51,10 @@ public:
 	bool IsModel();
 
 private:
+	int ParseParameters(std::string);
+	void ApplyArithmetic(std::string&);
+
+private:
 	ID3D11Buffer* m_vBuffer, *m_iBuffer;
 	std::vector<VertexType> m_vertices;
 	std::vector<int> m_indices;

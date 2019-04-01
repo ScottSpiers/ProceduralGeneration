@@ -1,7 +1,7 @@
 
 #include "L-System.h"
 
-LSystem::LSystem(std::string axiom) : m_axiom(axiom), m_rules()
+LSystem::LSystem(std::string axiom, bool isParametric) : m_axiom(axiom), m_isParametric(isParametric), m_rules()
 {
 	srand(time(nullptr));
 }
@@ -45,7 +45,7 @@ bool LSystem::AddRule(char pre, std::string suc, float prob)
 {
 	for (ProductionRule r : m_rules)
 	{
-		if (r.predecessor == pre)
+		if (r.predecessor == ("" + pre))
 		{
 			if (prob >= 1.0f || suc == r.successor)
 				return false;

@@ -67,7 +67,7 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 	m_lsystem->AddRule('C', "|D^|F^B-F+C^F^A&&FA&F^C+F+B^F^D//");
 	m_lsystem->AddRule('D', "|CFB-F+B|FA&F^A&&FB-F+B|FC//");*/
 
-	//a=90, n = 3 (or 5 if you want to eb stupid)
+	//a=90, n = 3 (or 5 if you want to be stupid)
 
 	/*m_lsystem = new LSystem("F[X][Y][Z]");
 	m_lsystem->AddRule('F', "F[+[X][Y][Z]][-[X][Y][Z]][^[X][Y][Z]][&[X][Y][Z]][/[X][Y][Z]][[X][Y][Z]]");
@@ -112,8 +112,8 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 
 	int numIts = 6;
 
-	float stepSize = 1.5f;
-	float angleDelta = (25.7f * XM_PI) / 180;
+	float stepSize = 1.0f;
+	float angleDelta = (35.0f * XM_PI) / 180;
 	float terrainSize = 513.0f;
 
 	std::string testLSystem = m_lsystem->RunSystem(numIts);
