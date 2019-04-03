@@ -39,14 +39,15 @@ ProceduralScene::~ProceduralScene()
 bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* context)
 {
 	bool result;
+	float terrainSize = 513.0f;
 
 	result = Scene::Initialise(device, context);  
 	if (!result)
 		return false;
 
-	m_terrain = new Terrain(513,513);
-	m_terrain->GenRandom();
-	//m_terrain->GenSinWave();
+	m_terrain = new Terrain(terrainSize,terrainSize);
+	//m_terrain->GenRandom();
+	m_terrain->GenSinWave();
 
 	m_Light->SetAmbientColour(0.15f, 0.15f, 0.15f, 1.0f);
 	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -54,7 +55,7 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 	m_Light->SetSpecIntensity(2.f);
 	m_Light->SetDirection(0.0f, -.5f, 0.0f);
 	
-	m_Camera->SetPosition(50.0f, 2.0f, -7.0f);
+	m_Camera->SetPosition(terrainSize/2.0f, 2.0f, terrainSize/2.0f);
 
 	result = m_terrain->Initialise(device);
 	if (!result)
@@ -112,9 +113,9 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 
 	int numIts = 6;
 
-	float stepSize = 1.0f;
-	float angleDelta = (35.0f * XM_PI) / 180;
-	float terrainSize = 513.0f;
+	float stepSize = .75f;
+	float angleDelta = (25.7f * XM_PI) / 180;
+	//float terrainSize = 513.0f;
 
 	std::string testLSystem = m_lsystem->RunSystem(numIts);
 	//XMMATRIX newPos = XMMatrixTranslation(terrainSize, 0.0f, 0.0f);
@@ -162,6 +163,11 @@ bool ProceduralScene::Render(D3D* d3d)
 	d3d->BeginScene(0.0f, 0.0f, .8f, 1.0f);
 	//m_Camera->Render();
 
+	float x = m_Camera->GetPosition().x;
+	float z = m_Camera->GetPosition().z;
+	float heightOffset = 1.2f;
+
+	m_Camera->SetPosition(x, m_terrain->GetTerrainHeight(x, z) + heightOffset, z);
 	/*d3d->GetDeviceContext()->ClearRenderTargetView(defRTV, colour);
 	d3d->GetDeviceContext()->ClearDepthStencilView(defDSV, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);*/
 

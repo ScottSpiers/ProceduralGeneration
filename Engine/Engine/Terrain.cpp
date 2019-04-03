@@ -226,6 +226,48 @@ void Terrain::CalcNormals()
 	}
 }
 
+float Terrain::GetTerrainHeight(float x, float z)
+{
+	bool inX = x < m_width && x >= 0;
+	bool inZ = z < m_height && z >= 0;
+
+	if (!inX || !inZ)
+		return 0.0f;
+
+	/*x /= m_width;
+	z /= m_height;*/
+
+	int row = floorf(z);
+	int col = floorf(x);
+
+	float h = 0.0f;
+
+	int index = (row * m_width) + col;
+	float a = m_vertices[index].pos.y;
+	float b = m_vertices[index + 1].pos.y;
+
+	index = ((row + 1) * m_width) + col;
+	float c = m_vertices[index].pos.y;
+	float d = m_vertices[index + 1].pos.y;
+
+	float deltaX = x - col;
+	float deltaZ = z - row;
+
+	if (deltaZ <= 1.0f - deltaX)
+	{
+		float uy = b - a;
+		float vy = c - a;
+		h = a + (deltaX * uy) + (deltaZ * vy);
+	}
+	else
+	{
+		float uy = c - d;
+		float vy = b - d;
+		h = d + ((1 - deltaX) * uy) + ((1 - deltaZ) * vy);
+	}
+	return h;
+}
+
 void Terrain::GenRandom()
 {	
 	if (!m_toggleGenerated)

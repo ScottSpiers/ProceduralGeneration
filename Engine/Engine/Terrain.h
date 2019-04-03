@@ -30,6 +30,8 @@ public:
 	XMMATRIX GetWorldMatrix();
 	int GetIndexCount();
 
+	float GetTerrainHeight(float, float);
+
 private:
 	void CalcNormals();
 

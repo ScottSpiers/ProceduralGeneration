@@ -1,5 +1,6 @@
 ﻿  ProceduralScene.cpp
 c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(9): warning C4018: '<': signed/unsigned mismatch
 c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(11): warning C4316: 'LTree': object allocated on the heap may not be aligned 16
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(47): warning C4316: 'Terrain': object allocated on the heap may not be aligned 16
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(48): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(48): warning C4316: 'Terrain': object allocated on the heap may not be aligned 16
   Engine.vcxproj -> C:\Users\Scott\Documents\Uni\Abertay\CMP505\Assignment\Engine\Debug\Engine.exe

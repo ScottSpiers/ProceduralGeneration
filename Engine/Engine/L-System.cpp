@@ -45,7 +45,7 @@ bool LSystem::AddRule(char pre, std::string suc, float prob)
 {
 	for (ProductionRule r : m_rules)
 	{
-		if (r.predecessor == ("" + pre))
+		if (r.predecessor == + pre)
 		{
 			if (prob >= 1.0f || suc == r.successor)
 				return false;
