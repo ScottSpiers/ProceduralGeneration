@@ -11,6 +11,9 @@
 
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3d11.lib")
+#pragma comment(lib, "d3d10_1.lib")
+#pragma comment(lib, "d2d1.lib")
+#pragma comment(lib, "dwrite.lib")
 #pragma comment(lib, "winmm.lib")
 
 
@@ -20,6 +23,9 @@
 #include <dxgi.h>
 #include <d3dcommon.h>
 #include <d3d11.h>
+#include <d3d10_1.h>
+#include <d2d1.h>
+#include <dwrite.h>
 #include <directxmath.h>
 
 using namespace DirectX;
@@ -64,6 +70,9 @@ public:
 	void TurnOffAlphaBlending();
 
 private:
+	bool InitialiseD3D10_1(IDXGIAdapter*, int, int);
+
+private:
 	bool m_vsync_enabled;
 	int m_videoCardMemory;
 	char m_videoCardDescription[128];
@@ -83,6 +92,21 @@ private:
 	ID3D11DepthStencilState* m_depthLessEqualStencilState;
 	ID3D11BlendState* m_alphaEnableBlendState;
 	ID3D11BlendState* m_alphaDisableBlendState;
+
+	//font stuff 
+	//MOVE MOST OF THIS SOMEWHERE
+	ID3D10Device1* m_d3d10Device;
+	IDXGIKeyedMutex* m_d11Mutex;
+	IDXGIKeyedMutex* m_d10Mutex;
+	ID2D1RenderTarget* m_d2dRenderTarget;
+	ID2D1SolidColorBrush* m_brush;
+	ID3D11Texture2D* m_bBuffer11;
+	ID3D11Texture2D* m_sharedTexture;
+	ID3D11Buffer* m_d2dVertBuf;
+	ID3D11Buffer* m_d2dindexBuf;
+	ID3D11ShaderResourceView* m_d2dTexture;
+	IDWriteFactory* m_dWriteFactory;
+	IDWriteTextFormat* m_textFormat;
 };
 
 #endif

@@ -19,6 +19,8 @@ D3D::D3D()
 	m_depthLessEqualStencilState = 0;
 	m_alphaEnableBlendState = 0;
 	m_alphaDisableBlendState = 0;
+
+	m_d3d10Device = 0;
 }
 
 
@@ -33,6 +35,12 @@ D3D::~D3D()
 	if (m_swapChain)
 	{
 		m_swapChain->SetFullscreenState(false, NULL);
+	}
+
+	if (m_d3d10Device)
+	{
+		m_d3d10Device->Release();
+		m_d3d10Device = 0;
 	}
 
 	if (m_alphaDisableBlendState)
@@ -228,8 +236,8 @@ bool D3D::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, b
 	adapterOutput = 0;
 
 	// Release the adapter.
-	adapter->Release();
-	adapter = 0;
+	/*adapter->Release();
+	adapter = 0;*/
 
 	// Release the factory.
 	factory->Release();
@@ -294,12 +302,15 @@ bool D3D::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, b
 	featureLevel = D3D_FEATURE_LEVEL_11_0;
 
 	// Create the swap chain, Direct3D device, and Direct3D device context.
-	result = D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, 0, &featureLevel, 1, 
+	result = D3D11CreateDeviceAndSwapChain(adapter, D3D_DRIVER_TYPE_UNKNOWN, NULL, D3D11_CREATE_DEVICE_BGRA_SUPPORT, &featureLevel, 1, 
 										   D3D11_SDK_VERSION, &swapChainDesc, &m_swapChain, &m_device, NULL, &m_deviceContext);
 	if(FAILED(result))
 	{
 		return false;
 	}
+
+	InitialiseD3D10_1(adapter, screenWidth, screenHeight);
+	adapter->Release();
 
 	// Get the pointer to the back buffer.
 	result = m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBufferPtr);
@@ -488,6 +499,35 @@ bool D3D::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, b
 	m_orthoMatrix = XMMatrixOrthographicLH((float)screenWidth, (float)screenHeight, screenNear, screenDepth);
 
     return true;
+}
+
+bool D3D::InitialiseD3D10_1(IDXGIAdapter* adapter, int screenWidth, int screenHeight)
+{
+	HRESULT result; 
+	result = D3D10CreateDevice1(adapter, D3D10_DRIVER_TYPE_HARDWARE, NULL, D3D10_CREATE_DEVICE_BGRA_SUPPORT, D3D10_FEATURE_LEVEL_10_1, D3D10_1_SDK_VERSION, &m_d3d10Device);
+	if (FAILED(result))
+		return false;
+
+	D3D11_TEXTURE2D_DESC sharedTexDesc;
+	ZeroMemory(&sharedTexDesc, sizeof(sharedTexDesc));
+
+	sharedTexDesc.Width = screenWidth;
+	sharedTexDesc.Height = screenHeight;
+	sharedTexDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+	sharedTexDesc.MipLevels = 1;
+	sharedTexDesc.ArraySize = 1;
+	sharedTexDesc.SampleDesc.Count = 1;
+	sharedTexDesc.Usage = D3D11_USAGE_DEFAULT;
+	sharedTexDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
+	sharedTexDesc.MiscFlags = D3D11_RESOURCE_MISC_SHARED_KEYEDMUTEX;
+
+	result = m_device->CreateTexture2D(&sharedTexDesc, NULL, &m_sharedTexture);
+	if (FAILED(result))
+		return false;
+
+
+
+	return true;
 }
 
 

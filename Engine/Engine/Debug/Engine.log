@@ -1,6 +1,27 @@
-﻿  ProceduralScene.cpp
+﻿  Cubemape.cpp
+  D3D.cpp
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\d3d.cpp(143): warning C4101: 'depthDisabledStencilDesc': unreferenced local variable
+  Graphics.cpp
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\graphics.cpp(47): warning C4316: 'D3D': object allocated on the heap may not be aligned 16
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\graphics.cpp(71): warning C4316: 'Text': object allocated on the heap may not be aligned 16
+  Input.cpp
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\input.cpp(209): warning C4244: 'argument': conversion from 'const LONG' to 'float', possible loss of data
+  ProceduralScene.cpp
 c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(9): warning C4018: '<': signed/unsigned mismatch
 c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(11): warning C4316: 'LTree': object allocated on the heap may not be aligned 16
 c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(48): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
 c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(48): warning C4316: 'Terrain': object allocated on the heap may not be aligned 16
+  ResourceManager.cpp
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\resourcemanager.cpp(33): warning C4101: 'result': unreferenced local variable
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\resourcemanager.cpp(126): warning C4101: 'result': unreferenced local variable
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\resourcemanager.cpp(129): warning C4101: 'filename': unreferenced local variable
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\resourcemanager.cpp(187): warning C4316: 'Model': object allocated on the heap may not be aligned 16
+  Scene.cpp
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\scene.cpp(43): warning C4316: 'Camera': object allocated on the heap may not be aligned 16
+  System.cpp
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\system.cpp(54): warning C4316: 'Graphics': object allocated on the heap may not be aligned 16
+  WinterReflection.cpp
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\winterreflection.cpp(35): warning C4316: 'Cubemap': object allocated on the heap may not be aligned 16
+  main.cpp
+  Generating Code...
   Engine.vcxproj -> C:\Users\Scott\Documents\Uni\Abertay\CMP505\Assignment\Engine\Debug\Engine.exe

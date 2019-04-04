@@ -46,8 +46,8 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 		return false;
 
 	m_terrain = new Terrain(terrainSize,terrainSize);
-	//m_terrain->GenRandom();
-	m_terrain->GenSinWave();
+	m_terrain->GenRandom();
+	//m_terrain->GenSinWave();
 
 	m_Light->SetAmbientColour(0.15f, 0.15f, 0.15f, 1.0f);
 	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -165,7 +165,7 @@ bool ProceduralScene::Render(D3D* d3d)
 
 	float x = m_Camera->GetPosition().x;
 	float z = m_Camera->GetPosition().z;
-	float heightOffset = 1.2f;
+	float heightOffset = 10.0f;
 
 	m_Camera->SetPosition(x, m_terrain->GetTerrainHeight(x, z) + heightOffset, z);
 	/*d3d->GetDeviceContext()->ClearRenderTargetView(defRTV, colour);
