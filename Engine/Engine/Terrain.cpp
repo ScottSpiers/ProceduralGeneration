@@ -9,6 +9,7 @@ Terrain::Terrain(int rows, int columns)
 
 	m_vBuffer = 0;
 	m_iBuffer = 0;
+	m_texture = 0;
 	m_toggleGenerated = false;
 
 	m_worldMatrix = XMMatrixIdentity();
@@ -33,6 +34,13 @@ Terrain::Terrain(int rows, int columns)
 
 Terrain::~Terrain()
 {
+
+	if (m_texture)
+	{
+		m_texture->Release();
+		m_texture = 0;
+	}
+
 	if (m_iBuffer)
 	{
 		m_iBuffer->Release();
@@ -50,6 +58,7 @@ Terrain::~Terrain()
 bool Terrain::Initialise(ID3D11Device* device)
 {
 	CalcNormals();
+	//CalcTexCoords();
 
 	D3D11_BUFFER_DESC vBufferDesc;
 	D3D11_BUFFER_DESC iBufferDesc;
@@ -224,6 +233,27 @@ void Terrain::CalcNormals()
 			m_indices.push_back(face.first.z);
 		}
 	}
+}
+
+void Terrain::CalcTexCoords()
+{
+	float x = 1 / m_width;
+	float z = 1 / m_height;
+
+	for (auto& v : m_vertices)
+	{
+		v.tex = XMFLOAT2(v.pos.x * x, v.pos.z * z);
+	}
+}
+
+void Terrain::SetTexture(ID3D11ShaderResourceView* t)
+{
+	m_texture = t;
+}
+
+ID3D11ShaderResourceView* Terrain::GetTexture()
+{
+	return m_texture;
 }
 
 float Terrain::GetTerrainHeight(float x, float z)

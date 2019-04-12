@@ -102,6 +102,23 @@ bool ResourceManager::LoadResources()
 			{
 				return false;
 			}
+
+			if (!LoadTexture(SKY_CUBE_TEXTURE))
+			{
+				return false;
+			}
+
+			if (!LoadTexture(TREE_TEXTURE))
+			{
+				return false;
+			}
+
+			if (!LoadTexture(TERRAIN_TEXTURE))
+			{
+				return false;
+			}
+
+
 			break;
 		}
 		default: return false;
@@ -132,8 +149,10 @@ bool ResourceManager::LoadTexture(TextureResource t)
 	{
 		case ORBIT_TEXTURE: 
 		{
-			CreateDDSTextureFromFile(m_device, L"../Engine/data/seafloor.dds", nullptr, &texture, 0 , nullptr);
 			//D3DX11CreateShaderResourceViewFromFile(m_device, L"../Engine/data/seafloor.dds", NULL, NULL, &texture, NULL); 
+			result = CreateDDSTextureFromFile(m_device, L"../Engine/data/seafloor.dds", nullptr, &texture, 0 , nullptr);
+			if (FAILED(result))
+				return false;
 			break;
 		}
 		case SKY_CUBE_TEXTURE:
@@ -171,6 +190,22 @@ bool ResourceManager::LoadTexture(TextureResource t)
 			{
 				return false;
 			}
+			break;
+		}
+		case TERRAIN_TEXTURE:
+		{
+			//D3DX11CreateShaderResourceViewFromFile(m_device, L"../Engine/data/seafloor.dds", NULL, NULL, &texture, NULL); 
+			result = CreateDDSTextureFromFile(m_device, L"../Engine/data/grass.dds", nullptr, &texture, 0, nullptr);
+			if (FAILED(result))
+				return false;
+			break;
+		}
+		case TREE_TEXTURE:
+		{			
+			//D3DX11CreateShaderResourceViewFromFile(m_device, L"../Engine/data/seafloor.dds", NULL, NULL, &texture, NULL); 
+			result = CreateDDSTextureFromFile(m_device, L"../Engine/data/treebark.dds", nullptr, &texture, 0, nullptr);
+			if (FAILED(result))
+				return false;
 			break;
 		}
 	}

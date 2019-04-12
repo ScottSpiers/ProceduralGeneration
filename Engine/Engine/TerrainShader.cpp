@@ -3,12 +3,20 @@
 
 TerrainShader::TerrainShader(ID3D11Device* device, ID3D11DeviceContext* context) : Shader(device, context)
 {
+
 	m_lightBuffer = 0;
 	m_camBuffer = 0;
+	m_sampleState = 0;
 }
 
 TerrainShader::~TerrainShader()
 {
+	if (m_sampleState)
+	{
+		m_sampleState->Release();
+		m_sampleState = 0;
+	}
+
 	if (m_camBuffer)
 	{
 		m_camBuffer->Release();
@@ -32,6 +40,7 @@ bool TerrainShader::Initialise()
 	unsigned int numElems;
 	D3D11_BUFFER_DESC lightBufferDesc;
 	D3D11_BUFFER_DESC camBufferDesc;
+	D3D11_SAMPLER_DESC samplerDesc;
 
 	errorMessage = 0;
 	vertexShaderBuffer = 0;
@@ -68,6 +77,28 @@ bool TerrainShader::Initialise()
 	//result = Shader::Initialise(L"Light.vs", "LightVertexShader", L"Light.ps", "LightPixelShader", polygonLayout, numElems);
 	if (!result)
 		return false;
+
+	// Create a texture sampler state description.
+	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.MipLODBias = 0.0f;
+	samplerDesc.MaxAnisotropy = 1;
+	samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+	samplerDesc.BorderColor[0] = 0;
+	samplerDesc.BorderColor[1] = 0;
+	samplerDesc.BorderColor[2] = 0;
+	samplerDesc.BorderColor[3] = 0;
+	samplerDesc.MinLOD = 0;
+	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+	// Create the texture sampler state.
+	result = m_device->CreateSamplerState(&samplerDesc, &m_sampleState);
+	if (FAILED(result))
+	{
+		return false;
+	}
 
 	// Setup the description of the light dynamic constant buffer that is in the pixel shader.
 	// Note that ByteWidth always needs to be a multiple of 16 if using D3D11_BIND_CONSTANT_BUFFER or CreateBuffer will fail.
@@ -152,8 +183,8 @@ bool TerrainShader::Render(Terrain* t, Camera* cam, Light* light)
 	// Finally set the light constant buffer in the pixel shader with the updated values.
 	m_context->PSSetConstantBuffers(bufferNumber, 1, &m_lightBuffer);
 
-	/*ID3D11ShaderResourceView* texture = t->GetTexture();
-	m_context->PSSetShaderResources(0, 1, &texture);*/
+	ID3D11ShaderResourceView* texture = t->GetTexture();
+	m_context->PSSetShaderResources(0, 1, &texture);
 
 	// Set the vertex input layout.
 	m_context->IASetInputLayout(m_inputLayout);
@@ -163,7 +194,7 @@ bool TerrainShader::Render(Terrain* t, Camera* cam, Light* light)
 	m_context->PSSetShader(m_pShader, NULL, 0);
 
 	// Set the sampler state in the pixel shader.
-	//m_context->PSSetSamplers(0, 1, &m_sampleState);
+	m_context->PSSetSamplers(0, 1, &m_sampleState);
 
 	// Render the triangle.
 	m_context->DrawIndexed(t->GetIndexCount(), 0, 0);

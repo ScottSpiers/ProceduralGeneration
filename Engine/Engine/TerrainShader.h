@@ -33,4 +33,5 @@ public:
 private:
 	ID3D11Buffer* m_lightBuffer;
 	ID3D11Buffer* m_camBuffer;
+	ID3D11SamplerState* m_sampleState;
 };

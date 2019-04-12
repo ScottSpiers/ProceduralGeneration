@@ -7,6 +7,7 @@
 
 #include "LightShader.h"
 #include "Model.h"
+#include "ResourceManager.h"
 
 
 using namespace DirectX;
@@ -49,6 +50,8 @@ public:
 	int GetIndexCount();
 
 	bool IsModel();
+	void SetTexture(ID3D11ShaderResourceView*);
+	//ID3D11ShaderResourceVeiw* GetTexture();
 
 private:
 	int ParseParameters(std::string);
@@ -56,6 +59,8 @@ private:
 
 private:
 	ID3D11Buffer* m_vBuffer, *m_iBuffer;
+	ID3D11ShaderResourceView* m_texture;
+
 	std::vector<VertexType> m_vertices;
 	std::vector<int> m_indices;
 	std::vector<Model*> m_models;

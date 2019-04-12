@@ -5,10 +5,16 @@ LTree::LTree()
 {
 	m_worldMatrix = XMMatrixIdentity();
 	m_isModel = true;
+	m_texture = 0;
 }
 
 LTree::~LTree()
 {
+	if (m_texture)
+	{
+		m_texture->Release();
+		m_texture = 0;
+	}
 }
 
 bool LTree::Initialise(ID3D11Device* device)
@@ -18,6 +24,7 @@ bool LTree::Initialise(ID3D11Device* device)
 		for (Model* m : m_models)
 		{
 			m->SetWorldMatrix(m->GetWorldMatrix() * m_worldMatrix);
+			m->SetTexture(m_texture);
 			m->InitializeBuffers(device);
 		}
 	}
@@ -269,6 +276,11 @@ XMMATRIX LTree::GetWorldMatrix()
 int LTree::GetIndexCount()
 {
 	return m_indices.size();
+}
+
+void LTree::SetTexture(ID3D11ShaderResourceView* t)
+{
+	m_texture = t;
 }
 
 bool LTree::IsModel()
