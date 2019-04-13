@@ -58,7 +58,7 @@ Terrain::~Terrain()
 bool Terrain::Initialise(ID3D11Device* device)
 {
 	CalcNormals();
-	//CalcTexCoords();
+	CalcTexCoords();
 
 	D3D11_BUFFER_DESC vBufferDesc;
 	D3D11_BUFFER_DESC iBufferDesc;
