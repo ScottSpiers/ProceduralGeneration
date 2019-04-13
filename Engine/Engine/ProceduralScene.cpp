@@ -5,6 +5,7 @@ ProceduralScene::ProceduralScene(ResourceManager::ManagerScene sceneResources) :
 {
 	m_terrain = 0;
 	m_lsystem = 0;
+	m_ppQuad = 0;
 
 	for (int i = 0; i < m_trees.size(); ++i)
 	{
@@ -14,14 +15,20 @@ ProceduralScene::ProceduralScene(ResourceManager::ManagerScene sceneResources) :
 
 ProceduralScene::~ProceduralScene()
 {
-	/*for (LTree* l : m_trees)
+	for (LTree* l : m_trees)
 	{
 		if (l)
 		{
 			delete l;
 			l = 0;
 		}
-	}*/
+	}
+
+	if (m_ppQuad)
+	{
+		delete m_ppQuad;
+		m_ppQuad = 0;
+	}
 
 	if (m_lsystem)
 	{
@@ -148,7 +155,75 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 	return true;	
 }
 
-bool ProceduralScene::Render(D3D* d3d)
+
+bool ProceduralScene::InitialiseRenderTexture(ID3D11Device* device, XMFLOAT2 dimensions)
+{
+	HRESULT res;
+	D3D11_TEXTURE2D_DESC textureDesc;
+	D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
+	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+
+	ZeroMemory(&textureDesc, sizeof(textureDesc));
+	textureDesc.Width = dimensions.x;
+	textureDesc.Height = dimensions.y;
+	textureDesc.MipLevels = 1;
+	textureDesc.ArraySize = 1;
+	textureDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	textureDesc.SampleDesc.Count = 1;
+	textureDesc.Usage = D3D11_USAGE_DEFAULT;
+	textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+	textureDesc.CPUAccessFlags = 0;
+	textureDesc.MiscFlags = 0;
+
+	res = device->CreateTexture2D(&textureDesc, 0, &m_ppRenderTarget);
+	if (FAILED(res))
+		return false;
+
+	rtvDesc.Format = textureDesc.Format;
+	rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+	rtvDesc.Texture2D.MipSlice = 0;
+
+	res = device->CreateRenderTargetView(m_ppRenderTarget, &rtvDesc, &m_ppRTV);
+	if (FAILED(res))
+		return false;
+
+	srvDesc.Format = textureDesc.Format;
+	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MostDetailedMip = 0;
+	srvDesc.Texture2D.MipLevels = 1;
+
+	res = device->CreateShaderResourceView(m_ppRenderTarget, &srvDesc, &m_ppSRV);
+	if(FAILED(res))
+		return false;
+
+	m_ppQuad = new Quad(dimensions.x, dimensions.y);
+	if (!m_ppQuad->Initialise(device))
+		return false;
+
+	m_orthoProj = XMMatrixOrthographicLH(dimensions.x, dimensions.y, 0.1f, 1000.0f);
+	return true;
+}
+
+bool ProceduralScene::RenderToTexture(D3D* d3d)
+{
+	InitialiseRenderTexture(d3d->GetDevice(), d3d->GetScreenDimensions());
+	d3d->GetDeviceContext()->OMSetRenderTargets(1, &m_ppRTV, d3d->getDepthStencilView());
+
+	float colour[4]{ 0.0f, 0.0f, 1.0f, 1.0f };
+	d3d->GetDeviceContext()->ClearRenderTargetView(m_ppRTV, colour);
+	d3d->GetDeviceContext()->ClearDepthStencilView(d3d->getDepthStencilView(), D3D11_CLEAR_DEPTH, 1.0f, 0);
+	
+	RenderScene(d3d);
+
+	m_ppQuad->SetTexture(m_ppSRV);
+
+	ID3D11RenderTargetView* rtv = d3d->getRenderTargetView();
+	d3d->GetDeviceContext()->OMSetRenderTargets(1, &rtv, d3d->getDepthStencilView());
+
+	return true;
+}
+
+bool ProceduralScene::RenderScene(D3D* d3d)
 {
 	XMMATRIX viewMatrix, projMatrix;
 	bool result;
@@ -156,14 +231,10 @@ bool ProceduralScene::Render(D3D* d3d)
 	viewMatrix = m_Camera->GetViewMatrix();
 
 	// Set the initial position of the camera.
-	
+
 	d3d->GetProjectionMatrix(projMatrix);
 	m_Camera->setProjMatrix(projMatrix);
 	m_Camera->Render();
-	
-
-	d3d->BeginScene(0.0f, 0.0f, .8f, 1.0f);
-	//m_Camera->Render();
 
 	float x = m_Camera->GetPosition().x;
 	float z = m_Camera->GetPosition().z;
@@ -178,10 +249,10 @@ bool ProceduralScene::Render(D3D* d3d)
 	result = m_terrain->Render(d3d->GetDeviceContext());
 	if (!result)
 		return false;
-	
+
 	result = m_shaders->RenderTerrain(m_terrain, m_Camera, m_Light);
 	if (!result)
-		return false;	
+		return false;
 
 	//d3d->TurnOffCulling();
 	/*for (LTree* lt : m_trees)
@@ -210,6 +281,26 @@ bool ProceduralScene::Render(D3D* d3d)
 	//{
 	//	return false;
 	//}
+	return true;
+}
 
+bool ProceduralScene::Render(D3D* d3d)
+{
+	bool res;
+	res = RenderToTexture(d3d);
+	if (!res)
+		return false;
+
+
+	d3d->BeginScene(0.0f, 0.0f, .8f, 1.0f);
+
+	d3d->TurnZBufferOff();
+
+	m_ppQuad->Render(d3d->GetDeviceContext());
+	m_shaders->RenderTexture(m_ppQuad, m_Camera->GetViewMatrix(), m_orthoProj);
+
+
+	d3d->TurnZBufferOn();
+	d3d->EndScene();
 	return true;
 }

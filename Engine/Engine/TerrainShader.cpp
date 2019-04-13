@@ -75,7 +75,7 @@ bool TerrainShader::Initialise()
 
 	result = Shader::Initialise(L"Terrain.vs", "TerrainVertexShader", L"Terrain.ps", "TerrainPixelShader", polygonLayout, numElems);
 	//result = Shader::Initialise(L"Light.vs", "LightVertexShader", L"Light.ps", "LightPixelShader", polygonLayout, numElems);
-	if (!result)
+	if (FAILED(result))
 		return false;
 
 	// Create a texture sampler state description.

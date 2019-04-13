@@ -2,6 +2,7 @@
 
 #include "L-System.h"
 #include "LTree.h"
+#include "Quad.h"
 #include "Scene.h"
 #include "Terrain.h"
 
@@ -17,7 +18,20 @@ public:
 	virtual bool Render(D3D*) final;
 
 private:
+	bool InitialiseRenderTexture(ID3D11Device*, XMFLOAT2);
+	bool RenderToTexture(D3D*);
+	bool RenderScene(D3D*);
+
+
+
+private:
 	Terrain* m_terrain;
 	LSystem* m_lsystem;
 	std::array<LTree*, 5> m_trees;
+
+	ID3D11Texture2D* m_ppRenderTarget;
+	ID3D11RenderTargetView* m_ppRTV;
+	ID3D11ShaderResourceView* m_ppSRV;
+	XMMATRIX m_orthoProj;
+	Quad* m_ppQuad;
 };

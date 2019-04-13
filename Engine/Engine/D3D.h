@@ -54,6 +54,7 @@ public:
 	void GetProjectionMatrix(XMMATRIX&);
 	void GetWorldMatrix(XMMATRIX&);
 	void GetOrthoMatrix(XMMATRIX&);
+	XMFLOAT2 GetScreenDimensions();
 
 	void GetVideoCardInfo(char*, int&);
 
@@ -76,6 +77,8 @@ private:
 	bool m_vsync_enabled;
 	int m_videoCardMemory;
 	char m_videoCardDescription[128];
+	float m_screenHeight, m_screenWidth;
+
 	IDXGISwapChain* m_swapChain;
 	ID3D11Device* m_device;
 	ID3D11DeviceContext* m_deviceContext;

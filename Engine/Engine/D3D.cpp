@@ -150,7 +150,8 @@ bool D3D::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, b
 	// Store the vsync setting.
 	m_vsync_enabled = vsync;
 
-
+	m_screenHeight = screenHeight;
+	m_screenWidth = screenWidth;
 	
 	// Create a DirectX graphics interface factory.
 	result = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&factory);
@@ -610,6 +611,11 @@ void D3D::GetOrthoMatrix(XMMATRIX& orthoMatrix)
 {
 	orthoMatrix = m_orthoMatrix;
 	return;
+}
+
+XMFLOAT2 D3D::GetScreenDimensions()
+{
+	return XMFLOAT2(m_screenWidth, m_screenHeight);
 }
 
 void D3D::TurnZBufferOn()
