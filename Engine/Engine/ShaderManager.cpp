@@ -74,6 +74,10 @@ bool ShaderManager::InitialiseShaders()
 	if (!result)
 		return false;
 
+	result = m_textureShader->Initialise();
+	if (!result)
+		return false;
+
 	return true;
 }
 

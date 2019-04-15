@@ -11,6 +11,9 @@ class Quad
 private:
 	struct Vertex
 	{
+		Vertex() : pos(), tex() {};
+		Vertex(XMFLOAT3 p, XMFLOAT2 t) : pos(p), tex(t) {};
+
 		XMFLOAT3 pos;
 		XMFLOAT2 tex;
 	};
@@ -37,7 +40,7 @@ private:
 	
 
 	std::vector<Vertex> m_vertices;
-	std::vector<int> m_indices;
+	std::vector<unsigned int> m_indices;
 
 	int m_width;
 	int m_height;

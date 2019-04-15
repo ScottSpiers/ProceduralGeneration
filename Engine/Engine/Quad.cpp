@@ -28,7 +28,7 @@ Quad::~Quad()
 bool Quad::Initialise(ID3D11Device* device)
 {
 	float top, bottom, left, right;
-	D3D11_BUFFER_DESC vbufferDesc, iBufferDesc;
+	D3D11_BUFFER_DESC vBufferDesc, iBufferDesc;
 	D3D11_SUBRESOURCE_DATA vData, iData;
 	HRESULT res;
 
@@ -36,50 +36,37 @@ bool Quad::Initialise(ID3D11Device* device)
 	right = left + m_width;
 	top = (m_height / 2.0f);
 	bottom = top - m_height;
-
-	Vertex v;
-	v.pos = XMFLOAT3(left, top, 0.0f);
-	v.tex = XMFLOAT2(0.0f, 0.0f);
-	m_vertices.push_back(v);
 	
-	v.pos = XMFLOAT3(right, top, 0.0f);
-	v.tex = XMFLOAT2(1.0f, 0.0f);
-	m_vertices.push_back(v);
-
-	v.pos = XMFLOAT3(left, bottom, 0.0f);
-	v.tex = XMFLOAT2(0.0f, 1.0f);
-	m_vertices.push_back(v);
-
-	v.pos = XMFLOAT3(right, bottom, 0.0f);
-	v.tex = XMFLOAT2(1.0f, 1.0f);
-	m_vertices.push_back(v);
-
+	m_vertices.push_back(Vertex(XMFLOAT3(left, top, 0.0f), XMFLOAT2(0.0f, 0.0f)));
+	m_vertices.push_back(Vertex(XMFLOAT3(right, bottom, 0.0f), XMFLOAT2(1.0f, 1.0f)));
+	m_vertices.push_back(Vertex(XMFLOAT3(left, bottom, 0.0f), XMFLOAT2(0.0f, 1.0f)));
+	m_vertices.push_back(Vertex(XMFLOAT3(right, top, 0.0f), XMFLOAT2(1.0f, 0.0f)));
 
 	m_indices.push_back(0);
-	m_indices.push_back(2);
 	m_indices.push_back(1);
+	m_indices.push_back(2);
 
-	m_indices.push_back(1);
-	m_indices.push_back(2);
+	m_indices.push_back(0);
 	m_indices.push_back(3);
+	m_indices.push_back(1);
 
-	vbufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	vbufferDesc.ByteWidth = sizeof(Vertex) * m_vertices.size();
-	vbufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vbufferDesc.CPUAccessFlags = 0;
-	vbufferDesc.MiscFlags = 0;
-	vbufferDesc.StructureByteStride = 0;
+	vBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	vBufferDesc.ByteWidth = sizeof(Vertex) * m_vertices.size();
+	vBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vBufferDesc.CPUAccessFlags = 0;
+	vBufferDesc.MiscFlags = 0;
+	vBufferDesc.StructureByteStride = 0;
 
 	vData.pSysMem = m_vertices.data();
 	vData.SysMemPitch = 0;
 	vData.SysMemSlicePitch = 0;
 
-	res = device->CreateBuffer(&vbufferDesc, &vData, &m_vBuffer);
+	res = device->CreateBuffer(&vBufferDesc, &vData, &m_vBuffer);
 	if (FAILED(res))
 		return false;
 
 	iBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	iBufferDesc.ByteWidth = sizeof(int) * m_indices.size();
+	iBufferDesc.ByteWidth = sizeof(unsigned int) * m_indices.size();
 	iBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	iBufferDesc.CPUAccessFlags = 0;
 	iBufferDesc.MiscFlags = 0;
@@ -105,7 +92,7 @@ void Quad::Render(ID3D11DeviceContext* context)
 	offset = 0;
 
 	context->IASetVertexBuffers(0, 1, &m_vBuffer, &stride, &offset);
-	context->IASetIndexBuffer(m_iBuffer, DXGI_FORMAT_R32G32_UINT, 0);
+	context->IASetIndexBuffer(m_iBuffer, DXGI_FORMAT_R32_UINT, 0);
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 

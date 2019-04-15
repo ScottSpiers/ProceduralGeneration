@@ -64,6 +64,7 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 	m_Light->SetDirection(-.75f, -.5f, -.75f);
 	
 	m_Camera->SetPosition(terrainSize/2.0f, 2.0f, terrainSize/2.0f);
+	m_ppView = GetView();
 
 	result = m_terrain->Initialise(device);
 	if (!result)
@@ -200,6 +201,7 @@ bool ProceduralScene::InitialiseRenderTexture(ID3D11Device* device, XMFLOAT2 dim
 	if (!m_ppQuad->Initialise(device))
 		return false;
 
+	
 	m_orthoProj = XMMatrixOrthographicLH(dimensions.x, dimensions.y, 0.1f, 1000.0f);
 	return true;
 }
@@ -212,7 +214,7 @@ bool ProceduralScene::RenderToTexture(D3D* d3d)
 	float colour[4]{ 0.0f, 0.0f, 1.0f, 1.0f };
 	d3d->GetDeviceContext()->ClearRenderTargetView(m_ppRTV, colour);
 	d3d->GetDeviceContext()->ClearDepthStencilView(d3d->getDepthStencilView(), D3D11_CLEAR_DEPTH, 1.0f, 0);
-	
+
 	RenderScene(d3d);
 
 	m_ppQuad->SetTexture(m_ppSRV);
@@ -291,16 +293,14 @@ bool ProceduralScene::Render(D3D* d3d)
 	if (!res)
 		return false;
 
-
+	float terrainSize = 513.0f;
 	d3d->BeginScene(0.0f, 0.0f, .8f, 1.0f);
 
 	d3d->TurnZBufferOff();
 
 	m_ppQuad->Render(d3d->GetDeviceContext());
-	m_shaders->RenderTexture(m_ppQuad, m_Camera->GetViewMatrix(), m_orthoProj);
-
-
+	m_shaders->RenderTexture(m_ppQuad, m_ppView, m_orthoProj);
 	d3d->TurnZBufferOn();
-	d3d->EndScene();
+	//d3d->EndScene();
 	return true;
 }

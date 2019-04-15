@@ -3,14 +3,14 @@
 
 TextureShader::TextureShader(ID3D11Device* device, ID3D11DeviceContext* context) : Shader(device, context)
 {
-	m_samplerState = 0;
+	m_sampleState = 0;
 }
 TextureShader::~TextureShader()
 {
-	if (m_samplerState)
+	if (m_sampleState)
 	{
-		m_samplerState->Release();
-		m_samplerState = 0;
+		m_sampleState->Release();
+		m_sampleState = 0;
 	}
 }
 
@@ -59,7 +59,7 @@ bool TextureShader::Initialise()
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
 	// Create the texture sampler state.
-	res = m_device->CreateSamplerState(&samplerDesc, &m_samplerState);
+	res = m_device->CreateSamplerState(&samplerDesc, &m_sampleState);
 	if (FAILED(res))
 		return false;
 
@@ -81,7 +81,7 @@ bool TextureShader::Render(Quad* q, XMMATRIX view, XMMATRIX ortho)
 	m_context->PSSetShader(m_pShader, NULL, 0);
 
 	// Set the sampler state in the pixel shader.
-	m_context->PSSetSamplers(0, 1, &m_samplerState);
+	m_context->PSSetSamplers(0, 1, &m_sampleState);
 
 	// Render the triangle.
 	m_context->DrawIndexed(q->GetIndexCount(), 0, 0);

@@ -14,6 +14,6 @@ public:
 	bool Render(Quad*, XMMATRIX, XMMATRIX);
 
 private:
-	ID3D11SamplerState* m_samplerState;
+	ID3D11SamplerState* m_sampleState;
 
 };

@@ -33,5 +33,6 @@ private:
 	ID3D11RenderTargetView* m_ppRTV;
 	ID3D11ShaderResourceView* m_ppSRV;
 	XMMATRIX m_orthoProj;
+	XMMATRIX m_ppView;
 	Quad* m_ppQuad;
 };
