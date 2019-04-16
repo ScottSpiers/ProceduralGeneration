@@ -35,12 +35,12 @@ public:
 	XMFLOAT3 GetNormal(int);
 
 	int GetNumVertices();
-	std::vector<int> GetIndices();
+	std::vector<unsigned int> GetIndices();
 
 private:
 	inline XMVECTOR GetCircleVector(int, int);
 
 private:
 	std::vector<Vertex> m_vertices;
-	std::vector<int> m_indices;
+	std::vector<unsigned int> m_indices;
 };

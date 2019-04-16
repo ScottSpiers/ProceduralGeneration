@@ -108,6 +108,18 @@ bool ResourceManager::LoadResources()
 				return false;
 			}
 
+			if(!LoadModel(SKY_DOME_MODEL))
+			{
+				return false;
+			}
+
+			m_models[SKY_DOME_MODEL]->SetTexture(m_textures[SKY_CUBE_TEXTURE]);
+
+			if (!m_models[SKY_DOME_MODEL]->InitializeBuffers(m_device))
+			{
+				return false;
+			}
+
 			if (!LoadTexture(TREE_TEXTURE))
 			{
 				return false;

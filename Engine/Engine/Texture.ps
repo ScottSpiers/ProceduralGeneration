@@ -17,6 +17,17 @@ struct PixelInputType
 {
     float4 pos : SV_POSITION;
     float2 tex : TEXCOORD0;
+
+	//neighbours
+	float2 n0 : TEXCOORD1; //diag
+	float2 n1 : TEXCOORD2;
+	float2 n2 : TEXCOORD3; //diag
+	float2 n3 : TEXCOORD4;
+	float2 n4 : TEXCOORD5;
+	float2 n5 : TEXCOORD6; 
+	float2 n6 : TEXCOORD7; //diag
+	float2 n7 : TEXCOORD8;
+	float2 n8 : TEXCOORD9; //diag
 };
 
 
@@ -25,5 +36,38 @@ struct PixelInputType
 ////////////////////////////////////////////////////////////////////////////////
 float4 TexturePixelShader(PixelInputType input) : SV_TARGET
 {
-	return shaderTexture.Sample(SampleType, input.tex);
+	float posWeight = 1.0f; 
+	float adjWeight = 0.75f;
+	float diagWeight = 0.25f;
+
+	float norm = (posWeight + 2.0f  *(adjWeight + diagWeight));
+
+	posWeight /= norm;
+	adjWeight /= norm;
+	diagWeight /= norm;
+
+	float4 c = {0.0f, 0.0f, 0.0f, 0.0f};
+
+	c += shaderTexture.Sample(SampleType, input.n0) * diagWeight;
+	c += shaderTexture.Sample(SampleType, input.n1) * adjWeight;
+	c += shaderTexture.Sample(SampleType, input.n2) * diagWeight;
+	c += shaderTexture.Sample(SampleType, input.n3) * adjWeight;
+	c += shaderTexture.Sample(SampleType, input.n4) * posWeight;
+	c += shaderTexture.Sample(SampleType, input.n5) * adjWeight;
+	c += shaderTexture.Sample(SampleType, input.n6) * diagWeight;
+	c += shaderTexture.Sample(SampleType, input.n7) * adjWeight;
+	c += shaderTexture.Sample(SampleType, input.n8) * diagWeight;
+
+	c.a = 1.0f;
+
+	/*
+	float y = 0.5f - input.tex.y;
+	float x = (0.5f - input.tex.x) * 1.33;
+
+	if(0.25f - ((x * x) + (y * y)) >= 0.24f)
+	{
+		c = float4(1.0f, 1.0f, 1.0f, 1.0f);
+	}*/
+
+	return c;
 }

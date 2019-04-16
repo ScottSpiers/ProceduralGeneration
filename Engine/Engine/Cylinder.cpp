@@ -170,7 +170,7 @@ int Cylinder::GetNumVertices()
 	return m_vertices.size();
 }
 
-std::vector<int> Cylinder::GetIndices()
+std::vector<unsigned int> Cylinder::GetIndices()
 {
 	return m_indices;
 }

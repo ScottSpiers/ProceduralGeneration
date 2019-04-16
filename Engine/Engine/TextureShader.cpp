@@ -21,6 +21,7 @@ bool TextureShader::Initialise()
 	D3D11_INPUT_ELEMENT_DESC polygonLayout[2];
 	unsigned int numElems;
 	D3D11_SAMPLER_DESC samplerDesc;
+	D3D11_BUFFER_DESC screenBufDesc;
 
 	polygonLayout[0].SemanticName = "POSITION";
 	polygonLayout[0].SemanticIndex = 0;
@@ -43,6 +44,16 @@ bool TextureShader::Initialise()
 	res = Shader::Initialise(L"Texture.vs", "TextureVertexShader", L"Texture.ps", "TexturePixelShader", polygonLayout, numElems);
 	if (FAILED(res))
 		return false;
+
+	screenBufDesc.Usage = D3D11_USAGE_DYNAMIC;
+	screenBufDesc.ByteWidth = sizeof(ScreenBuffer);
+	screenBufDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	screenBufDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	screenBufDesc.MiscFlags = 0;
+	screenBufDesc.StructureByteStride = 0;
+
+	res = m_device->CreateBuffer(&screenBufDesc, nullptr, &m_screenBuffer);
+
 
 	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
@@ -68,7 +79,25 @@ bool TextureShader::Initialise()
 
 bool TextureShader::Render(Quad* q, XMMATRIX view, XMMATRIX ortho)
 {
+	HRESULT result;
+	D3D11_MAPPED_SUBRESOURCE mappedResource;
+	unsigned int bufferNumber;
+	ScreenBuffer* dataPtr;
+
 	Shader::SetMatrixBuffer(q->GetWorldMatrix(), view, ortho);
+
+	result = m_context->Map(m_screenBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	if (FAILED(result))
+		return false;
+
+	dataPtr = (ScreenBuffer*)mappedResource.pData;
+
+	dataPtr->screenDims = XMFLOAT2A(q->GetWidth(), q->GetHeight());
+	m_context->Unmap(m_screenBuffer, 0);
+	//Don't forget the matrix buffer
+	bufferNumber = 1;
+
+	m_context->VSSetConstantBuffers(bufferNumber, 1, &m_screenBuffer);
 
 	ID3D11ShaderResourceView* texture = q->GetTexture();
 	m_context->PSSetShaderResources(0, 1, &texture);

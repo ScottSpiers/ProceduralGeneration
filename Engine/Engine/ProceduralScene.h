@@ -35,4 +35,6 @@ private:
 	XMMATRIX m_orthoProj;
 	XMMATRIX m_ppView;
 	Quad* m_ppQuad;
+
+	int m_renders;
 };

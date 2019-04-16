@@ -97,7 +97,7 @@ void Camera::Move(XMFLOAT3 movement)
 	XMVECTOR pos{ m_positionX, m_positionY, m_positionZ };
 	
 	pos = XMVectorAdd(pos, movement.x * right);
-	pos = XMVectorAdd(pos, movement.y * up);
+	pos = XMVectorAdd(pos, 0.0f * up);
 	pos = XMVectorAdd(pos, movement.z * forward);
 
 	target = XMVectorAdd(pos, target);

@@ -73,7 +73,7 @@ private:
 	ID3D11Buffer *m_vertexBuffer, *m_indexBuffer;
 	int m_vertexCount, m_indexCount;
 	ModelData* m_model;
-	std::vector<int> m_indices;
+	std::vector<unsigned int> m_indices;
 
 	XMMATRIX m_worldMatrix;
 	ID3D11ShaderResourceView* m_texture;

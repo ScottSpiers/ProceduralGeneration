@@ -54,8 +54,8 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 
 	m_terrain = new Terrain(terrainSize,terrainSize);
 	m_terrain->SetTexture(m_resources->GetTexture(ResourceManager::TERRAIN_TEXTURE));
-	m_terrain->GenRandom();
-	//m_terrain->GenSinWave();
+	//m_terrain->GenRandom();
+	m_terrain->GenSinWave();
 
 	m_Light->SetAmbientColour(0.15f, 0.15f, 0.15f, 1.0f);
 	m_Light->SetDiffuseColor(.75f, .75f, .75f, 1.0f);
@@ -152,7 +152,7 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 	m_trees[4]->SetWorldMatrix(newPos);
 	m_trees[4]->InterpretSystem(m_lsystem->RunSystem(numIts), stepSize, angleDelta);
 	m_trees[4]->Initialise(device);*/
-
+	m_renders = 0;
 	return true;	
 }
 
@@ -269,6 +269,24 @@ bool ProceduralScene::RenderScene(D3D* d3d)
 	if (!result)
 		return false;
 
+
+	d3d->TurnOffCulling();
+	d3d->SetDepthLessEqual();
+
+	XMFLOAT3 cameraPos = m_Camera->GetPosition();
+	Model* skySphere = m_resources->GetModel(ResourceManager::SKY_DOME_MODEL);
+
+	skySphere->SetWorldMatrix(XMMatrixTranslation(cameraPos.x, cameraPos.y + 1.0f, cameraPos.z));
+	skySphere->Render(d3d->GetDeviceContext());
+	result = m_shaders->RenderSkySphere(skySphere, m_Camera);
+	if (!result)
+	{
+		return false;
+	}
+
+	d3d->TurnOnCulling();
+	d3d->SetDepthLess();
+
 	//d3d->TurnOffCulling();	
 
 	//d3d->TurnOnCulling();
@@ -288,6 +306,10 @@ bool ProceduralScene::RenderScene(D3D* d3d)
 
 bool ProceduralScene::Render(D3D* d3d)
 {
+	
+	if (m_renders > 0)
+		m_renders = 0;
+
 	bool res;
 	res = RenderToTexture(d3d);
 	if (!res)
@@ -301,6 +323,8 @@ bool ProceduralScene::Render(D3D* d3d)
 	m_ppQuad->Render(d3d->GetDeviceContext());
 	m_shaders->RenderTexture(m_ppQuad, m_ppView, m_orthoProj);
 	d3d->TurnZBufferOn();
+	
+	++m_renders;
 	//d3d->EndScene();
 	return true;
 }

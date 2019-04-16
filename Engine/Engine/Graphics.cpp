@@ -141,6 +141,7 @@ bool Graphics::Render()
 
 void Graphics::MoveCamera(XMFLOAT3 movement)
 {
+	
 	m_Scene->MoveCamera(movement);
 }
 

@@ -6,6 +6,12 @@
 class TextureShader : public Shader
 {
 
+private:
+	struct ScreenBuffer
+	{
+		XMFLOAT2A screenDims;
+	};
+
 public:
 	TextureShader(ID3D11Device*, ID3D11DeviceContext*);
 	~TextureShader();
@@ -15,5 +21,6 @@ public:
 
 private:
 	ID3D11SamplerState* m_sampleState;
+	ID3D11Buffer* m_screenBuffer;
 
 };

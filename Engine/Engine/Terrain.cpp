@@ -258,8 +258,8 @@ ID3D11ShaderResourceView* Terrain::GetTexture()
 
 float Terrain::GetTerrainHeight(float x, float z)
 {
-	bool inX = x < m_width && x >= 0;
-	bool inZ = z < m_height && z >= 0;
+	bool inX = x < m_width - 1 && x >= 0;
+	bool inZ = z < m_height -1 && z >= 0;
 
 	if (!inX || !inZ)
 		return 0.0f;

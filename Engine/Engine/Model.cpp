@@ -141,7 +141,7 @@ bool Model::InitializeBuffers(ID3D11Device* device)
 
 	// Set up the description of the static index buffer.
     indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-    indexBufferDesc.ByteWidth = sizeof(unsigned long) * m_indexCount;
+    indexBufferDesc.ByteWidth = sizeof(unsigned int) * m_indexCount;
     indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
     indexBufferDesc.CPUAccessFlags = 0;
     indexBufferDesc.MiscFlags = 0;
@@ -163,6 +163,7 @@ bool Model::InitializeBuffers(ID3D11Device* device)
 	delete [] vertices;
 	vertices = 0;
 
+	m_indices.clear();
 
 	return true;
 }
