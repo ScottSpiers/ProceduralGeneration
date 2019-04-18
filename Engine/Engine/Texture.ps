@@ -31,16 +31,15 @@ struct PixelInputType
 };
 
 
-////////////////////////////////////////////////////////////////////////////////
-// Pixel Shader
-////////////////////////////////////////////////////////////////////////////////
-float4 TexturePixelShader(PixelInputType input) : SV_TARGET
+float4 DoF(PixelInputType input, float oWeight) 
 {
 	float posWeight = 1.0f; 
-	float adjWeight = 0.75f;
-	float diagWeight = 0.25f;
+	float adjWeight = 0.9f;
+	float diagWeight = 0.75f;
 
-	float norm = (posWeight + 2.0f  *(adjWeight + diagWeight));
+	float norm = (posWeight + (4.0f * oWeight)  *(adjWeight + diagWeight));
+
+	
 
 	posWeight /= norm;
 	adjWeight /= norm;
@@ -59,15 +58,30 @@ float4 TexturePixelShader(PixelInputType input) : SV_TARGET
 	c += shaderTexture.Sample(SampleType, input.n8) * diagWeight;
 
 	c.a = 1.0f;
+	return saturate(c);
+}
 
-	/*
+////////////////////////////////////////////////////////////////////////////////
+// Pixel Shader
+////////////////////////////////////////////////////////////////////////////////
+float4 TexturePixelShader(PixelInputType input) : SV_TARGET
+{
+	float2 botLeft = {0.0f, 0.0f};
+	float2 topRight = {1.0f, 1.0f};
+
 	float y = 0.5f - input.tex.y;
-	float x = (0.5f - input.tex.x) * 1.33;
+	float x = (0.5f - input.tex.x) * 1.33f;
 
-	if(0.25f - ((x * x) + (y * y)) >= 0.24f)
+	float oWeight = 1.0f - (x * y);
+
+	float4 c = DoF(input, oWeight);
+
+	
+	if(0.25f - ((x * x) + (y * y)) >= 0.225f)
 	{
-		c = float4(1.0f, 1.0f, 1.0f, 1.0f);
-	}*/
+		c = shaderTexture.Sample(SampleType, input.tex);
+	}
+	
 
 	return c;
 }

@@ -83,6 +83,8 @@ void Camera::Move(XMFLOAT3 movement)
 	float pitch = m_rotationX * 0.0174532925f;
 	float yaw = m_rotationY * 0.0174532925f;
 	float roll = m_rotationZ * 0.0174532925f;
+	
+	float y = m_positionY;
 
 	rotMatrix = XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
 
@@ -104,7 +106,7 @@ void Camera::Move(XMFLOAT3 movement)
 
 	m_viewMatrix = XMMatrixLookAtLH(pos, target, up);
 	m_positionX = XMVectorGetByIndex(pos, 0);
-	m_positionY = XMVectorGetByIndex(pos, 1);
+	//m_positionY = XMVectorGetByIndex(pos, 1);
 	m_positionZ = XMVectorGetByIndex(pos, 2);
 	
 }

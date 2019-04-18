@@ -127,32 +127,43 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 	//float terrainSize = 513.0f;
 
 	std::string testLSystem = m_lsystem->RunSystem(numIts);
-	//XMMATRIX newPos = XMMatrixTranslation(terrainSize, 0.0f, 0.0f);
-	//m_trees[0]->SetWorldMatrix(newPos);
-	m_trees[0]->InterpretSystem(testLSystem, stepSize, angleDelta);
+	XMMATRIX newPos = XMMatrixTranslation(terrainSize, 0.0f, 0.0f);
+	m_trees[0]->SetWorldMatrix(newPos);
+	//m_trees[0]->InterpretSystem(testLSystem, stepSize, angleDelta);
 	m_trees[0]->SetTexture(m_resources->GetTexture(ResourceManager::TREE_TEXTURE));
 	m_trees[0]->Initialise(device);
 
-	/*XMMATRIX newPos = XMMatrixTranslation(terrainSize, 0.0f, 0.0f);
+	m_trees[1] = m_trees[0];
+	m_trees[2] = m_trees[0];
+	m_trees[3] = m_trees[0];
+	m_trees[4] = m_trees[0];
+
+	newPos = XMMatrixTranslation(terrainSize, 0.0f, 0.0f);
 	m_trees[1]->SetWorldMatrix(newPos);
-	m_trees[1]->InterpretSystem(m_lsystem->RunSystem(numIts), stepSize, angleDelta);
+	//m_trees[1]->InterpretSystem(testLSystem /*m_lsystem->RunSystem(numIts)*/, stepSize, angleDelta);
 	m_trees[1]->Initialise(device);
 
 	newPos = XMMatrixTranslation(0.0f, 0.0f, terrainSize);
 	m_trees[2]->SetWorldMatrix(newPos);
-	m_trees[2]->InterpretSystem(m_lsystem->RunSystem(numIts), stepSize, angleDelta);
+	//m_trees[2]->InterpretSystem(testLSystem /*m_lsystem->RunSystem(numIts)*/, stepSize, angleDelta);
 	m_trees[2]->Initialise(device);
 
 	newPos = XMMatrixTranslation(terrainSize, 0.0f, terrainSize);
 	m_trees[3]->SetWorldMatrix(newPos);
-	m_trees[3]->InterpretSystem(m_lsystem->RunSystem(numIts), stepSize, angleDelta);
+	//m_trees[3]->InterpretSystem(testLSystem /*m_lsystem->RunSystem(numIts)*/, stepSize, angleDelta);
 	m_trees[3]->Initialise(device);
 
 	newPos = XMMatrixTranslation(terrainSize / 2, 0.0f, terrainSize / 2);
 	m_trees[4]->SetWorldMatrix(newPos);
-	m_trees[4]->InterpretSystem(m_lsystem->RunSystem(numIts), stepSize, angleDelta);
-	m_trees[4]->Initialise(device);*/
-	m_renders = 0;
+	//m_trees[4]->InterpretSystem(testLSystem /*m_lsystem->RunSystem(numIts)*/, stepSize, angleDelta);
+	m_trees[4]->Initialise(device);
+
+
+	m_isSphereAlive = true;
+	m_sphere = m_resources->GetModel(ResourceManager::ORBIT_MODEL);
+	m_skySphere = m_resources->GetModel(ResourceManager::SKY_DOME_MODEL);
+	m_sphere->SetWorldMatrix(XMMatrixTranslation(250.0f, 5.0f, 250.0f));
+	m_sphereCount = 0;
 	return true;	
 }
 
@@ -242,10 +253,31 @@ bool ProceduralScene::RenderScene(D3D* d3d)
 	float z = m_Camera->GetPosition().z;
 	float heightOffset = 10.0f;
 
+	XMFLOAT3 cameraPos = m_Camera->GetPosition();
+	m_skySphere->SetWorldMatrix(XMMatrixTranslation(cameraPos.x, cameraPos.y , cameraPos.z));
 	m_Camera->SetPosition(x, m_terrain->GetTerrainHeight(x, z) + heightOffset, z);
-	/*d3d->GetDeviceContext()->ClearRenderTargetView(defRTV, colour);
-	d3d->GetDeviceContext()->ClearDepthStencilView(defDSV, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);*/
 
+	XMVECTOR spherePos = m_sphere->GetWorldMatrix().r[3];
+	XMVECTOR camPos = XMLoadFloat3(&m_Camera->GetPosition());
+	XMVECTOR dist = XMVectorSubtract(spherePos, camPos);
+	XMFLOAT3 fDist;
+	XMStoreFloat3(&fDist, dist);
+
+
+	if (abs(fDist.x) < 2.0f && abs(fDist.y) < 10.0f && abs(fDist.z) < 2.0f)
+	{
+		++m_sphereCount;
+		float rx = (double)rand() / (RAND_MAX + 1);
+		rx *= 513.0f;
+
+		float rz = (double)rand() / (RAND_MAX + 1);
+		rz *= 513.0f;
+
+		if(m_sphereCount >= 7)
+			m_isSphereAlive = false;
+		else
+			m_sphere->SetWorldMatrix(XMMatrixTranslation(rx, 6.66f, rz));		
+	}
 
 	//TERRAIN TURN BACK ON EVENTUALLY
 	result = m_terrain->Render(d3d->GetDeviceContext());
@@ -257,28 +289,32 @@ bool ProceduralScene::RenderScene(D3D* d3d)
 		return false;
 
 	//d3d->TurnOffCulling();
-	/*for (LTree* lt : m_trees)
+	for (LTree* lt : m_trees)
 	{
 		lt->Render(d3d->GetDeviceContext());
 		result = m_shaders->RenderLTree(lt, m_Camera, m_Light);
 		if (!result)
 			return false;
-	}*/
-	m_trees[0]->Render(d3d->GetDeviceContext());
+	}
+	/*m_trees[0]->Render(d3d->GetDeviceContext());
 	result = m_shaders->RenderLTree(m_trees[0], m_Camera, m_Light);
 	if (!result)
-		return false;
+		return false;*/
 
+
+	if (m_isSphereAlive)
+	{
+		
+		m_sphere->Render(d3d->GetDeviceContext());
+		m_shaders->RenderLight(m_sphere, m_Camera, m_Light);
+	}
 
 	d3d->TurnOffCulling();
 	d3d->SetDepthLessEqual();
 
-	XMFLOAT3 cameraPos = m_Camera->GetPosition();
-	Model* skySphere = m_resources->GetModel(ResourceManager::SKY_DOME_MODEL);
 
-	skySphere->SetWorldMatrix(XMMatrixTranslation(cameraPos.x, cameraPos.y + 1.0f, cameraPos.z));
-	skySphere->Render(d3d->GetDeviceContext());
-	result = m_shaders->RenderSkySphere(skySphere, m_Camera);
+	m_skySphere->Render(d3d->GetDeviceContext());
+	result = m_shaders->RenderSkySphere(m_skySphere, m_Camera);
 	if (!result)
 	{
 		return false;
@@ -286,30 +322,11 @@ bool ProceduralScene::RenderScene(D3D* d3d)
 
 	d3d->TurnOnCulling();
 	d3d->SetDepthLess();
-
-	//d3d->TurnOffCulling();	
-
-	//d3d->TurnOnCulling();
-
-	//Model* orbitSphere = m_resources->GetModel(ResourceManager::ORBIT_MODEL);
-	////orbitSphere->SetWorldMatrix(XMMatrixTranslation(0.f, 0.f, -.f));
-
-	//orbitSphere->Render(d3d->GetDeviceContext());
-
-	//result = m_shaders->RenderLight(orbitSphere, m_Camera, m_Light);
-	//if (!result)
-	//{
-	//	return false;
-	//}
 	return true;
 }
 
 bool ProceduralScene::Render(D3D* d3d)
 {
-	
-	if (m_renders > 0)
-		m_renders = 0;
-
 	bool res;
 	res = RenderToTexture(d3d);
 	if (!res)
@@ -323,8 +340,6 @@ bool ProceduralScene::Render(D3D* d3d)
 	m_ppQuad->Render(d3d->GetDeviceContext());
 	m_shaders->RenderTexture(m_ppQuad, m_ppView, m_orthoProj);
 	d3d->TurnZBufferOn();
-	
-	++m_renders;
-	//d3d->EndScene();
+
 	return true;
 }

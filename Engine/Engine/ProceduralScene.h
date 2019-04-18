@@ -28,6 +28,8 @@ private:
 	Terrain* m_terrain;
 	LSystem* m_lsystem;
 	std::array<LTree*, 5> m_trees;
+	Model* m_sphere;
+	Model* m_skySphere;
 
 	ID3D11Texture2D* m_ppRenderTarget;
 	ID3D11RenderTargetView* m_ppRTV;
@@ -36,5 +38,6 @@ private:
 	XMMATRIX m_ppView;
 	Quad* m_ppQuad;
 
-	int m_renders;
+	bool m_isSphereAlive;
+	int m_sphereCount;
 };
