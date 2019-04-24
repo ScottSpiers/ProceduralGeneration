@@ -55,7 +55,8 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 	m_terrain = new Terrain(terrainSize,terrainSize);
 	m_terrain->SetTexture(m_resources->GetTexture(ResourceManager::TERRAIN_TEXTURE));
 	//m_terrain->GenRandom();
-	m_terrain->GenSinWave();
+	//m_terrain->GenSinWave();
+	m_terrain->GenPerlin();
 
 	m_Light->SetAmbientColour(0.15f, 0.15f, 0.15f, 1.0f);
 	m_Light->SetDiffuseColor(.75f, .75f, .75f, 1.0f);
@@ -63,7 +64,7 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 	m_Light->SetSpecIntensity(1.f);
 	m_Light->SetDirection(-.75f, -.5f, -.75f);
 	
-	m_Camera->SetPosition(terrainSize/2.0f, 2.0f, terrainSize/2.0f);
+	m_Camera->SetPosition(terrainSize/2.0f - 10.0f, 2.0f, terrainSize/2.0f - 10.0f);
 	m_ppView = GetView();
 
 	result = m_terrain->Initialise(device);
@@ -127,36 +128,31 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 	//float terrainSize = 513.0f;
 
 	std::string testLSystem = m_lsystem->RunSystem(numIts);
-	XMMATRIX newPos = XMMatrixTranslation(terrainSize, 0.0f, 0.0f);
+	XMMATRIX newPos = XMMatrixTranslation(terrainSize / 2.0f, 0.0f, terrainSize / 2.0f);
 	m_trees[0]->SetWorldMatrix(newPos);
-	//m_trees[0]->InterpretSystem(testLSystem, stepSize, angleDelta);
+	m_trees[0]->InterpretSystem(testLSystem, stepSize, angleDelta);
 	m_trees[0]->SetTexture(m_resources->GetTexture(ResourceManager::TREE_TEXTURE));
 	m_trees[0]->Initialise(device);
 
-	m_trees[1] = m_trees[0];
-	m_trees[2] = m_trees[0];
-	m_trees[3] = m_trees[0];
-	m_trees[4] = m_trees[0];
+	//newPos = XMMatrixTranslation(terrainSize, 0.0f, 0.0f);
+	//m_trees[1]->SetWorldMatrix(newPos);
+	////m_trees[1]->InterpretSystem(testLSystem /*m_lsystem->RunSystem(numIts)*/, stepSize, angleDelta);
+	//m_trees[1]->Initialise(device);
 
-	newPos = XMMatrixTranslation(terrainSize, 0.0f, 0.0f);
-	m_trees[1]->SetWorldMatrix(newPos);
-	//m_trees[1]->InterpretSystem(testLSystem /*m_lsystem->RunSystem(numIts)*/, stepSize, angleDelta);
-	m_trees[1]->Initialise(device);
+	//newPos = XMMatrixTranslation(0.0f, 0.0f, terrainSize);
+	//m_trees[2]->SetWorldMatrix(newPos);
+	////m_trees[2]->InterpretSystem(testLSystem /*m_lsystem->RunSystem(numIts)*/, stepSize, angleDelta);
+	//m_trees[2]->Initialise(device);
 
-	newPos = XMMatrixTranslation(0.0f, 0.0f, terrainSize);
-	m_trees[2]->SetWorldMatrix(newPos);
-	//m_trees[2]->InterpretSystem(testLSystem /*m_lsystem->RunSystem(numIts)*/, stepSize, angleDelta);
-	m_trees[2]->Initialise(device);
+	//newPos = XMMatrixTranslation(terrainSize, 0.0f, terrainSize);
+	//m_trees[3]->SetWorldMatrix(newPos);
+	////m_trees[3]->InterpretSystem(testLSystem /*m_lsystem->RunSystem(numIts)*/, stepSize, angleDelta);
+	//m_trees[3]->Initialise(device);
 
-	newPos = XMMatrixTranslation(terrainSize, 0.0f, terrainSize);
-	m_trees[3]->SetWorldMatrix(newPos);
-	//m_trees[3]->InterpretSystem(testLSystem /*m_lsystem->RunSystem(numIts)*/, stepSize, angleDelta);
-	m_trees[3]->Initialise(device);
-
-	newPos = XMMatrixTranslation(terrainSize / 2, 0.0f, terrainSize / 2);
-	m_trees[4]->SetWorldMatrix(newPos);
-	//m_trees[4]->InterpretSystem(testLSystem /*m_lsystem->RunSystem(numIts)*/, stepSize, angleDelta);
-	m_trees[4]->Initialise(device);
+	//newPos = XMMatrixTranslation(terrainSize / 2, 0.0f, terrainSize / 2);
+	//m_trees[4]->SetWorldMatrix(newPos);
+	////m_trees[4]->InterpretSystem(testLSystem /*m_lsystem->RunSystem(numIts)*/, stepSize, angleDelta);
+	//m_trees[4]->Initialise(device);
 
 
 	m_isSphereAlive = true;
@@ -289,17 +285,17 @@ bool ProceduralScene::RenderScene(D3D* d3d)
 		return false;
 
 	//d3d->TurnOffCulling();
-	for (LTree* lt : m_trees)
+	/*for (LTree* lt : m_trees)
 	{
 		lt->Render(d3d->GetDeviceContext());
 		result = m_shaders->RenderLTree(lt, m_Camera, m_Light);
 		if (!result)
 			return false;
-	}
-	/*m_trees[0]->Render(d3d->GetDeviceContext());
+	}*/
+	m_trees[0]->Render(d3d->GetDeviceContext());
 	result = m_shaders->RenderLTree(m_trees[0], m_Camera, m_Light);
 	if (!result)
-		return false;*/
+		return false;
 
 
 	if (m_isSphereAlive)

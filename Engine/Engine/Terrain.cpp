@@ -1,6 +1,6 @@
 
 #include "Terrain.h"
-
+#include "ImprovedNoise.h"
 
 Terrain::Terrain(int rows, int columns)
 {
@@ -338,13 +338,37 @@ void Terrain::GenSinWave()
 			for (int i = 0; i < m_width; i++)
 			{
 				index = (m_height * j) + i;
-
 				XMFLOAT3 pos = XMFLOAT3((float)i, (float)(sin((float)i / (m_width / 12))*3.0) * (float)(cos((float)j / (m_height / 12))*3.0), (float)j);
 				//m_vertices[index].pos = XMLoadFloat3(&pos);
 				m_vertices[index].pos = pos;
 			}
 		}
 		m_toggleGenerated = true;
+	}
+}
+
+void Terrain::GenPerlin()
+{
+	ImprovedNoise::perlin();
+	if (!m_toggleGenerated)
+	{
+		int index;
+		double height = 0.0f;
+		for (int i = 0; i < m_height; ++i)
+		{
+			for (int j = 0; j < m_width; ++j)
+			{
+				index = (m_height * i) + j;
+				double nx = m_vertices[index].pos.x * 10 * (1.0 / m_width);
+				double ny = m_vertices[index].pos.y * 10;
+				double nz = m_vertices[index].pos.z * 10 * (1.0 / m_height);
+
+				XMFLOAT3 pos = XMFLOAT3((float) j, 20 * (ImprovedNoise::noise(.25 * nx, ny,.25 * nz)), (float)i);
+				m_vertices[index].pos = pos;
+			}
+		}
+
+
 	}
 }
 

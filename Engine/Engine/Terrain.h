@@ -26,6 +26,7 @@ public:
 
 	void GenRandom();
 	void GenSinWave();
+	void GenPerlin();
 
 	XMMATRIX GetWorldMatrix();
 	int GetIndexCount();
