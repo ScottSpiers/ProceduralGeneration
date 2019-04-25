@@ -9,7 +9,7 @@ Terrain::Terrain(int rows, int columns)
 
 	m_vBuffer = 0;
 	m_iBuffer = 0;
-	m_texture = 0;
+	m_textures = 0;
 	m_toggleGenerated = false;
 
 	m_worldMatrix = XMMatrixIdentity();
@@ -34,11 +34,15 @@ Terrain::Terrain(int rows, int columns)
 
 Terrain::~Terrain()
 {
+	int elems = sizeof(m_textures) / sizeof(m_textures[0]);
 
-	if (m_texture)
+	for (int i = 0; i < elems; ++i)
 	{
-		m_texture->Release();
-		m_texture = 0;
+		if (m_textures[i])
+		{
+			m_textures[i]->Release();
+			m_textures[i] = 0;
+		}
 	}
 
 	if (m_iBuffer)
@@ -246,14 +250,14 @@ void Terrain::CalcTexCoords()
 	}
 }
 
-void Terrain::SetTexture(ID3D11ShaderResourceView* t)
+void Terrain::SetTextures(ID3D11ShaderResourceView** t)
 {
-	m_texture = t;
+	m_textures = t;
 }
 
-ID3D11ShaderResourceView* Terrain::GetTexture()
+ID3D11ShaderResourceView** Terrain::GetTextures()
 {
-	return m_texture;
+	return m_textures;
 }
 
 float Terrain::GetTerrainHeight(float x, float z)
@@ -354,16 +358,34 @@ void Terrain::GenPerlin()
 	{
 		int index;
 		double height = 0.0f;
+		int numOctaves = 8;
+
+		
 		for (int i = 0; i < m_height; ++i)
 		{
 			for (int j = 0; j < m_width; ++j)
 			{
+				double elevation = 0.0f;
+				double amp = 1.0f;
+				double st = 1.0f;
+
 				index = (m_height * i) + j;
 				double nx = m_vertices[index].pos.x * 10 * (1.0 / m_width);
 				double ny = m_vertices[index].pos.y * 10;
 				double nz = m_vertices[index].pos.z * 10 * (1.0 / m_height);
 
-				XMFLOAT3 pos = XMFLOAT3((float) j, 20 * (ImprovedNoise::noise(.25 * nx, ny,.25 * nz)), (float)i);
+				for (int k = 0; k < numOctaves; ++k)
+				{
+					elevation += amp * ImprovedNoise::noise(st * nx, st * ny, st *nz);
+					st *= 2;
+					amp *= 0.5;
+				}
+
+
+				/*elevation += 0.5 * ImprovedNoise::noise(2 * nx, 2 * ny, 2 * nz);
+				elevation += 0.25 * ImprovedNoise::noise(4 * nx, 4 * ny, 4 * nz);*/
+
+				XMFLOAT3 pos = XMFLOAT3((float) j, 7* elevation ,(float)i);
 				m_vertices[index].pos = pos;
 			}
 		}

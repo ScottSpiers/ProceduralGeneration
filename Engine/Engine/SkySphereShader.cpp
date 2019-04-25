@@ -4,6 +4,8 @@
 SkySphereShader::SkySphereShader(ID3D11Device* device, ID3D11DeviceContext* context) : Shader(device, context)
 {
 	m_sampleStateSky = 0;
+	
+	
 }
 
 SkySphereShader::~SkySphereShader()
@@ -102,8 +104,9 @@ bool SkySphereShader::Render(Model* model, Camera* cam)
 
 
 	//TALKING POINT
-	ID3D11ShaderResourceView* texture = model->GetTexture();
-	m_context->PSSetShaderResources(0, 1, &texture);//this bit is rather important
+	ID3D11ShaderResourceView** textures = model->GetTextures();
+	int elems = sizeof(textures) / sizeof(textures[0]);
+	m_context->PSSetShaderResources(0, elems, textures);//this bit is rather important
 
 
 	m_context->IASetInputLayout(m_inputLayout);

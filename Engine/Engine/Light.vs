@@ -29,6 +29,8 @@ struct VertexInputType
     float4 position : POSITION;
     float2 tex : TEXCOORD0;
 	float3 normal : NORMAL;
+	float3 tangent : TANGENT;
+	float3 binormal : BINORMAL;
 };
 
 struct PixelInputType
@@ -36,6 +38,8 @@ struct PixelInputType
     float4 position : SV_POSITION;
     float2 tex : TEXCOORD0;
 	float3 normal : NORMAL;
+	float3 tangent : TANGENT;
+	float3 binormal : BINORMAL;
 	float3 viewDir : TEXCOORD1;
 };
 
@@ -67,6 +71,12 @@ PixelInputType LightVertexShader(VertexInputType input)
 	
     // Normalize the normal vector.
     output.normal = normalize(output.normal);
+
+	output.tangent = mul(input.tangent, (float3x3)worldMatrix);
+	output.tangent = normalize(output.normal);
+
+	output.binormal = mul(input.binormal, (float3x3)worldMatrix);
+	output.binormal = normalize(output.binormal);
 
 	//Calc pos of vertex in world
 	worldPos = mul(input.position, worldMatrix);

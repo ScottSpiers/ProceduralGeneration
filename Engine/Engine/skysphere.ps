@@ -2,7 +2,7 @@
 //Globals
 
 
-TextureCube SkyMap;
+TextureCube SkyMap[1];
 SamplerState SkySampleType;
 
 //Typedefs
@@ -15,5 +15,5 @@ struct PixelInputType
 //Pixel Shader
 float4 SkySpherePixelShader(PixelInputType input) : SV_TARGET
 {
-	return SkyMap.Sample(SkySampleType, input.texCoord);
+	return SkyMap[0].Sample(SkySampleType, input.texCoord);
 }

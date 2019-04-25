@@ -42,7 +42,7 @@ bool LightShader::Initialise()
 	ID3D10Blob* errorMessage;
 	ID3D10Blob* vertexShaderBuffer;
 	ID3D10Blob* pixelShaderBuffer;
-	D3D11_INPUT_ELEMENT_DESC polygonLayout[3];
+	D3D11_INPUT_ELEMENT_DESC polygonLayout[5];
 	unsigned int numElems;
 	D3D11_SAMPLER_DESC samplerDesc;
 	D3D11_BUFFER_DESC matrixBufferDesc;
@@ -80,6 +80,22 @@ bool LightShader::Initialise()
 	polygonLayout[2].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
 	polygonLayout[2].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 	polygonLayout[2].InstanceDataStepRate = 0;
+
+	polygonLayout[3].SemanticName = "TANGENT";
+	polygonLayout[3].SemanticIndex = 0;
+	polygonLayout[3].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	polygonLayout[3].InputSlot = 0;
+	polygonLayout[3].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+	polygonLayout[3].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	polygonLayout[3].InstanceDataStepRate = 0;
+
+	polygonLayout[4].SemanticName = "BINORMAL";
+	polygonLayout[4].SemanticIndex = 0;
+	polygonLayout[4].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	polygonLayout[4].InputSlot = 0;
+	polygonLayout[4].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+	polygonLayout[4].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	polygonLayout[4].InstanceDataStepRate = 0;
 
 	// Get a count of the elements in the layout.
 	numElems = sizeof(polygonLayout) / sizeof(polygonLayout[0]);
@@ -205,8 +221,10 @@ bool LightShader::Render(Model* model, Camera* cam, Light* light)
 	// Finally set the light constant buffer in the pixel shader with the updated values.
 	m_context->PSSetConstantBuffers(bufferNumber, 1, &m_lightBuffer);
 
-	ID3D11ShaderResourceView* texture = model->GetTexture();
-	m_context->PSSetShaderResources(0, 1, &texture);
+	ID3D11ShaderResourceView** textures = model->GetTextures();
+	int elems = sizeof(textures) / sizeof(textures[0]);
+
+	m_context->PSSetShaderResources(0, elems, textures);
 
 	// Set the vertex input layout.
 	m_context->IASetInputLayout(m_inputLayout);

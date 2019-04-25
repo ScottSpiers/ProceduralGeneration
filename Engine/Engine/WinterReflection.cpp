@@ -6,6 +6,8 @@ WinterReflection::WinterReflection(ResourceManager::ManagerScene sceneResources)
 	m_cMap = 0;
 	m_cMapSRV = 0;
 	m_passingTime = 0.0f;
+
+	
 }
 
 WinterReflection::~WinterReflection()
@@ -136,13 +138,16 @@ bool WinterReflection::RenderScene(D3D* d3d, Camera* view, bool drawMirror)
 	if (drawMirror)
 	{
 		Model* reflectiveSphere = m_resources->GetModel(ResourceManager::REFLECTIVE_MODEL);
-		reflectiveSphere->SetTexture(m_cMapSRV);
+		ID3D11ShaderResourceView** textures = new ID3D11ShaderResourceView*[1];
+		textures[0] = m_cMapSRV;
+		reflectiveSphere->SetTextures(textures);
 		reflectiveSphere->Render(d3d->GetDeviceContext());
 		result = m_shaders->RenderReflection(reflectiveSphere, m_Camera);
 		if (!result)
 		{
 			return false;
 		}
+		delete[] textures;
 		//This will try to use the texture but light.ps uses Texture2D not TextureCube
 		/*result = m_shaders->RenderLight(reflectiveSphere, m_Camera, m_Light);
 		if (!result)

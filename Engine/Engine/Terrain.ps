@@ -94,7 +94,7 @@ cbuffer LightBuffer
 
 };
 
-Texture2D shaderTexture;
+Texture2D shaderTexture[2];
 SamplerState SampleType;
 
 
@@ -125,7 +125,7 @@ float4 TerrainPixelShader(PixelInputType input) : SV_TARGET
 
 	input.normal = normalize(input.normal);
 	
-	textureColour = shaderTexture.Sample(SampleType, input.tex);
+	textureColour = shaderTexture[0].Sample(SampleType, input.tex);
 
 	
 	colour = ambientColour;

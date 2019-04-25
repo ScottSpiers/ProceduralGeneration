@@ -183,8 +183,9 @@ bool TerrainShader::Render(Terrain* t, Camera* cam, Light* light)
 	// Finally set the light constant buffer in the pixel shader with the updated values.
 	m_context->PSSetConstantBuffers(bufferNumber, 1, &m_lightBuffer);
 
-	ID3D11ShaderResourceView* texture = t->GetTexture();
-	m_context->PSSetShaderResources(0, 1, &texture);
+	ID3D11ShaderResourceView** textures = t->GetTextures();
+	int elems = sizeof(textures) / sizeof(textures[0]);
+	m_context->PSSetShaderResources(0, elems, textures);
 
 	// Set the vertex input layout.
 	m_context->IASetInputLayout(m_inputLayout);

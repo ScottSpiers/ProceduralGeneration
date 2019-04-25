@@ -30,6 +30,8 @@ public:
 		float x, y, z;
 		float tu, tv;
 		float nx, ny, nz;
+		float tx, ty, tz;
+		float bx, by, bz;
 	};
 
 protected:
@@ -38,7 +40,16 @@ protected:
 		XMFLOAT3 position;
 	    XMFLOAT2 texture;
 		XMFLOAT3 normal;
+		XMFLOAT3 tangent;
+		XMFLOAT3 binormal;
 	};	
+
+	struct TempVertex
+	{
+		XMFLOAT3 pos;
+		XMFLOAT2 tex;
+		XMFLOAT3 normal;
+	};
 
 public:
 	Model();
@@ -54,8 +65,8 @@ public:
 	void SetWorldMatrix(XMMATRIX);
 	XMMATRIX GetWorldMatrix();
 
-	void SetTexture(ID3D11ShaderResourceView*);
-	ID3D11ShaderResourceView* GetTexture();
+	void SetTextures(ID3D11ShaderResourceView**);
+	ID3D11ShaderResourceView** GetTextures();
 
 	void SetModelData(ModelData*);
 	void SetVertexCount(int);
@@ -65,9 +76,9 @@ protected:
 	virtual void drawCurrent(ID3D11DeviceContext*) const;
 
 private:
-	void ReleaseBuffers();
-
-	void ReleaseModel();
+	void CalcVectors();
+	void CalcTanBi(TempVertex, TempVertex, TempVertex, XMFLOAT3&, XMFLOAT3&);
+	XMFLOAT3 CalcNormal(XMFLOAT3, XMFLOAT3);
 
 private:
 	ID3D11Buffer *m_vertexBuffer, *m_indexBuffer;
@@ -76,7 +87,7 @@ private:
 	std::vector<unsigned int> m_indices;
 
 	XMMATRIX m_worldMatrix;
-	ID3D11ShaderResourceView* m_texture;
+	ID3D11ShaderResourceView** m_textures;
 };
 
 #endif

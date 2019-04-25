@@ -6,6 +6,7 @@ ResourceManager::ResourceManager(ID3D11Device* device, ID3D11DeviceContext* cont
 	m_device = device;
 	m_context = context;
 	m_scene = scene;
+	m_textureCount = 0;
 }
 
 ResourceManager::~ResourceManager()
@@ -21,9 +22,14 @@ ResourceManager::~ResourceManager()
 
 	for (auto& t : m_textures)
 	{
-		if (t)
+		int numElems = sizeof(t) / sizeof(t[0]);
+		for (int i = 0; i < numElems; ++i)
 		{
-			t->Release();
+			if (t[i])
+			{
+				t[i]->Release();
+				t[i] = 0;
+			}
 		}
 	}
 }
@@ -47,7 +53,7 @@ bool ResourceManager::LoadResources()
 				return false;
 			}
 
-			m_models[ORBIT_MODEL]->SetTexture(m_textures[ORBIT_TEXTURE]);
+			m_models[ORBIT_MODEL]->SetTextures(m_textures[ORBIT_TEXTURE]);
 
 			//load the sky sphere texture and model
 			if (!LoadTexture(SKY_CUBE_TEXTURE))
@@ -60,7 +66,7 @@ bool ResourceManager::LoadResources()
 				return false;
 			}
 
-			m_models[SKY_DOME_MODEL]->SetTexture(m_textures[SKY_CUBE_TEXTURE]);
+			m_models[SKY_DOME_MODEL]->SetTextures(m_textures[SKY_CUBE_TEXTURE]);
 
 			// load the refelctive sphere model
 			if (!LoadModel(REFLECTIVE_MODEL))
@@ -96,7 +102,7 @@ bool ResourceManager::LoadResources()
 				return false;
 			}
 
-			m_models[ORBIT_MODEL]->SetTexture(m_textures[ORBIT_TEXTURE]);
+			m_models[ORBIT_MODEL]->SetTextures(m_textures[ORBIT_TEXTURE]);
 
 			if (!m_models[ORBIT_MODEL]->InitializeBuffers(m_device))
 			{
@@ -113,7 +119,7 @@ bool ResourceManager::LoadResources()
 				return false;
 			}
 
-			m_models[SKY_DOME_MODEL]->SetTexture(m_textures[SKY_CUBE_TEXTURE]);
+			m_models[SKY_DOME_MODEL]->SetTextures(m_textures[SKY_CUBE_TEXTURE]);
 
 			if (!m_models[SKY_DOME_MODEL]->InitializeBuffers(m_device))
 			{
@@ -140,7 +146,7 @@ bool ResourceManager::LoadResources()
 
 }
 
-ID3D11ShaderResourceView* ResourceManager::GetTexture(TextureResource t)
+ID3D11ShaderResourceView** ResourceManager::GetTextures(TextureResource t)
 {
 	return m_textures[t];
 }
@@ -154,7 +160,9 @@ bool ResourceManager::LoadTexture(TextureResource t)
 {
 	HRESULT result;
 
+	bool hasSecond = false;
 	ID3D11ShaderResourceView* texture;
+	ID3D11ShaderResourceView* texture2;
 	char* filename;
 
 	switch (t)
@@ -213,16 +221,29 @@ bool ResourceManager::LoadTexture(TextureResource t)
 			break;
 		}
 		case TREE_TEXTURE:
-		{			
+		{	
+			bool hasSecond = true;
 			//D3DX11CreateShaderResourceViewFromFile(m_device, L"../Engine/data/seafloor.dds", NULL, NULL, &texture, NULL); 
 			result = CreateDDSTextureFromFile(m_device, L"../Engine/data/treebark.dds", nullptr, &texture, 0, nullptr);
 			if (FAILED(result))
 				return false;
+
+			result = CreateDDSTextureFromFile(m_device, L"../Engine/data/treebarkNorm.dds", nullptr, &texture2, 0, nullptr);
+			if (FAILED(result))
+				return false;
+			
 			break;
 		}
 	}
-		m_textures.push_back(texture);
-		return true;
+
+	m_textures.push_back(new ID3D11ShaderResourceView*[2]);
+	m_textures[m_textureCount][0] = texture;
+	if (hasSecond)
+	{
+		m_textures[m_textureCount][1] = texture2;
+	}
+	++m_textureCount;
+	return true;
 }
 
 bool ResourceManager::LoadModel(ModelResource m)

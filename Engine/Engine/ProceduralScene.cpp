@@ -53,10 +53,10 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 		return false;
 
 	m_terrain = new Terrain(terrainSize,terrainSize);
-	m_terrain->SetTexture(m_resources->GetTexture(ResourceManager::TERRAIN_TEXTURE));
+	m_terrain->GenPerlin();
 	//m_terrain->GenRandom();
 	//m_terrain->GenSinWave();
-	m_terrain->GenPerlin();
+	m_terrain->SetTextures(m_resources->GetTextures(ResourceManager::TERRAIN_TEXTURE));
 
 	m_Light->SetAmbientColour(0.15f, 0.15f, 0.15f, 1.0f);
 	m_Light->SetDiffuseColor(.75f, .75f, .75f, 1.0f);
@@ -131,7 +131,7 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 	XMMATRIX newPos = XMMatrixTranslation(terrainSize / 2.0f, 0.0f, terrainSize / 2.0f);
 	m_trees[0]->SetWorldMatrix(newPos);
 	m_trees[0]->InterpretSystem(testLSystem, stepSize, angleDelta);
-	m_trees[0]->SetTexture(m_resources->GetTexture(ResourceManager::TREE_TEXTURE));
+	m_trees[0]->SetTextures(m_resources->GetTextures(ResourceManager::TREE_TEXTURE));
 	m_trees[0]->Initialise(device);
 
 	//newPos = XMMatrixTranslation(terrainSize, 0.0f, 0.0f);

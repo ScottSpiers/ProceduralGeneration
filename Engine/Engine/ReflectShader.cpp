@@ -149,8 +149,9 @@ bool ReflectShader::Render(Model* model, Camera* cam)
 	//Now set the camera constant buffer in the vertex shader with the updated values
 	m_context->VSSetConstantBuffers(bufferNumber, 1, &m_cameraBuffer);
 
-	ID3D11ShaderResourceView* texture = model->GetTexture();
-	m_context->PSSetShaderResources(0, 1, &texture);
+	ID3D11ShaderResourceView** textures = model->GetTextures();
+	int elems = sizeof(textures) / sizeof(textures[0]);
+	m_context->PSSetShaderResources(0, 1, textures);
 
 	// Now render the prepared buffers with the shader.
 	// Set the vertex input layout.

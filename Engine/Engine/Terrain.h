@@ -31,8 +31,8 @@ public:
 	XMMATRIX GetWorldMatrix();
 	int GetIndexCount();
 
-	void SetTexture(ID3D11ShaderResourceView*);
-	ID3D11ShaderResourceView* GetTexture();
+	void SetTextures(ID3D11ShaderResourceView**);
+	ID3D11ShaderResourceView** GetTextures();
 	float GetTerrainHeight(float, float);
 
 private:
@@ -42,7 +42,7 @@ private:
 
 private:
 	ID3D11Buffer *m_vBuffer, *m_iBuffer;
-	ID3D11ShaderResourceView* m_texture;
+	ID3D11ShaderResourceView** m_textures;
 
 	int m_width, m_height, m_vCount, m_iCount;
 	bool m_toggleGenerated;

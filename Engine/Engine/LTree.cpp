@@ -5,16 +5,22 @@ LTree::LTree()
 {
 	m_worldMatrix = XMMatrixIdentity();
 	m_isModel = true;
-	m_texture = 0;
+	m_textures = 0;
 }
 
 LTree::~LTree()
 {
-	if (m_texture)
+	int numElems = sizeof(m_textures) / sizeof(m_textures[0]);
+
+	for (int i = 0; i < numElems; ++i)
 	{
-		m_texture->Release();
-		m_texture = 0;
+		if (m_textures[i])
+		{
+			m_textures[i]->Release();
+			m_textures[i] = 0;
+		}
 	}
+	m_textures = 0;
 }
 
 bool LTree::Initialise(ID3D11Device* device)
@@ -24,7 +30,7 @@ bool LTree::Initialise(ID3D11Device* device)
 		for (Model* m : m_models)
 		{
 			m->SetWorldMatrix(m->GetWorldMatrix() * m_worldMatrix);
-			m->SetTexture(m_texture);
+			m->SetTextures(m_textures);
 			m->InitializeBuffers(device);
 		}
 	}
@@ -189,6 +195,9 @@ void LTree::InterpretSystem(std::string lResult, float stepSize, float angleDelt
 					m_models.back()->SetWorldMatrix(XMMatrixMultiply(XMMatrixMultiply(XMMatrixScaling(curState.radius / origRad, curState.stepSize / origStepSize, curState.radius / origRad), rotMatrix), XMMatrixTranslationFromVector(curState.pos)));
 					
 				}
+				nextState.radius = curState.radius - 0.005f;
+				if (nextState.radius < 0.05f)
+					nextState.radius = 0.05f;
 				break;
 			}
 			case 'f':
@@ -236,7 +245,10 @@ void LTree::InterpretSystem(std::string lResult, float stepSize, float angleDelt
 			case '[':
 			{
 				//nextState.stepSize = curState.stepSize + 1.0f;
+				//make this a percentage of the curradius?
 				nextState.radius = curState.radius - 0.3f;
+				if (nextState.radius < 0.05f)
+					nextState.radius = 0.05f;
 				curState.rotation = rotMatrix;
 				turtleStack.push(curState);
 				indexStack.push(index);
@@ -278,9 +290,9 @@ int LTree::GetIndexCount()
 	return m_indices.size();
 }
 
-void LTree::SetTexture(ID3D11ShaderResourceView* t)
+void LTree::SetTextures(ID3D11ShaderResourceView** t)
 {
-	m_texture = t;
+	m_textures = t;
 }
 
 bool LTree::IsModel()

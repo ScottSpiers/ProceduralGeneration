@@ -40,7 +40,7 @@ public:
 	~ResourceManager();
 
 	bool LoadResources();
-	ID3D11ShaderResourceView* GetTexture(TextureResource);
+	ID3D11ShaderResourceView** GetTextures(TextureResource);
 	Model* GetModel(ModelResource);
 
 private:
@@ -50,7 +50,8 @@ private:
 private:
 	ID3D11Device* m_device;
 	ID3D11DeviceContext* m_context;
-	std::vector<ID3D11ShaderResourceView*> m_textures;
+	std::vector<ID3D11ShaderResourceView**> m_textures;
+	int m_textureCount;
 	std::vector<Model*> m_models;
 
 	ManagerScene m_scene;

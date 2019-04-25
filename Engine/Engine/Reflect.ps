@@ -7,7 +7,7 @@
 // GLOBALS //
 /////////////
 
-TextureCube shaderTexture;
+TextureCube shaderTexture[1];
 SamplerState SampleType;
 
 
@@ -42,7 +42,7 @@ float4 ReflectPixelShader(PixelInputType input) : SV_TARGET
 	float3 incident = -input.viewDir;
 	float3 refVec = reflect(incident, input.normal);
 	
-	textureColour = shaderTexture.Sample(SampleType, refVec);
+	textureColour = shaderTexture[0].Sample(SampleType, refVec);
 
 	/*
 	colour = ambientColour;
