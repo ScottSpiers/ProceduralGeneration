@@ -25,14 +25,6 @@ class Model
 {
 
 public:
-	struct ModelData
-	{
-		float x, y, z;
-		float tu, tv;
-		float nx, ny, nz;
-		float tx, ty, tz;
-		float bx, by, bz;
-	};
 	struct VertexType
 	{
 		XMFLOAT3 position;
@@ -77,9 +69,9 @@ protected:
 	virtual void drawCurrent(ID3D11DeviceContext*) const;
 
 private:
-	/*void CalcVectors();
+	void CalcVectors();
 	void CalcTanBi(TempVertex, TempVertex, TempVertex, XMFLOAT3&, XMFLOAT3&);
-	XMFLOAT3 CalcNormal(XMFLOAT3, XMFLOAT3);*/
+	XMFLOAT3 CalcNormal(XMFLOAT3, XMFLOAT3);
 
 private:
 	ID3D11Buffer *m_vertexBuffer, *m_indexBuffer;

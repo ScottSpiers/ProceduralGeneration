@@ -170,11 +170,11 @@ bool ResourceManager::LoadTexture(TextureResource t)
 	{
 		case ORBIT_TEXTURE: 
 		{
-			
 			//D3DX11CreateShaderResourceViewFromFile(m_device, L"../Engine/data/seafloor.dds", NULL, NULL, &texture, NULL); 
-			result = CreateDDSTextureFromFile(m_device, L"../Engine/data/seafloor.dds", nullptr, &texture, 0 , nullptr);
+			result = CreateDDSTextureFromFile(m_device, L"../Engine/data/crystal.dds", nullptr, &texture, 0 , nullptr);
 			if (FAILED(result))
 				return false;
+
 			break;
 		}
 		case SKY_CUBE_TEXTURE:
@@ -230,7 +230,7 @@ bool ResourceManager::LoadTexture(TextureResource t)
 			if (FAILED(result))
 				return false;
 
-			result = CreateDDSTextureFromFile(m_device, L"../Engine/data/treebarkNorm.dds", nullptr, &texture2, 0, nullptr);
+			result = CreateDDSTextureFromFile(m_device, L"../Engine/data/treeBarkNorm.dds", nullptr, &texture2, 0, nullptr);
 			if (FAILED(result))
 				return false;
 			

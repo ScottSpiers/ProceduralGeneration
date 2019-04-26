@@ -158,7 +158,7 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 	m_isSphereAlive = true;
 	m_sphere = m_resources->GetModel(ResourceManager::ORBIT_MODEL);
 	m_skySphere = m_resources->GetModel(ResourceManager::SKY_DOME_MODEL);
-	m_sphere->SetWorldMatrix(XMMatrixTranslation(250.0f, 5.0f, 250.0f));
+	m_sphere->SetWorldMatrix(XMMatrixMultiply(XMMatrixScaling(2.0f,2.0f,2.0f), XMMatrixTranslation(250.0f, 6.66f, 250.0f)));
 	m_sphereCount = 0;
 	return true;	
 }
@@ -203,6 +203,12 @@ bool ProceduralScene::InitialiseRenderTexture(ID3D11Device* device, XMFLOAT2 dim
 	res = device->CreateShaderResourceView(m_ppRenderTarget, &srvDesc, &m_ppSRV);
 	if(FAILED(res))
 		return false;
+
+	if (m_ppQuad)
+	{
+		delete m_ppQuad;
+		m_ppQuad = 0;
+	}
 
 	m_ppQuad = new Quad(dimensions.x, dimensions.y);
 	if (!m_ppQuad->Initialise(device))
@@ -250,8 +256,9 @@ bool ProceduralScene::RenderScene(D3D* d3d)
 	float heightOffset = 10.0f;
 
 	XMFLOAT3 cameraPos = m_Camera->GetPosition();
+	float terrainHeight = m_terrain->GetTerrainHeight(x, z);
 	m_skySphere->SetWorldMatrix(XMMatrixTranslation(cameraPos.x, cameraPos.y , cameraPos.z));
-	m_Camera->SetPosition(x, m_terrain->GetTerrainHeight(x, z) + heightOffset, z);
+	m_Camera->SetPosition(x, terrainHeight + heightOffset, z);
 
 	XMVECTOR spherePos = m_sphere->GetWorldMatrix().r[3];
 	XMVECTOR camPos = XMLoadFloat3(&m_Camera->GetPosition());
@@ -272,10 +279,9 @@ bool ProceduralScene::RenderScene(D3D* d3d)
 		if(m_sphereCount >= 7)
 			m_isSphereAlive = false;
 		else
-			m_sphere->SetWorldMatrix(XMMatrixTranslation(rx, 6.66f, rz));		
+			m_sphere->SetWorldMatrix(XMMatrixTranslation(rx, terrainHeight, rz));		
 	}
 
-	//TERRAIN TURN BACK ON EVENTUALLY
 	result = m_terrain->Render(d3d->GetDeviceContext());
 	if (!result)
 		return false;

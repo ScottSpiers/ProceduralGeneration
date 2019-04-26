@@ -192,7 +192,6 @@ void LTree::InterpretSystem(std::string lResult, float stepSize, float angleDelt
 				{
 					//cyl.GenCylinder(curState.radius, curState.stepSize, 24);
 					m_models.push_back(new Model(cyl));
-					//m_models.back()->SetWorldMatrix(XMMatrixScaling(curState.radius / origRad, curState.stepSize / origStepSize, curState.radius / origRad));
 					m_models.back()->SetWorldMatrix(XMMatrixMultiply(XMMatrixMultiply(XMMatrixScaling(curState.radius / origRad, curState.stepSize / origStepSize, curState.radius / origRad), rotMatrix), XMMatrixTranslationFromVector(curState.pos)));
 					
 				}
@@ -292,6 +291,13 @@ void LTree::InterpretSystem(std::string lResult, float stepSize, float angleDelt
 		std::vector<unsigned int> tempInds = m->GetIndices();
 		std::vector<Model::VertexType> tempVerts = m->GetVertices();
 
+		for (auto& v : tempVerts)
+		{
+			XMVECTOR pos = XMLoadFloat3(&v.position);
+			XMVECTOR newPos = XMVector3TransformCoord(pos, m->GetWorldMatrix());
+			XMStoreFloat3(&v.position, newPos);
+		}
+
 		int accIndSize = finalVerts.size();
 		for (auto& ind : tempInds)
 		{
@@ -303,7 +309,7 @@ void LTree::InterpretSystem(std::string lResult, float stepSize, float angleDelt
 
 	m_bigModel->SetModelData(finalVerts, finalInds);
 
-	//m_models.clear();
+	m_models.clear();
 	//m_models.push_back(m_bigModel);
 
 }
