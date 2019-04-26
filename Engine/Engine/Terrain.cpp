@@ -241,8 +241,8 @@ void Terrain::CalcNormals()
 
 void Terrain::CalcTexCoords()
 {
-	float x = 1 / m_width;
-	float z = 1 / m_height;
+	float x = 32.0f / m_width;
+	float z = 32.0f / m_height;
 
 	for (auto& v : m_vertices)
 	{

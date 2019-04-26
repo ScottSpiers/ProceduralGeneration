@@ -33,8 +33,6 @@ public:
 		float tx, ty, tz;
 		float bx, by, bz;
 	};
-
-protected:
 	struct VertexType
 	{
 		XMFLOAT3 position;
@@ -44,6 +42,7 @@ protected:
 		XMFLOAT3 binormal;
 	};	
 
+private:
 	struct TempVertex
 	{
 		XMFLOAT3 pos;
@@ -60,7 +59,10 @@ public:
 	bool InitializeBuffers(ID3D11Device*);
 	void Render(ID3D11DeviceContext*) const;
 
+	std::vector<VertexType> GetVertices();
+	std::vector<unsigned int> GetIndices();
 	int GetIndexCount();
+	int GetVertexCount();
 
 	void SetWorldMatrix(XMMATRIX);
 	XMMATRIX GetWorldMatrix();
@@ -68,22 +70,20 @@ public:
 	void SetTextures(ID3D11ShaderResourceView**);
 	ID3D11ShaderResourceView** GetTextures();
 
-	void SetModelData(ModelData*);
-	void SetVertexCount(int);
-	void SetIndexCount(int);
+	void SetModelData(std::vector<VertexType>&);
+	void SetModelData(std::vector<VertexType>&, std::vector<unsigned int>&);
 
 protected:
 	virtual void drawCurrent(ID3D11DeviceContext*) const;
 
 private:
-	void CalcVectors();
+	/*void CalcVectors();
 	void CalcTanBi(TempVertex, TempVertex, TempVertex, XMFLOAT3&, XMFLOAT3&);
-	XMFLOAT3 CalcNormal(XMFLOAT3, XMFLOAT3);
+	XMFLOAT3 CalcNormal(XMFLOAT3, XMFLOAT3);*/
 
 private:
 	ID3D11Buffer *m_vertexBuffer, *m_indexBuffer;
-	int m_vertexCount, m_indexCount;
-	ModelData* m_model;
+	std::vector<VertexType> m_vertices;
 	std::vector<unsigned int> m_indices;
 
 	XMMATRIX m_worldMatrix;

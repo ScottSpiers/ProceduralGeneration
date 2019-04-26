@@ -56,7 +56,7 @@ PixelInputType TerrainVertexShader(VertexInputType input)
     output.position = mul(output.position, viewMatrix);
     output.position = mul(output.position, projectionMatrix);
 
-	output.tex = input.position;
+	output.tex = input.tex;
     
 	// Calculate the normal vector against the world matrix only.
     output.normal = mul(input.normal, (float3x3)worldMatrix);
@@ -139,7 +139,7 @@ PixelInputType TerrainVertexShader(VertexInputType input)
 
 
 	// Store the texture coordinates for the pixel shader.
-	output.tex = input.position;
+	output.tex = input.tex;
     
 	// Calculate the normal vector against the world matrix only.
     output.normal = mul(input.normal, (float3x3)worldMatrix);

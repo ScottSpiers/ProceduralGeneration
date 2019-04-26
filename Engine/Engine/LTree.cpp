@@ -5,6 +5,7 @@ LTree::LTree()
 {
 	m_worldMatrix = XMMatrixIdentity();
 	m_isModel = true;
+	m_bigModel = 0;
 	m_textures = 0;
 }
 
@@ -21,18 +22,21 @@ LTree::~LTree()
 		}
 	}
 	m_textures = 0;
+
+	if (m_bigModel)
+	{
+		delete m_bigModel;
+		m_bigModel = 0;
+	}
 }
 
 bool LTree::Initialise(ID3D11Device* device)
 {
 	if (m_isModel)
-	{
-		for (Model* m : m_models)
-		{
-			m->SetWorldMatrix(m->GetWorldMatrix() * m_worldMatrix);
-			m->SetTextures(m_textures);
-			m->InitializeBuffers(device);
-		}
+	{		
+		m_bigModel->SetWorldMatrix(m_bigModel->GetWorldMatrix() * m_worldMatrix);
+		m_bigModel->SetTextures(m_textures);
+		m_bigModel->InitializeBuffers(device);
 	}
 	else
 	{
@@ -83,10 +87,7 @@ bool LTree::Render(ID3D11DeviceContext* context)
 {
 	if (m_isModel)
 	{
-		for (Model* m : m_models)
-		{
-			m->Render(context);
-		}
+		m_bigModel->Render(context);
 	}
 	else
 	{
@@ -268,11 +269,48 @@ void LTree::InterpretSystem(std::string lResult, float stepSize, float angleDelt
 		}
 		curState = nextState;
 	}
+
+	m_bigModel = new Model();
+	m_bigModel->SetWorldMatrix(m_models[0]->GetWorldMatrix());
+
+	int numVerts = 0;
+	int numIndices= 0;
+	std::vector<Model::VertexType> finalVerts;
+	std::vector<unsigned int> finalInds;
+
+	for (Model* m : m_models)
+	{
+		numVerts += m->GetVertexCount();
+		numIndices += m->GetIndexCount();
+	}
+
+	finalVerts.reserve(numVerts);
+	finalInds.reserve(numIndices);
+
+	for (Model* m : m_models)
+	{
+		std::vector<unsigned int> tempInds = m->GetIndices();
+		std::vector<Model::VertexType> tempVerts = m->GetVertices();
+
+		int accIndSize = finalVerts.size();
+		for (auto& ind : tempInds)
+		{
+			ind += accIndSize;
+		}
+		finalInds.insert(finalInds.end(), tempInds.begin(), tempInds.end());
+		finalVerts.insert(finalVerts.end(), tempVerts.begin(), tempVerts.end());
+	}
+
+	m_bigModel->SetModelData(finalVerts, finalInds);
+
+	//m_models.clear();
+	//m_models.push_back(m_bigModel);
+
 }
 
-std::vector<Model*> LTree::GetModels()
+Model* LTree::GetModel()
 {
-	return m_models;
+	return m_bigModel;
 }
 
 void LTree::SetWorldMatrix(XMMATRIX world)

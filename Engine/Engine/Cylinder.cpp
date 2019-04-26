@@ -114,11 +114,6 @@ void Cylinder::GenCylinder(float r, float h, int t)
 
 	GenCaps(r, height, t, true);
 	GenCaps(r, height, t, false);
-
-	for (auto it = m_vertices.begin(); it != m_vertices.end(); ++it)
-	{
-		it->tex.x = (1.f - it->tex.x);
-	}
 }
 
 void Cylinder::Rotate(XMMATRIX rotation)

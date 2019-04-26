@@ -1,17 +1,9 @@
-﻿  ProceduralScene.cpp
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(10): warning C4018: '<': signed/unsigned mismatch
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(12): warning C4316: 'LTree': object allocated on the heap may not be aligned 16
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(55): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(55): warning C4316: 'Terrain': object allocated on the heap may not be aligned 16
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(175): warning C4244: '=': conversion from 'float' to 'UINT', possible loss of data
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(176): warning C4244: '=': conversion from 'float' to 'UINT', possible loss of data
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(207): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(207): warning C4316: 'Quad': object allocated on the heap may not be aligned 16
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(266): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(269): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-  ResourceManager.cpp
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\resourcemanager.cpp(39): warning C4101: 'result': unreferenced local variable
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\resourcemanager.cpp(166): warning C4101: 'filename': unreferenced local variable
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\resourcemanager.cpp(255): warning C4316: 'Model': object allocated on the heap may not be aligned 16
+﻿  Cylinder.cpp
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\cylinder.cpp(11): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\cylinder.cpp(121): warning C4018: '<': signed/unsigned mismatch
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\cylinder.cpp(140): warning C4018: '<': signed/unsigned mismatch
+  LTree.cpp
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\ltree.cpp(194): warning C4316: 'Model': object allocated on the heap may not be aligned 16
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\ltree.cpp(273): warning C4316: 'Model': object allocated on the heap may not be aligned 16
   Generating Code...
   Engine.vcxproj -> C:\Users\Scott\Documents\Uni\Abertay\CMP505\Assignment\Engine\Debug\Engine.exe

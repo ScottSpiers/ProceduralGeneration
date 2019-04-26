@@ -43,7 +43,7 @@ public:
 	bool Render(ID3D11DeviceContext*);
 	void InterpretSystem(std::string, float, float);
 
-	std::vector<Model*> GetModels();
+	Model* GetModel();
 
 	void SetWorldMatrix(XMMATRIX);
 	XMMATRIX GetWorldMatrix();
@@ -64,6 +64,7 @@ private:
 	std::vector<VertexType> m_vertices;
 	std::vector<int> m_indices;
 	std::vector<Model*> m_models;
+	Model* m_bigModel;
 
 	XMMATRIX m_worldMatrix;
 	bool m_isModel;

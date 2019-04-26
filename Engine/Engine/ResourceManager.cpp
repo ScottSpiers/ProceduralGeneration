@@ -159,16 +159,18 @@ Model* ResourceManager::GetModel(ModelResource m)
 bool ResourceManager::LoadTexture(TextureResource t)
 {
 	HRESULT result;
-
-	bool hasSecond = false;
 	ID3D11ShaderResourceView* texture;
 	ID3D11ShaderResourceView* texture2;
+
+
+	bool hasSecond = false;
 	char* filename;
 
 	switch (t)
 	{
 		case ORBIT_TEXTURE: 
 		{
+			
 			//D3DX11CreateShaderResourceViewFromFile(m_device, L"../Engine/data/seafloor.dds", NULL, NULL, &texture, NULL); 
 			result = CreateDDSTextureFromFile(m_device, L"../Engine/data/seafloor.dds", nullptr, &texture, 0 , nullptr);
 			if (FAILED(result))
@@ -215,7 +217,7 @@ bool ResourceManager::LoadTexture(TextureResource t)
 		case TERRAIN_TEXTURE:
 		{
 			//D3DX11CreateShaderResourceViewFromFile(m_device, L"../Engine/data/seafloor.dds", NULL, NULL, &texture, NULL); 
-			result = CreateDDSTextureFromFile(m_device, L"../Engine/data/grass.dds", nullptr, &texture, 0, nullptr);
+			result = CreateDDSTextureFromFile(m_device, L"../Engine/data/forestfloor.dds", nullptr, &texture, 0, nullptr);
 			if (FAILED(result))
 				return false;
 			break;
@@ -284,15 +286,10 @@ bool ResourceManager::LoadModel(ModelResource m)
 	// Set the number of indices to be the same as the vertex count.
 	indexCount = vertexCount;
 
-	model->SetVertexCount(vertexCount);
-	model->SetIndexCount(indexCount);
-
 	// Create the model using the vertex count that was read in.
-	Model::ModelData* data = new Model::ModelData[vertexCount];
-	if (!data)
-	{
-		return false;
-	}
+	std::vector<Model::VertexType> data;
+	data.resize(vertexCount);
+	//Model::ModelData* data = new Model::ModelData[vertexCount];
 
 	// Read up to the beginning of the data.
 	fin.get(input);
@@ -306,9 +303,9 @@ bool ResourceManager::LoadModel(ModelResource m)
 	// Read in the vertex data.
 	for (i = 0; i < vertexCount; i++)
 	{
-		fin >> data[i].x >> data[i].y >> data[i].z;
-		fin >> data[i].tu >> data[i].tv;
-		fin >> data[i].nx >> data[i].ny >> data[i].nz;
+		fin >> data[i].position.x >> data[i].position.y >> data[i].position.z;
+		fin >> data[i].texture.x >> data[i].texture.y;
+		fin >> data[i].normal.x >> data[i].normal.y >> data[i].normal.z;
 	}
 
 	model->SetModelData(data);

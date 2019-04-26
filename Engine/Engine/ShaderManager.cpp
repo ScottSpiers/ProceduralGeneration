@@ -106,11 +106,9 @@ bool ShaderManager::RenderLTree(LTree* t, Camera* cam, Light* light)
 
 	if (t->IsModel())
 	{
-		bool res;
-		for (Model* m : t->GetModels())
+		if (!m_lightShader->Render(t->GetModel(), cam, light))
 		{
-			if (!m_lightShader->Render(m, cam, light))
-				return false;
+			return false;
 		}
 		return true;
 	}

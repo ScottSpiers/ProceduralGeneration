@@ -51,6 +51,7 @@ float4 LightPixelShader(PixelInputType input) : SV_TARGET
 	float3 normal;
 
 	input.normal = normalize(input.normal);
+	normal = input.normal;
 	
 	textureColour = shaderTexture[0].Sample(SampleType, input.tex);
 
@@ -68,17 +69,17 @@ float4 LightPixelShader(PixelInputType input) : SV_TARGET
     lightDir = -lightDirection;
 
     // Calculate the amount of light on this pixel.
-    lightIntensity = saturate(dot(normal, lightDir));
+    lightIntensity = saturate(dot(input.normal, lightDir));
 
 	colour += (diffuseColour * lightIntensity);
 	colour = saturate(colour);
 
-	//reflection = normalize(2* lightIntensity * input.normal - lightDir);
-	//specularColour = pow(saturate(dot(reflection, input.viewDir)), specularIntensity);
+	reflection = normalize(2* lightIntensity * input.normal - lightDir);
+	specularColour = pow(saturate(dot(reflection, input.viewDir)), specularIntensity);
 
     
 	colour *= textureColour;
-	//colour = saturate(colour +  (specularColour * specColour));	
+	colour = saturate(colour +  (specularColour * specColour));	
 	
     return colour;
 }

@@ -144,8 +144,8 @@ float4 TerrainPixelShader(PixelInputType input) : SV_TARGET
 		colour += (diffuseColour * lightIntensity);
 		colour = saturate(colour);
 
-		reflection = normalize(2* lightIntensity * input.normal - lightDir);
-		specularColour = pow(saturate(dot(reflection, input.viewDir)), specularIntensity);
+		//reflection = normalize(2* lightIntensity * input.normal - lightDir);
+		//specularColour = pow(saturate(dot(reflection, input.viewDir)), specularIntensity);
 	}
 
     

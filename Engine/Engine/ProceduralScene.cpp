@@ -62,7 +62,7 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 	m_Light->SetDiffuseColor(.75f, .75f, .75f, 1.0f);
 	m_Light->SetSpecColour(0.0f, .0f, .0f, 0.f);
 	m_Light->SetSpecIntensity(1.f);
-	m_Light->SetDirection(-.75f, -.5f, -.75f);
+	m_Light->SetDirection(.75f, -.5f, .75f);
 	
 	m_Camera->SetPosition(terrainSize/2.0f - 10.0f, 2.0f, terrainSize/2.0f - 10.0f);
 	m_ppView = GetView();
@@ -292,7 +292,10 @@ bool ProceduralScene::RenderScene(D3D* d3d)
 		if (!result)
 			return false;
 	}*/
-	m_trees[0]->Render(d3d->GetDeviceContext());
+	if(!m_trees[0]->Render(d3d->GetDeviceContext()))
+	{
+		return false;
+	}
 	result = m_shaders->RenderLTree(m_trees[0], m_Camera, m_Light);
 	if (!result)
 		return false;
@@ -328,7 +331,6 @@ bool ProceduralScene::Render(D3D* d3d)
 	if (!res)
 		return false;
 
-	float terrainSize = 513.0f;
 	d3d->BeginScene(0.0f, 0.0f, .8f, 1.0f);
 
 	d3d->TurnZBufferOff();
