@@ -17,11 +17,14 @@ public:
 	virtual bool Initialise(ID3D11Device*, ID3D11DeviceContext*) final;
 	virtual bool Render(D3D*) final;
 
+	virtual void MoveCamera(XMFLOAT3) final;
+
 private:
 	bool InitialiseRenderTexture(ID3D11Device*, XMFLOAT2);
 	bool RenderToTexture(D3D*);
 	bool RenderScene(D3D*);
 
+	bool IsCollidingTree(XMFLOAT3);
 
 
 private:

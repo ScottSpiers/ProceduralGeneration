@@ -7,6 +7,12 @@ LTree::LTree()
 	m_isModel = true;
 	m_bigModel = 0;
 	m_textures = 0;
+	m_radius = 1.0f;
+}
+
+LTree::LTree(float radius) : LTree()
+{
+	m_radius = radius;
 }
 
 LTree::~LTree()
@@ -118,7 +124,7 @@ void LTree::InterpretSystem(std::string lResult, float stepSize, float angleDelt
 	curState.pos = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
 	curState.rotation = XMMatrixIdentity();
 	curState.stepSize = stepSize;
-	curState.radius = 1.0f;
+	curState.radius = m_radius;
 
 	std::stack<int> indexStack;
 	std::stack<TurtleState> turtleStack;
@@ -312,6 +318,16 @@ void LTree::InterpretSystem(std::string lResult, float stepSize, float angleDelt
 	m_models.clear();
 	//m_models.push_back(m_bigModel);
 
+}
+
+void LTree::SetRadius(float r)
+{
+	m_radius = r;
+}
+
+float LTree::GetRadius()
+{
+	return m_radius;
 }
 
 Model* LTree::GetModel()

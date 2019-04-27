@@ -13,7 +13,14 @@ Camera::Camera()
 	m_rotationX = 0.0f;
 	m_rotationY = 0.0f;
 	m_rotationZ = 0.0f;
+
+	m_type = CamType::FREE;
 	
+}
+
+Camera::Camera(CamType type) : Camera()
+{
+	m_type = type;
 }
 
 
@@ -105,10 +112,59 @@ void Camera::Move(XMFLOAT3 movement)
 	target = XMVectorAdd(pos, target);
 
 	m_viewMatrix = XMMatrixLookAtLH(pos, target, up);
-	m_positionX = XMVectorGetByIndex(pos, 0);
-	//m_positionY = XMVectorGetByIndex(pos, 1);
-	m_positionZ = XMVectorGetByIndex(pos, 2);
+
+	XMFLOAT3 newPos;
+	XMStoreFloat3(&newPos, pos);
+	m_positionX = newPos.x;
+
+	if (m_type == CamType::FREE)
+	{
+		m_positionY = newPos.y;
+	}
+	m_positionZ = newPos.z;
 	
+}
+
+//rework this a bit so move uses this and then sets stuff, as to not duplicate code
+XMFLOAT3 Camera::GetNextPos(XMFLOAT3 movement)
+{
+	XMMATRIX rotMatrix;
+	XMVECTOR right{ 1.0f, 0.0f, 0.0f };
+	XMVECTOR up{ 0.0f, 1.0f, 0.0f };
+	XMVECTOR forward{ 0.0f, 0.0f, 1.0f };
+
+	float pitch = m_rotationX * 0.0174532925f;
+	float yaw = m_rotationY * 0.0174532925f;
+	float roll = m_rotationZ * 0.0174532925f;
+
+	float y = m_positionY;
+
+	rotMatrix = XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
+
+	XMVECTOR target;
+	target = XMVector3TransformCoord(forward, rotMatrix);
+	target = XMVector3Normalize(target);
+
+	right = XMVector3TransformCoord(right, rotMatrix);
+	forward = XMVector3TransformCoord(forward, rotMatrix);
+	up = XMVector3Cross(forward, right);
+
+	XMVECTOR pos{ m_positionX, m_positionY, m_positionZ };
+
+	pos = XMVectorAdd(pos, movement.x * right);
+	pos = XMVectorAdd(pos, 0.0f * up);
+	pos = XMVectorAdd(pos, movement.z * forward);
+
+	target = XMVectorAdd(pos, target);
+	
+	XMFLOAT3 newPos;
+	XMStoreFloat3(&newPos, pos);
+	return newPos;
+
+	//m_viewMatrix = XMMatrixLookAtLH(pos, target, up);
+	//m_positionX = XMVectorGetByIndex(pos, 0);
+	////m_positionY = XMVectorGetByIndex(pos, 1);
+	//m_positionZ = XMVectorGetByIndex(pos, 2);
 }
 
 
@@ -150,6 +206,10 @@ void Camera::Render()
 	return;
 }
 
+void Camera::SetCamType(CamType type)
+{
+	m_type = type;
+}
 
 void Camera::setViewMatrix(XMMATRIX viewMatrix)
 {

@@ -55,10 +55,15 @@ float4 LightPixelShader(PixelInputType input) : SV_TARGET
 	
 	textureColour = shaderTexture[0].Sample(SampleType, input.tex);
 
-	normMap = shaderTexture[1].Sample(SampleType, input.tex);
-	normMap = (normMap *2.0f) -1.0f;
-	normal = (normMap.x * input.tangent) + (normMap.y * input.binormal) + (normMap.z * input.normal);
-	normal = normalize(normal);		
+	//normMap = shaderTexture[1].Sample(SampleType, input.tex);
+	//normMap = (normMap *2.0f) -1.0f;
+
+	//if(normMap.x > 0.0f)
+	//{
+		//normal = (normMap.x * input.tangent) + (normMap.y * input.binormal) + (normMap.z * input.normal);
+		//normal = normalize(normal);
+	//}
+	
 
 	colour = ambientColour;
 

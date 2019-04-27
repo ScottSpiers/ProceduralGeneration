@@ -25,7 +25,7 @@ public:
 	virtual bool Render(D3D*) = 0;
 	//bool Update(); //add once we have time stuff working
 
-	void MoveCamera(XMFLOAT3);
+	virtual void MoveCamera(XMFLOAT3);
 	void RotateCamera(XMFLOAT3);
 
 	//Think of a better way to handle this stuff

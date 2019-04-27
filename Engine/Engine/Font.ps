@@ -19,14 +19,14 @@ float4 FontPixelShader(PixelInputType input) : SV_TARGET
 	colour = shaderTexture.Sample(SampleType, input.tex);
 
 	
-	if(colour.r == 0.0f) 
-	{
-		colour.a = 0.0f;	
-	}
-	else
+	if(colour.r > 0.0f) 
 	{
 		colour.a = 1.0f;
 		colour *= pixelColour;
+	}
+	else
+	{
+		colour.a = 0.0f;		
 	}
 	return colour;
 }

@@ -18,7 +18,17 @@ using namespace DirectX;
 class Camera
 {
 public:
+	enum class CamType
+	{
+		FREE,
+		FPC,
+		TPC,
+		MAX_CAM_TYPES
+	};
+
+public:
 	Camera();
+	Camera(CamType);
 	Camera(const Camera&);
 	~Camera();
 
@@ -27,6 +37,8 @@ public:
 
 	XMFLOAT3 GetPosition();
 	XMFLOAT3 GetRotation();
+
+	XMFLOAT3 GetNextPos(XMFLOAT3);
 
 	void Render();
 	void setViewMatrix(XMMATRIX);
@@ -37,10 +49,14 @@ public:
 	void Move(XMFLOAT3);
 	void Rotate(XMFLOAT3);
 
+	void SetCamType(CamType);
+
 private:
 	float m_positionX, m_positionY, m_positionZ;
 	float m_rotationX, m_rotationY, m_rotationZ;
 	XMMATRIX m_viewMatrix , m_projMatrix;
+
+	CamType m_type;
 };
 
 #endif

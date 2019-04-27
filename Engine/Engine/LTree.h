@@ -37,12 +37,16 @@ private:
 
 public:
 	LTree();
+	LTree(float);
 	~LTree();
 
 	bool Initialise(ID3D11Device*);
 	bool Render(ID3D11DeviceContext*);
 	void InterpretSystem(std::string, float, float);
 
+
+	void SetRadius(float);
+	float GetRadius();
 	Model* GetModel();
 
 	void SetWorldMatrix(XMMATRIX);
@@ -68,4 +72,5 @@ private:
 
 	XMMATRIX m_worldMatrix;
 	bool m_isModel;
+	float m_radius;
 };
