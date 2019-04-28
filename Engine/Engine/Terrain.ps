@@ -44,7 +44,7 @@ float4 TerrainPixelShader(PixelInputType input) : SV_TARGET
 	float4 specularColour;
 	float3 reflection;
 	float4 textureColour;
-
+	
 	input.normal = normalize(input.normal);
 	
 	textureColour = shaderTexture[0].Sample(SampleType, input.tex);

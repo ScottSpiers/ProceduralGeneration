@@ -170,10 +170,16 @@ bool ResourceManager::LoadTexture(TextureResource t)
 	{
 		case ORBIT_TEXTURE: 
 		{
+			//hasSecond = true;
 			//D3DX11CreateShaderResourceViewFromFile(m_device, L"../Engine/data/seafloor.dds", NULL, NULL, &texture, NULL); 
 			result = CreateDDSTextureFromFile(m_device, L"../Engine/data/crystal.dds", nullptr, &texture, 0 , nullptr);
 			if (FAILED(result))
 				return false;
+
+			/*result = CreateDDSTextureFromFile(m_device, L"../Engine/data/crystalNorm.dds", nullptr, &texture2, 0, nullptr);
+			if (FAILED(result))
+				return false;*/
+
 
 			break;
 		}
@@ -224,15 +230,15 @@ bool ResourceManager::LoadTexture(TextureResource t)
 		}
 		case TREE_TEXTURE:
 		{	
-			bool hasSecond = true;
+			//hasSecond = true;
 			//D3DX11CreateShaderResourceViewFromFile(m_device, L"../Engine/data/seafloor.dds", NULL, NULL, &texture, NULL); 
 			result = CreateDDSTextureFromFile(m_device, L"../Engine/data/treebark.dds", nullptr, &texture, 0, nullptr);
 			if (FAILED(result))
 				return false;
 
-			result = CreateDDSTextureFromFile(m_device, L"../Engine/data/treeBarkNorm.dds", nullptr, &texture2, 0, nullptr);
+			/*result = CreateDDSTextureFromFile(m_device, L"../Engine/data/treebark2Norm.dds", nullptr, &texture2, 0, nullptr);
 			if (FAILED(result))
-				return false;
+				return false;*/
 			
 			break;
 		}

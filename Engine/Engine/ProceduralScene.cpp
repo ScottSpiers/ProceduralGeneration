@@ -62,8 +62,8 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 
 	m_Light->SetAmbientColour(0.15f, 0.15f, 0.15f, 1.0f);
 	m_Light->SetDiffuseColor(.75f, .75f, .75f, 1.0f);
-	m_Light->SetSpecColour(0.0f, .0f, .0f, 0.f);
-	m_Light->SetSpecIntensity(1.f);
+	m_Light->SetSpecColour(0.0f, 0.0f, 0.0f, 0.f);
+	m_Light->SetSpecIntensity(0.1f);
 	m_Light->SetDirection(.75f, -.5f, .75f);
 	
 	m_Camera->SetPosition(terrainSize/2.0f - 10.0f, 2.0f, terrainSize/2.0f - 10.0f);

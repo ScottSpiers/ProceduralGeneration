@@ -86,7 +86,7 @@ void Cylinder::GenCylinder(float r, float h, int t)
 		XMVECTOR normal = GetCircleVector(i, t);
 		XMVECTOR offsetSide = XMVectorScale(normal, r);
 
-		float u = float(i) / t;
+		float u = (8.0f * float(i)) / t;
 
 		XMVECTOR texCoord = XMLoadFloat(&u);
 		Vertex v;
@@ -112,8 +112,8 @@ void Cylinder::GenCylinder(float r, float h, int t)
 		m_indices.push_back(i * 2 + 1);
 	}
 
-	GenCaps(r, height, t, true);
-	GenCaps(r, height, t, false);
+	/*GenCaps(r, height, t, true);
+	GenCaps(r, height, t, false);*/
 }
 
 void Cylinder::Rotate(XMMATRIX rotation)

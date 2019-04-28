@@ -93,7 +93,7 @@ bool Model::InitializeBuffers(ID3D11Device* device)
 	HRESULT result;
 	int i;
 
-	//CalcVectors(); THis is acting weird
+	//CalcVectors(); //THis is acting weird
 	// Load the vertex array and index array with data.
 	for(i = 0; i < m_vertices.size(); ++i)
 	{
