@@ -32,6 +32,7 @@ public:
 	bool Render(ID3D11DeviceContext*, XMMATRIX, XMMATRIX);
 
 	bool setText(const char*, ID3D11DeviceContext*);
+	bool setText(const char*, ID3D11DeviceContext*, int posX, int posY);
 
 private:
 	bool InitialiseSentence(SentenceType**, int, ID3D11Device*);

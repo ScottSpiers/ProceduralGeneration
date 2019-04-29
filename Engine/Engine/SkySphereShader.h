@@ -13,14 +13,21 @@ using namespace DirectX;
 class SkySphereShader : public Shader
 {
 	
+private:
+	struct DayNightBuffer
+	{
+		XMFLOAT4 colourWeight;
+	};
+
 public:
 	SkySphereShader(ID3D11Device*, ID3D11DeviceContext*);
 	~SkySphereShader();
 
 	bool Initialise();
-	bool Render(Model*, Camera*);
+	bool Render(Model*, Camera*, float);
 
 
 private:
+	ID3D11Buffer* dnBuffer;
 	ID3D11SamplerState* m_sampleStateSky;
 };

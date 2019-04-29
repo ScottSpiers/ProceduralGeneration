@@ -25,8 +25,7 @@ bool SkySphereShader::Initialise()
 	ID3D10Blob* pixelShaderBuffer;
 	D3D11_INPUT_ELEMENT_DESC polygonLayout[1];
 	unsigned int numElems;
-	D3D11_BUFFER_DESC matrixBufferDesc;
-	D3D11_BUFFER_DESC gradientBufferDesc;
+	D3D11_BUFFER_DESC dnBufDesc;
 	D3D11_SAMPLER_DESC skySamplerDesc;
 
 	errorMsg = 0;
@@ -44,6 +43,20 @@ bool SkySphereShader::Initialise()
 	numElems = sizeof(polygonLayout) / sizeof(polygonLayout[0]);
 
 	Shader::Initialise(L"skysphere.vs", "SkySphereVertexShader", L"skysphere.ps", "SkySpherePixelShader", polygonLayout, numElems);
+
+	dnBufDesc.Usage = D3D11_USAGE_DYNAMIC;
+	dnBufDesc.ByteWidth = sizeof(DayNightBuffer);
+	dnBufDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	dnBufDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	dnBufDesc.MiscFlags = 0;
+	dnBufDesc.StructureByteStride = 0;
+
+	// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
+	res = m_device->CreateBuffer(&dnBufDesc, nullptr, &dnBuffer);
+	if (FAILED(res))
+	{
+		return false;
+	}
 
 	////TALKING POINT
 	//D3DX11_IMAGE_LOAD_INFO skyMapInfo;
@@ -94,14 +107,35 @@ bool SkySphereShader::Initialise()
 	return true;
 }
 
-bool SkySphereShader::Render(Model* model, Camera* cam)
+bool SkySphereShader::Render(Model* model, Camera* cam, float cWeight)
 {
 	HRESULT res;
+
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
+	DayNightBuffer* dataPtr;
 	unsigned int bufferNumber;
 
 	Shader::SetMatrixBuffer(model->GetWorldMatrix(), cam);
 
+	res = m_context->Map(dnBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	if (FAILED(res))
+	{
+		return false;
+	}
+
+	// Get a pointer to the data in the constant buffer.
+	dataPtr = (DayNightBuffer*)mappedResource.pData;
+
+	// Copy the lighting variables into the constant buffer.
+
+	//XMFLOAT4 red(1.f, 0.f, 0.f, 1.f);
+	XMFLOAT4 c = XMFLOAT4(cWeight, cWeight, cWeight, 1.0f);
+	dataPtr->colourWeight = c;
+
+	// Unlock the constant buffer.
+	m_context->Unmap(dnBuffer, 0);
+	
+	m_context->PSSetConstantBuffers(0, 1, &dnBuffer);
 
 	//TALKING POINT
 	ID3D11ShaderResourceView** textures = model->GetTextures();

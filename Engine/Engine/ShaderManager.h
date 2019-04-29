@@ -20,7 +20,7 @@ public:
 
 	bool InitialiseShaders();
 	bool RenderLight(Model*, Camera*, Light*);
-	bool RenderSkySphere(Model*, Camera*);
+	bool RenderSkySphere(Model*, Camera*, float);
 	bool RenderReflection(Model*, Camera*);
 	bool RenderTerrain(Terrain*, Camera*, Light*);
 	bool RenderLTree(LTree*, Camera*, Light*);

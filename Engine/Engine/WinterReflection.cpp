@@ -168,7 +168,7 @@ bool WinterReflection::RenderScene(D3D* d3d, Camera* view, bool drawMirror)
 
 
 	skySphere->Render(d3d->GetDeviceContext());
-	result = m_shaders->RenderSkySphere(skySphere, view);
+	result = m_shaders->RenderSkySphere(skySphere, view, 1.0f);
 	if (!result)
 	{
 		return false;

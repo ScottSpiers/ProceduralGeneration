@@ -5,8 +5,10 @@
 #include "Quad.h"
 #include "Scene.h"
 #include "Terrain.h"
+#include "Text.h"
 
 #include <array>
+#include <string>
 
 class ProceduralScene : public Scene
 {
@@ -26,17 +28,20 @@ private:
 	bool RenderToTexture(D3D*);
 	bool RenderScene(D3D*);
 
+	void UpdateLight();
+
 	bool IsCollidingTree(XMFLOAT3);
 
 
 private:
 	Terrain* m_terrain;
 	LSystem* m_lsystem;
-	std::array<LTree*, 5> m_trees;
+	std::array<LTree*, 3> m_trees;
 	Model* m_sphere;
 	Model* m_skySphere;
 	Model* m_tree;
 
+	Text* m_obj;
 	std::string m_output;
 
 	ID3D11Texture2D* m_ppRenderTarget;
@@ -48,4 +53,5 @@ private:
 
 	bool m_isSphereAlive;
 	int m_sphereCount;
+	float m_lightFactor;
 };

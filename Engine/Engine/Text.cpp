@@ -46,7 +46,7 @@ bool Text::Initialise(ID3D11Device* device, ID3D11DeviceContext* deviceContext, 
 		return false;
 	}
 
-	res = InitialiseSentence(&m_fpsSentence, 16, device);
+	res = InitialiseSentence(&m_fpsSentence, 256, device);
 	if (!res)
 		return false;
 
@@ -99,6 +99,11 @@ bool Text::setText(const char* sentence, ID3D11DeviceContext* deviceContext)
 	return updateSentence(m_fpsSentence, sentence, 10, 10, 0.01f, 0.01f, 0.01f, deviceContext);
 }
 
+
+bool Text::setText(const char* sentence, ID3D11DeviceContext* deviceContext, int posX, int posY)
+{
+	return updateSentence(m_fpsSentence, sentence, posX, posY, 0.01f, 0.01f, 0.01f, deviceContext);
+}
 
 bool Text::Render(ID3D11DeviceContext* deviceContext, XMMATRIX world, XMMATRIX ortho)
 {

@@ -91,9 +91,9 @@ bool ShaderManager::RenderReflection(Model* model, Camera* cam)
 	return m_reflectShader->Render(model, cam);
 }
 
-bool ShaderManager::RenderSkySphere(Model* model, Camera* cam)
+bool ShaderManager::RenderSkySphere(Model* model, Camera* cam, float cWeight)
 {
-	return m_skyShader->Render(model, cam);
+	return m_skyShader->Render(model, cam, cWeight);
 }
 
 bool ShaderManager::RenderTerrain(Terrain* t, Camera* cam, Light* light)

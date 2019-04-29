@@ -2,6 +2,11 @@
 //Globals
 
 
+cbuffer DayNightBuffer 
+{
+	float4 colourWeight;
+}
+
 TextureCube SkyMap[1];
 SamplerState SkySampleType;
 
@@ -15,5 +20,5 @@ struct PixelInputType
 //Pixel Shader
 float4 SkySpherePixelShader(PixelInputType input) : SV_TARGET
 {
-	return SkyMap[0].Sample(SkySampleType, input.texCoord);
+	return SkyMap[0].Sample(SkySampleType, input.texCoord) * colourWeight;
 }
