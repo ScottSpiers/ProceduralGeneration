@@ -28,6 +28,8 @@ public:
 	virtual void MoveCamera(XMFLOAT3);
 	void RotateCamera(XMFLOAT3);
 
+	virtual void Modify(ID3D11Device*) = 0;
+
 	//Think of a better way to handle this stuff
 	XMMATRIX GetView() const;
 

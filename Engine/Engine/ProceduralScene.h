@@ -11,11 +11,13 @@
 class ProceduralScene : public Scene
 {
 public:
-	ProceduralScene(ResourceManager::ManagerScene = ResourceManager::PROCEDURAL);
+	ProceduralScene();
 	~ProceduralScene();
 
 	virtual bool Initialise(ID3D11Device*, ID3D11DeviceContext*) final;
 	virtual bool Render(D3D*) final;
+
+	virtual void Modify(ID3D11Device*) final;
 
 	virtual void MoveCamera(XMFLOAT3) final;
 
@@ -33,6 +35,9 @@ private:
 	std::array<LTree*, 5> m_trees;
 	Model* m_sphere;
 	Model* m_skySphere;
+	Model* m_tree;
+
+	std::string m_output;
 
 	ID3D11Texture2D* m_ppRenderTarget;
 	ID3D11RenderTargetView* m_ppRTV;

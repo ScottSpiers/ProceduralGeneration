@@ -3,36 +3,46 @@
 
 LTree::LTree()
 {
-	m_worldMatrix = XMMatrixIdentity();
-	m_isModel = true;
+	m_vBuffer = 0;
+	m_iBuffer = 0;
 	m_bigModel = 0;
-	m_textures = 0;
+	m_worldMatrix = XMMatrixIdentity();
+	m_isModel = false;
+}
+
+LTree::LTree(bool isModel) : LTree()
+{
+	m_isModel = isModel;
 	m_radius = 1.0f;
+
 }
 
 LTree::LTree(float radius) : LTree()
 {
+	m_isModel = true;
 	m_radius = radius;
 }
 
 LTree::~LTree()
 {
-	int numElems = sizeof(m_textures) / sizeof(m_textures[0]);
-
-	for (int i = 0; i < numElems; ++i)
-	{
-		if (m_textures[i])
-		{
-			m_textures[i]->Release();
-			m_textures[i] = 0;
-		}
-	}
-	m_textures = 0;
-
 	if (m_bigModel)
 	{
 		delete m_bigModel;
 		m_bigModel = 0;
+	}
+
+	// Release the index buffer.
+	if (m_iBuffer)
+	{
+		m_iBuffer->Release();
+		m_iBuffer = 0;
+	}
+
+	// Release the vertex buffer.
+	if (m_vBuffer)
+	{
+		m_vBuffer->Release();
+		m_vBuffer = 0;
 	}
 }
 
@@ -40,12 +50,22 @@ bool LTree::Initialise(ID3D11Device* device)
 {
 	if (m_isModel)
 	{		
-		m_bigModel->SetWorldMatrix(m_bigModel->GetWorldMatrix() * m_worldMatrix);
-		m_bigModel->SetTextures(m_textures);
 		m_bigModel->InitializeBuffers(device);
 	}
 	else
 	{
+		if (m_vBuffer)
+		{
+			m_vBuffer->Release();
+			m_vBuffer = 0;
+		}
+
+		if (m_iBuffer)
+		{
+			m_iBuffer->Release();
+			m_iBuffer = 0;
+		}
+
 		D3D11_BUFFER_DESC vBufferDesc;
 		D3D11_BUFFER_DESC iBufferDesc;
 
@@ -180,27 +200,24 @@ void LTree::InterpretSystem(std::string lResult, float stepSize, float angleDelt
 			case 'F':
 			{
 				nextState.pos = XMVectorAdd(nextState.pos, XMVectorScale(rotated, curState.stepSize));
-
-				if (!m_isModel)
-				{
-					XMFLOAT3 vertPos;
-					XMStoreFloat3(&vertPos, curState.pos);
-					m_vertices.push_back(vertPos);
-
-					XMStoreFloat3(&vertPos, nextState.pos);
-					m_vertices.push_back(vertPos);
-
-					m_indices.push_back(index);
-					index = m_indices.size(); //can't add 1, what if we branched
-					m_indices.push_back(index);
-				}
-				else
-				{
-					//cyl.GenCylinder(curState.radius, curState.stepSize, 24);
-					m_models.push_back(new Model(cyl));
-					m_models.back()->SetWorldMatrix(XMMatrixMultiply(XMMatrixMultiply(XMMatrixScaling(curState.radius / origRad, curState.stepSize / origStepSize, curState.radius / origRad), rotMatrix), XMMatrixTranslationFromVector(curState.pos)));
 					
-				}
+				//LINES
+				XMFLOAT3 vertPos;
+				XMStoreFloat3(&vertPos, curState.pos);
+				m_vertices.push_back(vertPos);
+
+				XMStoreFloat3(&vertPos, nextState.pos);
+				m_vertices.push_back(vertPos);
+
+				m_indices.push_back(index);
+				index = m_indices.size(); //can't add 1, what if we branched
+				m_indices.push_back(index);
+
+				//MODEL
+				//cyl.GenCylinder(curState.radius, curState.stepSize, 24);
+				m_models.push_back(new Model(cyl));
+				m_models.back()->SetWorldMatrix(XMMatrixMultiply(XMMatrixMultiply(XMMatrixScaling(curState.radius / origRad, curState.stepSize / origStepSize, curState.radius / origRad), rotMatrix), XMMatrixTranslationFromVector(curState.pos)));
+					
 				nextState.radius = curState.radius - 0.005f;
 				if (nextState.radius < 0.05f)
 					nextState.radius = 0.05f;
@@ -275,48 +292,59 @@ void LTree::InterpretSystem(std::string lResult, float stepSize, float angleDelt
 		curState = nextState;
 	}
 
-	m_bigModel = new Model();
-	m_bigModel->SetWorldMatrix(m_models[0]->GetWorldMatrix());
-
-	int numVerts = 0;
-	int numIndices= 0;
-	std::vector<Model::VertexType> finalVerts;
-	std::vector<unsigned int> finalInds;
-
-	for (Model* m : m_models)
+	for (VertexType v : m_vertices)
 	{
-		numVerts += m->GetVertexCount();
-		numIndices += m->GetIndexCount();
+		XMVECTOR pos = XMLoadFloat3(&v.pos);
+		XMVECTOR newPos = XMVector3TransformCoord(pos, m_worldMatrix);
+		XMStoreFloat3(&v.pos, newPos);
 	}
 
-	finalVerts.reserve(numVerts);
-	finalInds.reserve(numIndices);
-
-	for (Model* m : m_models)
+	if (m_isModel)
 	{
-		std::vector<unsigned int> tempInds = m->GetIndices();
-		std::vector<Model::VertexType> tempVerts = m->GetVertices();
+		m_bigModel = new Model();
+		m_bigModel->SetWorldMatrix(m_models[0]->GetWorldMatrix());
+		m_bigModel->SetWorldMatrix(m_bigModel->GetWorldMatrix() * m_worldMatrix);
 
-		for (auto& v : tempVerts)
+		int numVerts = 0;
+		int numIndices= 0;
+		std::vector<Model::VertexType> finalVerts;
+		std::vector<unsigned int> finalInds;
+
+		for (Model* m : m_models)
 		{
-			XMVECTOR pos = XMLoadFloat3(&v.position);
-			XMVECTOR newPos = XMVector3TransformCoord(pos, m->GetWorldMatrix());
-			XMStoreFloat3(&v.position, newPos);
+			numVerts += m->GetVertexCount();
+			numIndices += m->GetIndexCount();
 		}
 
-		int accIndSize = finalVerts.size();
-		for (auto& ind : tempInds)
+		finalVerts.reserve(numVerts);
+		finalInds.reserve(numIndices);
+
+		for (Model* m : m_models)
 		{
-			ind += accIndSize;
+			std::vector<unsigned int> tempInds = m->GetIndices();
+			std::vector<Model::VertexType> tempVerts = m->GetVertices();
+
+			for (auto& v : tempVerts)
+			{
+				XMVECTOR pos = XMLoadFloat3(&v.position);
+				XMVECTOR newPos = XMVector3TransformCoord(pos, m->GetWorldMatrix());
+				XMStoreFloat3(&v.position, newPos);
+			}
+
+			int accIndSize = finalVerts.size();
+			for (auto& ind : tempInds)
+			{
+				ind += accIndSize;
+			}
+			finalInds.insert(finalInds.end(), tempInds.begin(), tempInds.end());
+			finalVerts.insert(finalVerts.end(), tempVerts.begin(), tempVerts.end());
 		}
-		finalInds.insert(finalInds.end(), tempInds.begin(), tempInds.end());
-		finalVerts.insert(finalVerts.end(), tempVerts.begin(), tempVerts.end());
+
+		m_bigModel->SetModelData(finalVerts, finalInds);
+
+		m_models.clear();
+		//m_models.push_back(m_bigModel);
 	}
-
-	m_bigModel->SetModelData(finalVerts, finalInds);
-
-	m_models.clear();
-	//m_models.push_back(m_bigModel);
 
 }
 
@@ -352,7 +380,13 @@ int LTree::GetIndexCount()
 
 void LTree::SetTextures(ID3D11ShaderResourceView** t)
 {
-	m_textures = t;
+	if(m_isModel)
+		m_bigModel->SetTextures(t);
+}
+
+void LTree::SwitchRenderMode()
+{
+	m_isModel = !m_isModel;
 }
 
 bool LTree::IsModel()

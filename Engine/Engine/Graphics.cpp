@@ -139,6 +139,11 @@ bool Graphics::Render()
 	return true;
 }
 
+void Graphics::ModifyScene()
+{
+	m_Scene->Modify(m_D3D->GetDevice());
+}
+
 void Graphics::MoveCamera(XMFLOAT3 movement)
 {
 	

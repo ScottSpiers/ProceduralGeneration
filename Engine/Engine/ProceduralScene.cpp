@@ -1,7 +1,7 @@
 
 #include "ProceduralScene.h"
 
-ProceduralScene::ProceduralScene(ResourceManager::ManagerScene sceneResources) : Scene(sceneResources)
+ProceduralScene::ProceduralScene() : Scene(ResourceManager::PROCEDURAL)
 {
 	m_terrain = 0;
 	m_lsystem = 0;
@@ -9,7 +9,7 @@ ProceduralScene::ProceduralScene(ResourceManager::ManagerScene sceneResources) :
 
 	for (int i = 0; i < m_trees.size(); ++i)
 	{
-		m_trees[i] = new LTree(1.0f);
+		m_trees[i] = new LTree(0.75f);
 	}
 }
 
@@ -60,10 +60,11 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 	//m_terrain->GenSinWave();
 	m_terrain->SetTextures(m_resources->GetTextures(ResourceManager::TERRAIN_TEXTURE));
 
+
 	m_Light->SetAmbientColour(0.15f, 0.15f, 0.15f, 1.0f);
 	m_Light->SetDiffuseColor(.75f, .75f, .75f, 1.0f);
-	m_Light->SetSpecColour(0.0f, 0.0f, 0.0f, 0.f);
-	m_Light->SetSpecIntensity(0.1f);
+	m_Light->SetSpecColour(1.0f, 1.0f, 1.0f, 1.f);
+	m_Light->SetSpecIntensity(30.0f);
 	m_Light->SetDirection(.75f, -.5f, .75f);
 	
 	m_Camera->SetPosition(terrainSize/2.0f - 10.0f, 2.0f, terrainSize/2.0f - 10.0f);
@@ -129,41 +130,46 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 	float angleDelta = (25.7f * XM_PI) / 180;
 	//float terrainSize = 513.0f;
 
-	std::string testLSystem = m_lsystem->RunSystem(numIts);
+	m_output = m_lsystem->RunSystem(numIts);
 	XMMATRIX newPos = XMMatrixTranslation(terrainSize / 2.0f, 0.0f, terrainSize / 2.0f);
 	m_trees[0]->SetWorldMatrix(newPos);
-	m_trees[0]->InterpretSystem(testLSystem, stepSize, angleDelta);
+	m_trees[0]->InterpretSystem(m_output, stepSize, angleDelta);
 	m_trees[0]->SetTextures(m_resources->GetTextures(ResourceManager::TREE_TEXTURE));
 	m_trees[0]->Initialise(device);
 
-	//newPos = XMMatrixTranslation(terrainSize, 0.0f, 0.0f);
-	//m_trees[1]->SetWorldMatrix(newPos);
-	//m_trees[1]->InterpretSystem(testLSystem /*m_lsystem->RunSystem(numIts)*/, stepSize, angleDelta);
-	//m_trees[1]->SetTextures(m_resources->GetTextures(ResourceManager::TREE_TEXTURE));
-	//m_trees[1]->Initialise(device);
+	newPos = XMMatrixTranslation(terrainSize /1.5f, 0.0f, 0.0f);
+	m_trees[1]->SetWorldMatrix(newPos);
+	m_trees[1]->InterpretSystem(m_output /*m_lsystem->RunSystem(numIts)*/, stepSize, angleDelta);
+	m_trees[1]->SetTextures(m_resources->GetTextures(ResourceManager::TREE_TEXTURE));
+	m_trees[1]->Initialise(device);
 
-	//newPos = XMMatrixTranslation(0.0f, 0.0f, terrainSize);
-	//m_trees[2]->SetWorldMatrix(newPos);
-	//m_trees[2]->InterpretSystem(testLSystem /*m_lsystem->RunSystem(numIts)*/, stepSize, angleDelta);
-	//m_trees[2]->SetTextures(m_resources->GetTextures(ResourceManager::TREE_TEXTURE));
-	//m_trees[2]->Initialise(device);
+	newPos = XMMatrixTranslation(0.0f, 0.0f, terrainSize / 1.5f);
+	m_trees[2]->SetWorldMatrix(newPos);
+	m_trees[2]->InterpretSystem(m_output/*m_lsystem->RunSystem(numIts)*/, stepSize, angleDelta);
+	m_trees[2]->SetTextures(m_resources->GetTextures(ResourceManager::TREE_TEXTURE));
+	m_trees[2]->Initialise(device);
 
-	//newPos = XMMatrixTranslation(terrainSize, 0.0f, terrainSize);
-	//m_trees[3]->SetWorldMatrix(newPos);
-	//m_trees[3]->InterpretSystem(testLSystem /*m_lsystem->RunSystem(numIts)*/, stepSize, angleDelta);
-	//m_trees[3]->SetTextures(m_resources->GetTextures(ResourceManager::TREE_TEXTURE));
-	//m_trees[3]->Initialise(device);
+	newPos = XMMatrixTranslation(terrainSize/ 1.5f, 0.0f, terrainSize / 1.5f);
+	m_trees[3]->SetWorldMatrix(newPos);
+	m_trees[3]->InterpretSystem(m_output /*m_lsystem->RunSystem(numIts)*/, stepSize, angleDelta);
+	m_trees[3]->SetTextures(m_resources->GetTextures(ResourceManager::TREE_TEXTURE));
+	m_trees[3]->Initialise(device);
 
-	//newPos = XMMatrixTranslation(terrainSize / 2, 0.0f, terrainSize / 2);
-	//m_trees[4]->SetWorldMatrix(newPos);
-	//m_trees[4]->InterpretSystem(testLSystem /*m_lsystem->RunSystem(numIts)*/, stepSize, angleDelta);
-	//m_trees[4]->SetTextures(m_resources->GetTextures(ResourceManager::TREE_TEXTURE));
-	//m_trees[4]->Initialise(device);
+	newPos = XMMatrixTranslation(0.0f, 0.0f, 0.0f);
+	m_trees[4]->SetWorldMatrix(newPos);
+	m_trees[4]->InterpretSystem(m_output /*m_lsystem->RunSystem(numIts)*/, stepSize, angleDelta);
+	m_trees[4]->SetTextures(m_resources->GetTextures(ResourceManager::TREE_TEXTURE));
+	m_trees[4]->Initialise(device);
 
 
 	m_isSphereAlive = true;
 	m_sphere = m_resources->GetModel(ResourceManager::ORBIT_MODEL);
 	m_skySphere = m_resources->GetModel(ResourceManager::SKY_DOME_MODEL);
+	//m_tree = m_resources->GetModel(ResourceManager::TREE_MODEL);
+
+	/*XMMATRIX newPos = XMMatrixTranslation(terrainSize / 2.0f, 0.0f, terrainSize / 2.0f);
+	m_tree->SetWorldMatrix(newPos);*/
+
 	m_sphere->SetWorldMatrix(XMMatrixMultiply(XMMatrixScaling(2.0f,2.0f,2.0f), XMMatrixTranslation(250.0f, 6.66f, 250.0f)));
 	m_sphereCount = 0;
 	return true;	
@@ -297,20 +303,20 @@ bool ProceduralScene::RenderScene(D3D* d3d)
 		return false;
 
 	//d3d->TurnOffCulling();
-	/*for (LTree* lt : m_trees)
+	for (LTree* lt : m_trees)
 	{
 		lt->Render(d3d->GetDeviceContext());
 		result = m_shaders->RenderLTree(lt, m_Camera, m_Light);
 		if (!result)
 			return false;
-	}*/
-	if(!m_trees[0]->Render(d3d->GetDeviceContext()))
+	}
+	/*if(!m_trees[0]->Render(d3d->GetDeviceContext()))
 	{
 		return false;
 	}
 	result = m_shaders->RenderLTree(m_trees[0], m_Camera, m_Light);
 	if (!result)
-		return false;
+		return false;*/
 
 	if (m_isSphereAlive)
 	{
@@ -351,6 +357,17 @@ bool ProceduralScene::Render(D3D* d3d)
 	d3d->TurnZBufferOn();
 
 	return true;
+}
+
+void ProceduralScene::Modify(ID3D11Device* device)
+{
+	//m_trees[0]->SwitchRenderMode();
+	//m_trees[0]->Initialise(device);
+	for (LTree* t : m_trees)
+	{
+		t->SwitchRenderMode();
+		t->Initialise(device);
+	}
 }
 
 bool ProceduralScene::IsCollidingTree(XMFLOAT3 mov)

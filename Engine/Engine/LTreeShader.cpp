@@ -5,17 +5,10 @@
 LTreeShader::LTreeShader(ID3D11Device* device, ID3D11DeviceContext* context) : Shader(device, context)
 {
 	m_lightBuffer = 0;
-	m_camBuffer = 0;
 }
 
 LTreeShader::~LTreeShader()
 {
-	if (m_camBuffer)
-	{
-		m_camBuffer->Release();
-		m_camBuffer = 0;
-	}
-
 	if (m_lightBuffer)
 	{
 		m_lightBuffer->Release();
@@ -33,6 +26,7 @@ bool LTreeShader::Initialise()
 	unsigned int numElems;
 	D3D11_BUFFER_DESC lightBufferDesc;
 	D3D11_BUFFER_DESC camBufferDesc;
+	D3D11_SAMPLER_DESC samplerDesc;
 
 	errorMessage = 0;
 	vertexShaderBuffer = 0;
@@ -81,9 +75,31 @@ bool LTreeShader::Initialise()
 	// Get a count of the elements in the layout.
 	numElems = sizeof(polygonLayout) / sizeof(polygonLayout[0]);
 
-	result = Shader::Initialise(L"Light.vs", "LightVertexShader", L"Light.ps", "LightPixelShader", polygonLayout, numElems);
+	result = Shader::Initialise(L"Tree.vs", "TreeVertexShader", L"Tree.ps", "TreePixelShader", polygonLayout, numElems);
 	if (!result)
 		return false;
+
+	// Create a texture sampler state description.
+	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.MipLODBias = 0.0f;
+	samplerDesc.MaxAnisotropy = 1;
+	samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+	samplerDesc.BorderColor[0] = 0;
+	samplerDesc.BorderColor[1] = 0;
+	samplerDesc.BorderColor[2] = 0;
+	samplerDesc.BorderColor[3] = 0;
+	samplerDesc.MinLOD = 0;
+	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+	// Create the texture sampler state.
+	result = m_device->CreateSamplerState(&samplerDesc, &m_sampleState);
+	if (FAILED(result))
+	{
+		return false;
+	}
 
 	// Setup the description of the light dynamic constant buffer that is in the pixel shader.
 	// Note that ByteWidth always needs to be a multiple of 16 if using D3D11_BIND_CONSTANT_BUFFER or CreateBuffer will fail.
@@ -101,17 +117,6 @@ bool LTreeShader::Initialise()
 		return false;
 	}
 
-	camBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	camBufferDesc.ByteWidth = sizeof(CameraBufferType);
-	camBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	camBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	camBufferDesc.MiscFlags = 0;
-	camBufferDesc.StructureByteStride = 0;
-
-	result = m_device->CreateBuffer(&camBufferDesc, nullptr, &m_camBuffer);
-	if (FAILED(result))
-		return false;
-
 	return true;
 }
 
@@ -121,24 +126,17 @@ bool LTreeShader::Render(LTree* t, Camera* cam, Light* light)
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
 	unsigned int bufferNumber;
 	LightBufferType* dataPtr;
-	CameraBufferType* dataPtr2;
+	Model* treeModel;
 
-	Shader::SetMatrixBuffer(t->GetWorldMatrix(), cam);
-
-	//Lock the camera constant buffer so it can be written to
-	result = m_context->Map(m_camBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-	if (FAILED(result))
-		return false;
-
-	dataPtr2 = (CameraBufferType*)mappedResource.pData;
-
-	dataPtr2->cameraPos = cam->GetPosition();
-	dataPtr2->pad = 0.0f; //AAAAAAAAAAAAAAAAAAAAGH
-	m_context->Unmap(m_camBuffer, 0);
-	//Don't forget the matrix buffer
-	bufferNumber = 1;
-
-	m_context->VSSetConstantBuffers(bufferNumber, 1, &m_camBuffer);
+	if (t->IsModel())
+	{
+		treeModel = t->GetModel();
+		Shader::SetMatrixBuffer(treeModel->GetWorldMatrix(), cam);
+	}
+	else
+	{
+		Shader::SetMatrixBuffer(t->GetWorldMatrix(), cam);
+	}
 
 	// Lock the light constant buffer so it can be written to.
 	result = m_context->Map(m_lightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
@@ -155,9 +153,8 @@ bool LTreeShader::Render(LTree* t, Camera* cam, Light* light)
 	//XMFLOAT4 red(1.f, 0.f, 0.f, 1.f);
 	dataPtr->ambientColour = light->GetAmbientColour();
 	dataPtr->diffuseColour = light->GetDiffuseColor();
-	dataPtr->specColour = light->GetSpecColour();
 	dataPtr->lightDirection = light->GetDirection();
-	dataPtr->specIntensity = light->GetSpecIntensity();
+	dataPtr->pad = 0.0f;
 
 	// Unlock the constant buffer.
 	m_context->Unmap(m_lightBuffer, 0);
@@ -168,8 +165,11 @@ bool LTreeShader::Render(LTree* t, Camera* cam, Light* light)
 	// Finally set the light constant buffer in the pixel shader with the updated values.
 	m_context->PSSetConstantBuffers(bufferNumber, 1, &m_lightBuffer);
 
-	/*ID3D11ShaderResourceView* texture = t->GetTexture();
-	m_context->PSSetShaderResources(0, 1, &texture);*/
+	if (t->IsModel())
+	{
+		ID3D11ShaderResourceView** textures = treeModel->GetTextures();
+		m_context->PSSetShaderResources(0, 1, textures);
+	}
 
 	// Set the vertex input layout.
 	m_context->IASetInputLayout(m_inputLayout);
@@ -179,10 +179,11 @@ bool LTreeShader::Render(LTree* t, Camera* cam, Light* light)
 	m_context->PSSetShader(m_pShader, NULL, 0);
 
 	// Set the sampler state in the pixel shader.
-	//m_context->PSSetSamplers(0, 1, &m_sampleState);
+	m_context->PSSetSamplers(0, 1, &m_sampleState);
 
 	// Render the triangle.
-	m_context->DrawIndexed(t->GetIndexCount(), 0, 0);
+	int indexCount = t->IsModel() ? treeModel->GetIndexCount() : t->GetIndexCount();
+	m_context->DrawIndexed(indexCount, 0, 0);
 
 	return true;
 }

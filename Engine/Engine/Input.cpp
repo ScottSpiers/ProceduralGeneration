@@ -275,6 +275,13 @@ bool Input::IsDPressed()
 	return false;
 }
 
+bool Input::IsShiftPressed()
+{
+	if (m_keyboardState[DIK_LSHIFT] & 0x80)
+		return true;
+	return false;
+}
+
 void Input::GetMouseLocation(int& mouseX, int& mouseY)
 {
 	mouseX = m_mouseX;

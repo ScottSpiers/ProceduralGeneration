@@ -126,10 +126,22 @@ bool ResourceManager::LoadResources()
 				return false;
 			}
 
+			/*if (!LoadModel(TREE_MODEL))
+			{
+				return false;
+			}*/
+
 			if (!LoadTexture(TREE_TEXTURE))
 			{
 				return false;
 			}
+
+			/*m_models[TREE_MODEL]->SetTextures(m_textures[TREE_TEXTURE]);
+
+			if (!m_models[TREE_MODEL]->InitializeBuffers(m_device))
+			{
+				return false;
+			}*/
 
 			if (!LoadTexture(TERRAIN_TEXTURE))
 			{
@@ -261,12 +273,14 @@ bool ResourceManager::LoadModel(ModelResource m)
 	int i;
 	char* filename;
 	Model* model = new Model();
+	bool incInds = false;
 
 	switch (m)
 	{
 		case REFLECTIVE_MODEL: filename = "../Engine/data/sphere.txt"; break;
 		case ORBIT_MODEL: filename = "../Engine/data/sphere.txt"; break;
 		case SKY_DOME_MODEL: filename = "../Engine/data/skydome.txt"; break;
+		//case TREE_MODEL: filename = "../Engine/data/test.txt"; incInds = true; break;
 	}
 
 	// Open the model file.
@@ -314,7 +328,37 @@ bool ResourceManager::LoadModel(ModelResource m)
 		fin >> data[i].normal.x >> data[i].normal.y >> data[i].normal.z;
 	}
 
-	model->SetModelData(data);
+	if (incInds)
+	{
+		std::vector<unsigned int> indices;
+		fin.get(input);
+		while (input != ':')
+		{
+			fin.get(input);
+		}
+
+		fin >> indexCount;
+		indices.resize(indexCount);
+
+		fin.get(input);
+		while (input != ':')
+		{
+			fin.get(input);
+		}
+		fin.get(input);
+		fin.get(input);
+
+		for (i = 0; i < indexCount; ++i)
+		{
+			fin >> indices[i];
+		}
+		
+		model->SetModelData(data, indices);
+	}
+	else
+	{
+		model->SetModelData(data);
+	}
 
 	m_models.push_back(model);
 	// Close the model file.

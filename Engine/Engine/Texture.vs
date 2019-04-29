@@ -15,7 +15,7 @@ cbuffer MatrixBuffer
 
 cbuffer ScreenBuffer
 {
-	float2 screenDims;
+	float4 screenDims;
 };
 
 

@@ -93,6 +93,18 @@ bool Model::InitializeBuffers(ID3D11Device* device)
 	HRESULT result;
 	int i;
 
+	if (m_vertexBuffer)
+	{
+		m_vertexBuffer->Release();
+		m_vertexBuffer = 0;
+	}
+
+	if (m_indexBuffer)
+	{
+		m_indexBuffer->Release();
+		m_indexBuffer = 0;
+	}
+
 	//CalcVectors(); //THis is acting weird
 	// Load the vertex array and index array with data.
 	for(i = 0; i < m_vertices.size(); ++i)

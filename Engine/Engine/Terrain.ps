@@ -11,8 +11,7 @@ cbuffer LightBuffer
 	float4 ambientColour;
 	float4 diffuseColour;
     float3 lightDirection;
-	float specularIntensity;
-	float4 specColour;
+	float pad;
 
 };
 
@@ -28,7 +27,6 @@ struct PixelInputType
     float4 position : SV_POSITION;
     float2 tex : TEXCOORD0;
 	float3 normal : NORMAL;
-	float3 viewDir : TEXCOORD1;
 };
 
 

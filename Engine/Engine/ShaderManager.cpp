@@ -102,20 +102,8 @@ bool ShaderManager::RenderTerrain(Terrain* t, Camera* cam, Light* light)
 }
 
 bool ShaderManager::RenderLTree(LTree* t, Camera* cam, Light* light)
-{
-
-	if (t->IsModel())
-	{
-		if (!m_lightShader->Render(t->GetModel(), cam, light))
-		{
-			return false;
-		}
-		return true;
-	}
-	else
-	{
-		return m_lTreeShader->Render(t, cam, light);
-	}
+{	
+	return m_lTreeShader->Render(t, cam, light);
 }
 
 bool ShaderManager::RenderTexture(Quad* q, XMMATRIX view, XMMATRIX ortho)

@@ -13,13 +13,6 @@ cbuffer MatrixBuffer
 };
 
 
-cbuffer CameraBuffer
-{
-	float3 cameraPos;
-	float pad;
-};
-
-
 //////////////
 // TYPEDEFS //
 //////////////
@@ -35,7 +28,6 @@ struct PixelInputType
     float4 position : SV_POSITION;
     float2 tex : TEXCOORD0;
 	float3 normal : NORMAL;
-	float3 viewDir : TEXCOORD1;
 };
 
 
@@ -45,9 +37,7 @@ struct PixelInputType
 PixelInputType TerrainVertexShader(VertexInputType input)
 {
     PixelInputType output;
-	float4 worldPos;
-    
-
+	
 	// Change the position vector to be 4 units for proper matrix calculations.
     input.position.w = 1.0f;
 	
@@ -67,14 +57,6 @@ PixelInputType TerrainVertexShader(VertexInputType input)
     // Normalize the normal vector.
     output.normal = normalize(output.normal);
 
-	//Calc pos of vertex in world
-	worldPos = mul(input.position, worldMatrix);
-
-	//Determine viewing dir based on camera pos and vertex pos in world
-	output.viewDir =   cameraPos.xyz - worldPos.xyz;
-
-	//normalise
-	output.viewDir = normalize(output.viewDir);
 
     return output;
 }

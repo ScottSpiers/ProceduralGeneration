@@ -1,7 +1,7 @@
 
 #include "WinterReflection.h"
 
-WinterReflection::WinterReflection(ResourceManager::ManagerScene sceneResources) : Scene(sceneResources)
+WinterReflection::WinterReflection() : Scene(ResourceManager::WINTER_REFLECTION)
 {
 	m_cMap = 0;
 	m_cMapSRV = 0;

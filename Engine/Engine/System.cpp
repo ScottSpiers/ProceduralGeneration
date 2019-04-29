@@ -111,6 +111,7 @@ void System::Run()
 {
 	MSG msg;
 	bool done, result;
+	bool toggle = false;
 
 
 	// Initialize the message structure.
@@ -159,10 +160,11 @@ void System::Run()
 			movement = XMVectorSetX(movement, 5.f);
 
 		movement = XMVector3Normalize(movement);
+		if (m_Input->IsShiftPressed())
+			movement *= 2.0f;
+
 		XMFLOAT3 mov;
-		mov.x = XMVectorGetByIndex(movement, 0);
-		mov.y = XMVectorGetByIndex(movement, 1);
-		mov.z = XMVectorGetByIndex(movement, 2);
+		XMStoreFloat3(&mov, movement);
 
 
 		m_Graphics->MoveCamera(mov);
@@ -174,9 +176,7 @@ void System::Run()
 		movement = XMVectorSetZ(movement, mov.z + mouseMov.z);
 		movement = XMVector3Normalize(movement);
 		
-		mov.x = XMVectorGetByIndex(movement, 0);
-		mov.y = XMVectorGetByIndex(movement, 1);
-		mov.z = XMVectorGetByIndex(movement, 2);
+		XMStoreFloat3(&mov, movement);
 		if (mouseMov.z)
 			m_Graphics->MoveCamera(mov);
 
@@ -186,8 +186,15 @@ void System::Run()
 		m_Graphics->RotateCamera(rotation);
 
 		if (m_Input->IsSpacePressed())
+			toggle = true;
+
+		if (!m_Input->IsSpacePressed())
 		{
-			//m_Graphics->SetTerrainGen();
+			if (toggle)
+			{
+				m_Graphics->ModifyScene();
+				toggle = false;
+			}
 		}
 	}
 

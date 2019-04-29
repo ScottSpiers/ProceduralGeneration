@@ -6,7 +6,7 @@
 class WinterReflection final : public Scene
 {
 public:
-	WinterReflection(ResourceManager::ManagerScene = ResourceManager::WINTER_REFLECTION);
+	WinterReflection();
 	~WinterReflection();
 
 	virtual bool Initialise(ID3D11Device*, ID3D11DeviceContext*) final;

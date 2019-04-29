@@ -43,6 +43,8 @@ public:
 	bool Initialize(int, int, HWND);
 	bool Frame();
 
+	void ModifyScene();
+
 	void MoveCamera(XMFLOAT3);
 	void RotateCamera(XMFLOAT3);
 

@@ -1,0 +1,83 @@
+////////////////////////////////////////////////////////////////////////////////
+// Filename: Tree.ps
+////////////////////////////////////////////////////////////////////////////////
+
+
+/////////////
+// GLOBALS //
+/////////////
+
+cbuffer LightBuffer
+{
+	float4 ambientColour;
+	float4 diffuseColour;
+    float3 lightDirection;
+	float pad;
+
+};
+
+Texture2D shaderTexture[2];
+SamplerState SampleType;
+
+
+//////////////
+// TYPEDEFS //
+//////////////
+struct PixelInputType
+{
+    float4 position : SV_POSITION;
+    float2 tex : TEXCOORD0;
+	float3 normal : NORMAL;
+	float3 tangent : TANGENT;
+	float3 binormal : BINORMAL;
+};
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Pixel Shader
+////////////////////////////////////////////////////////////////////////////////
+float4 TreePixelShader(PixelInputType input) : SV_TARGET
+{
+
+	float3 lightDir;
+	float lightIntensity;
+	float4 colour;
+	float4 specularColour;
+	float3 reflection;
+	float4 textureColour;
+	float4 normMap;
+	float3 normal;
+
+	input.normal = normalize(input.normal);
+	normal = input.normal;
+	
+	textureColour = shaderTexture[0].Sample(SampleType, input.tex);
+
+	//normMap = shaderTexture[1].Sample(SampleType, input.tex);
+	//normMap = (normMap *2.0f) -1.0f;
+
+	//if(normMap.x > 0.0f)
+	//{
+		//normal = (normMap.x * input.tangent) + (normMap.y * input.binormal) + (normMap.z * input.normal);
+		//normal = normalize(normal);
+	//}
+	
+
+	colour = ambientColour;
+
+	specularColour = float4(0.f, 0.f, 0.f, 0.f);
+
+	// Invert the light direction for calculations.
+    lightDir = -lightDirection;
+
+    // Calculate the amount of light on this pixel.
+    lightIntensity = saturate(dot(input.normal, lightDir));
+
+	colour += (diffuseColour * lightIntensity);
+	colour = saturate(colour);
+    
+	colour *= textureColour;
+	colour = saturate(colour);	
+	
+    return colour;
+}

@@ -37,6 +37,7 @@ private:
 
 public:
 	LTree();
+	LTree(bool);
 	LTree(float);
 	~LTree();
 
@@ -44,6 +45,7 @@ public:
 	bool Render(ID3D11DeviceContext*);
 	void InterpretSystem(std::string, float, float);
 
+	void SwitchRenderMode();
 
 	void SetRadius(float);
 	float GetRadius();
@@ -55,7 +57,6 @@ public:
 
 	bool IsModel();
 	void SetTextures(ID3D11ShaderResourceView**);
-	//ID3D11ShaderResourceView* GetTexture();
 
 private:
 	int ParseParameters(std::string);
@@ -63,7 +64,6 @@ private:
 
 private:
 	ID3D11Buffer* m_vBuffer, *m_iBuffer;
-	ID3D11ShaderResourceView** m_textures;
 
 	std::vector<VertexType> m_vertices;
 	std::vector<int> m_indices;

@@ -7,20 +7,12 @@
 class TerrainShader : public Shader
 {
 private:
-
-	struct CameraBufferType
-	{
-		XMFLOAT3 cameraPos;
-		float pad; //AAAAAAAAAAAAAGH!
-	};
-
 	struct LightBufferType
 	{
 		XMFLOAT4 ambientColour;
 		XMFLOAT4 diffuseColour;
 		XMFLOAT3 lightDirection;		
-		float specIntensity;
-		XMFLOAT4 specColour;
+		float pad;
 	};
 
 public:
@@ -32,6 +24,5 @@ public:
 
 private:
 	ID3D11Buffer* m_lightBuffer;
-	ID3D11Buffer* m_camBuffer;
 	ID3D11SamplerState* m_sampleState;
 };

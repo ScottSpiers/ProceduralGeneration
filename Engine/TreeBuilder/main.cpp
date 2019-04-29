@@ -2,11 +2,97 @@
 //
 
 #include "pch.h"
+
+#include "L-System.h";
+#include "LTree.h"
 #include <iostream>
+#include <string>
 
 int main()
 {
-    std::cout << "Hello World!\n"; 
+	LSystem m_lsystem;
+	LTree m_tree;
+	bool cont = true;
+
+    std::cout << "Welcome to the Tree Builder!\n\n";
+
+	while (cont)
+	{
+		std::cout << "Please enter the L-Sytems axiom: ";
+
+		std::string axiom;
+		std::getline(std::cin, axiom);
+		std::cout << std::endl << std::endl;
+		m_lsystem.SetAxiom(axiom);
+
+		std::cout << "Please enter the number of rules for the system: ";
+		int numRules;
+		std::cin >> numRules;
+		std::cout << std::endl << std::endl;
+
+
+		for (int i = 0; i < numRules; ++i)
+		{
+			char pre;
+			std::cout << "Please enter rule #" << i +1 << "'s predecessor (single character): ";
+			std::cin >> pre;
+			std::cout << std::endl << std::endl;
+			std::cin.clear();
+			std::cin.ignore(256, '\n');
+
+			std::string suc;
+			std::cout << "Please enter rule #" << i+1 << "'s successor: ";
+			std::getline(std::cin, suc);
+			std::cout << std::endl << std::endl;
+
+			m_lsystem.AddRule(pre, suc);
+		}
+
+		float stepSize;
+		std::cout << "Please enter the length of tree segments (can be real number): ";
+		std::cin >> stepSize;
+		std::cout << std::endl << std::endl;
+
+		float angle;
+		std::cout << "Please enter the angle delta (can be real number): ";
+		std::cin >> angle;
+		std::cout << std::endl << std::endl;
+
+		float angleDelta = (angle * XM_PI) / 180;
+
+		float radius;
+		std::cout << "Please enter the start radius of the tree (can be real number): ";
+		std::cin >> radius;
+		std::cout << std::endl << std::endl;
+		m_tree.SetRadius(radius);
+
+		int iterations;
+		std::cout << "Please enter the number of times to run the LSystem (whole number): ";
+		std::cin >> iterations;
+		std::cin.clear();
+		std::cin.ignore(256, '\n');
+		std::cout << std::endl << std::endl;
+
+		std::string filepath;
+		std::cout << "Please enter the path you would like to save to (including filename): ";
+		std::getline(std::cin, filepath);
+		std::cout << std::endl << std::endl;
+
+		std::cout << "Building Tree\n\n";
+		std::string out = m_lsystem.RunSystem(iterations);
+		Model* m_model = m_tree.InterpretSystem(out, stepSize, angleDelta);
+
+		std::cout << "Writing to File...\n\n";
+		m_model->WriteToFile(filepath + ".txt");
+
+		char ans;
+		std::cout << "Would you like to continue?: (y/n)";
+		std::cin >> ans;
+		std::cout << std::endl << std::endl;
+
+		if (ans != 'y')
+			cont = false;
+	}
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
