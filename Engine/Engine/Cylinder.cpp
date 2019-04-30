@@ -8,7 +8,7 @@ Cylinder::Cylinder()
 
 Cylinder::Cylinder(int radius, int height, int tesselation)
 {
-	GenCylinder(radius, height, tesselation);
+	GenCylinder(radius, height, tesselation, true);
 }
 
 Cylinder::~Cylinder()
@@ -70,7 +70,7 @@ void Cylinder::GenCaps(float r, float h, int t, bool isTop)
 	}
 }
 
-void Cylinder::GenCylinder(float r, float h, int t)
+void Cylinder::GenCylinder(float r, float h, int t, bool genCaps)
 {
 	m_vertices.clear();
 	m_indices.clear();
@@ -112,8 +112,11 @@ void Cylinder::GenCylinder(float r, float h, int t)
 		m_indices.push_back(i * 2 + 1);
 	}
 
-	/*GenCaps(r, height, t, true);
-	GenCaps(r, height, t, false);*/
+	if (genCaps)
+	{	
+		GenCaps(r, height, t, true);
+		GenCaps(r, height, t, false);
+	}
 }
 
 void Cylinder::Rotate(XMMATRIX rotation)

@@ -139,6 +139,11 @@ bool LTree::Render(ID3D11DeviceContext* context)
 
 void LTree::InterpretSystem(std::string lResult, float stepSize, float angleDelta)
 {
+	InterpretSystem(lResult, stepSize, angleDelta, 0.0f, 0.0f, false);
+}
+
+void LTree::InterpretSystem(std::string lResult, float stepSize, float angleDelta, float stepRedDelta, float branchRedDelta, bool seeTopBot)
+{
 	TurtleState curState;
 	TurtleState nextState;
 	curState.pos = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
@@ -156,7 +161,7 @@ void LTree::InterpretSystem(std::string lResult, float stepSize, float angleDelt
 	float origStepSize = curState.stepSize;
 
 	Cylinder cyl;
-	cyl.GenCylinder(origRad, origStepSize, 24);
+	cyl.GenCylinder(origRad, origStepSize, 24, seeTopBot);
 
 	//Simple Math implementation of stuff
 	/*Vector3 Up() const { return Vector3(_21, _22, _23); }
@@ -200,7 +205,8 @@ void LTree::InterpretSystem(std::string lResult, float stepSize, float angleDelt
 			case 'F':
 			{
 				nextState.pos = XMVectorAdd(nextState.pos, XMVectorScale(rotated, curState.stepSize));
-					
+				
+				//Generate both lines and model, to allow for switching
 				//LINES
 				XMFLOAT3 vertPos;
 				XMStoreFloat3(&vertPos, curState.pos);
@@ -218,7 +224,7 @@ void LTree::InterpretSystem(std::string lResult, float stepSize, float angleDelt
 				m_models.push_back(new Model(cyl));
 				m_models.back()->SetWorldMatrix(XMMatrixMultiply(XMMatrixMultiply(XMMatrixScaling(curState.radius / origRad, curState.stepSize / origStepSize, curState.radius / origRad), rotMatrix), XMMatrixTranslationFromVector(curState.pos)));
 					
-				nextState.radius = curState.radius - 0.005f;
+				nextState.radius = curState.radius - stepRedDelta;
 				if (nextState.radius < 0.05f)
 					nextState.radius = 0.05f;
 				break;
@@ -269,7 +275,7 @@ void LTree::InterpretSystem(std::string lResult, float stepSize, float angleDelt
 			{
 				//nextState.stepSize = curState.stepSize + 1.0f;
 				//make this a percentage of the curradius?
-				nextState.radius = curState.radius - 0.3f;
+				nextState.radius = curState.radius - branchRedDelta;
 				if (nextState.radius < 0.05f)
 					nextState.radius = 0.05f;
 				curState.rotation = rotMatrix;

@@ -3,6 +3,7 @@
 
 ProceduralScene::ProceduralScene() : Scene(ResourceManager::PROCEDURAL)
 {
+	srand(time(nullptr));
 	m_obj = 0;
 	m_terrain = 0;
 	m_lsystem = 0;
@@ -15,6 +16,7 @@ ProceduralScene::ProceduralScene() : Scene(ResourceManager::PROCEDURAL)
 
 	m_lightFactor = 1.0f;
 	m_sphereCount = 0;
+	m_isInitialised = false;
 }
 
 ProceduralScene::~ProceduralScene()
@@ -114,11 +116,11 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 	//this is a mess
 
 
-	/*m_lsystem = new LSystem("A");
-	m_lsystem->AddRule('A', "[&FL!A]/////'[&FL!A]////////'[&FL!A]");
-	m_lsystem->AddRule('F', "S/////F");
-	m_lsystem->AddRule('S', "FL");
-	m_lsystem->AddRule('L', "['''^^{-f+f+f-|-f+f+f}]");*/
+	/*LSystem* lsystem = new LSystem("A");
+	lsystem->AddRule('A', "[&FL!A]/////'[&FL!A]////////'[&FL!A]");
+	lsystem->AddRule('F', "S/////F");
+	lsystem->AddRule('S', "FL");
+	lsystem->AddRule('L', "['''^^{-f+f+f-|-f+f+f}]");*/
 	//n = 7, a = 22.5
 
 	/*m_lsystem = new LSystem("P");
@@ -138,10 +140,10 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 	m_lsystem->AddRule('F', "FF");
 	//n = 6, a = 25.7
 
-	/*m_lsystem = new LSystem("F");
-	m_lsystem->AddRule('F', "F[+F]F[-F]F", 0.33f);
-	m_lsystem->AddRule('F', "F[+F]F", 0.33f);
-	m_lsystem->AddRule('F', "F[-F]F", 0.33f);*/
+	LSystem* lsystem = new LSystem("F");
+	lsystem->AddRule('F', "F[+F]F[-F]F[^F]F[&F]F", 0.33f);
+	lsystem->AddRule('F', "F[+F][^F][/F]", 0.33f);
+	lsystem->AddRule('F', "F[-F][&F][/F]", 0.34f);
 	//n = 5, a = 20.0
 
 	int numIts = 6;
@@ -149,23 +151,30 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 	float stepSize = .75f;
 	float angleDelta = (25.7f * XM_PI) / 180;
 	//float terrainSize = 513.0f;
+	//parameterise radius change for branches and steps 
 
 	m_output = m_lsystem->RunSystem(numIts);
 	XMMATRIX newPos = XMMatrixTranslation(terrainSize / 2.0f, 0.0f, terrainSize / 2.0f);
 	m_trees[0]->SetWorldMatrix(newPos);
-	m_trees[0]->InterpretSystem(m_output, stepSize, angleDelta);
+	m_trees[0]->InterpretSystem(m_output, stepSize, angleDelta, 0.005f, 0.3f, false);
 	m_trees[0]->SetTextures(m_resources->GetTextures(ResourceManager::TREE_TEXTURE));
 	m_trees[0]->Initialise(device);
 
+	stepSize = 0.5f;
+	angleDelta = (20.0f * XM_PI) / 180;
+	m_output = lsystem->RunSystem(5);
 	newPos = XMMatrixTranslation(terrainSize /1.5f, 0.0f, 0.0f);
 	m_trees[1]->SetWorldMatrix(newPos);
-	m_trees[1]->InterpretSystem(m_output /*m_lsystem->RunSystem(numIts)*/, stepSize, angleDelta);
+	m_trees[1]->SetRadius(0.3f);
+	m_trees[1]->InterpretSystem(m_output /*m_lsystem->RunSystem(numIts)*/, stepSize, angleDelta, 0.005f, 0.05f, true);
 	m_trees[1]->SetTextures(m_resources->GetTextures(ResourceManager::TREE_TEXTURE));
 	m_trees[1]->Initialise(device);
 
+	m_output = lsystem->RunSystem(5);
 	newPos = XMMatrixTranslation(0.0f, 0.0f, terrainSize / 1.5f);
 	m_trees[2]->SetWorldMatrix(newPos);
-	m_trees[2]->InterpretSystem(m_output/*m_lsystem->RunSystem(numIts)*/, stepSize, angleDelta);
+	m_trees[2]->SetRadius(0.3f);
+	m_trees[2]->InterpretSystem(m_output/*m_lsystem->RunSystem(numIts)*/, stepSize, angleDelta, 0.005f, 0.05f, true);
 	m_trees[2]->SetTextures(m_resources->GetTextures(ResourceManager::TREE_TEXTURE));
 	m_trees[2]->Initialise(device);
 
@@ -190,8 +199,10 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 	/*XMMATRIX newPos = XMMatrixTranslation(terrainSize / 2.0f, 0.0f, terrainSize / 2.0f);
 	m_tree->SetWorldMatrix(newPos);*/
 
-	m_sphere->SetWorldMatrix(XMMatrixMultiply(XMMatrixScaling(2.0f,2.0f,2.0f), XMMatrixTranslation(250.0f, 6.66f, 250.0f)));
+	m_sphere->SetWorldMatrix(XMMatrixMultiply(XMMatrixScaling(2.0f,2.0f,2.0f), XMMatrixTranslation(250.0f, 2.0f, 250.0f)));
 	m_sphereCount = 0;
+
+	delete lsystem;
 	return true;	
 }
 
@@ -253,7 +264,11 @@ bool ProceduralScene::InitialiseRenderTexture(ID3D11Device* device, XMFLOAT2 dim
 
 bool ProceduralScene::RenderToTexture(D3D* d3d)
 {
-	InitialiseRenderTexture(d3d->GetDevice(), d3d->GetScreenDimensions());
+	if (!m_isInitialised)
+	{
+		InitialiseRenderTexture(d3d->GetDevice(), d3d->GetScreenDimensions());
+		m_isInitialised = true;
+	}
 	d3d->GetDeviceContext()->OMSetRenderTargets(1, &m_ppRTV, d3d->getDepthStencilView());
 
 	float colour[4]{ 0.0f, 0.0f, 1.0f, 1.0f };
@@ -303,15 +318,15 @@ bool ProceduralScene::RenderScene(D3D* d3d)
 		if (abs(fDist.x) < 2.0f && abs(fDist.y) < 10.0f && abs(fDist.z) < 2.0f)
 		{
 			float rx = (double)rand() / (RAND_MAX + 1);
-			rx *= 513.0f;
+			rx *= 512.0f;
 
 			float rz = (double)rand() / (RAND_MAX + 1);
-			rz *= 513.0f;
+			rz *= 512.0f;
 			++m_sphereCount;
-			m_sphere->SetWorldMatrix(XMMatrixTranslation(rx, terrainHeight + 1.0f, rz));		
+			m_sphere->SetWorldMatrix(XMMatrixTranslation(rx, terrainHeight + 3.0f, rz));		
 		}
 
-		if (m_sphereCount >= 2)
+		if (m_sphereCount >= 7)
 		{
 			m_lightFactor = 0.3f;
 			m_isSphereAlive = false;

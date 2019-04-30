@@ -9,6 +9,7 @@
 
 #include <array>
 #include <string>
+#include <time.h>
 
 class ProceduralScene : public Scene
 {
@@ -51,6 +52,7 @@ private:
 	XMMATRIX m_ppView;
 	Quad* m_ppQuad;
 
+	bool m_isInitialised;
 	bool m_isSphereAlive;
 	int m_sphereCount;
 	float m_lightFactor;

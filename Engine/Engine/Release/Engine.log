@@ -1,34 +1,19 @@
-﻿  Graphics.cpp
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\graphics.cpp(47): warning C4316: 'D3D': object allocated on the heap may not be aligned 16
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\graphics.cpp(62): warning C4316: 'ProceduralScene': object allocated on the heap may not be aligned 16
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\graphics.cpp(71): warning C4316: 'Text': object allocated on the heap may not be aligned 16
-  LTreeShader.cpp
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\ltreeshader.cpp(28): warning C4101: 'camBufferDesc': unreferenced local variable
-  ProceduralScene.cpp
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(11): warning C4018: '<': signed/unsigned mismatch
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(13): warning C4316: 'LTree': object allocated on the heap may not be aligned 16
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(68): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(68): warning C4316: 'Terrain': object allocated on the heap may not be aligned 16
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(84): warning C4316: 'Text': object allocated on the heap may not be aligned 16
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(206): warning C4244: '=': conversion from 'float' to 'UINT', possible loss of data
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(207): warning C4244: '=': conversion from 'float' to 'UINT', possible loss of data
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(244): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(244): warning C4316: 'Quad': object allocated on the heap may not be aligned 16
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(304): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(307): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-  Scene.cpp
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\scene.cpp(43): warning C4316: 'Camera': object allocated on the heap may not be aligned 16
-  ShaderManager.cpp
-  SkySphereShader.cpp
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\skysphereshader.cpp(116): warning C4101: 'bufferNumber': unreferenced local variable
-  System.cpp
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\system.cpp(54): warning C4316: 'Graphics': object allocated on the heap may not be aligned 16
-  WinterReflection.cpp
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\winterreflection.cpp(37): warning C4316: 'Cubemap': object allocated on the heap may not be aligned 16
-  main.cpp
+﻿  ProceduralScene.cpp
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(6): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(12): warning C4018: '<': signed/unsigned mismatch
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(14): warning C4316: 'LTree': object allocated on the heap may not be aligned 16
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(71): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(71): warning C4316: 'Terrain': object allocated on the heap may not be aligned 16
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(87): warning C4316: 'Text': object allocated on the heap may not be aligned 16
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(218): warning C4244: '=': conversion from 'float' to 'UINT', possible loss of data
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(219): warning C4244: '=': conversion from 'float' to 'UINT', possible loss of data
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(256): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(256): warning C4316: 'Quad': object allocated on the heap may not be aligned 16
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(320): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(323): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
   Generating code
-  8 of 1975 functions ( 0.4%) were compiled, the rest were copied from previous compilation.
+  1 of 1988 functions (<0.1%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    1 functions had inline decision re-evaluated but remain unchanged
+    0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   Engine.vcxproj -> C:\Users\Scott\Documents\Uni\Abertay\CMP505\Assignment\Engine\Release\Engine.exe

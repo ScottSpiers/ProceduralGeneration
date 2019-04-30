@@ -44,6 +44,7 @@ public:
 	bool Initialise(ID3D11Device*);
 	bool Render(ID3D11DeviceContext*);
 	void InterpretSystem(std::string, float, float);
+	void InterpretSystem(std::string, float, float, float, float, bool);
 
 	void SwitchRenderMode();
 
