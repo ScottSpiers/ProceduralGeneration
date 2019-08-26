@@ -1,15 +1,2 @@
-﻿  pch.cpp
-  Cylinder.cpp
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\treebuilder\cylinder.cpp(11): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\treebuilder\cylinder.cpp(121): warning C4018: '<': signed/unsigned mismatch
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\treebuilder\cylinder.cpp(140): warning C4018: '<': signed/unsigned mismatch
-  L-System.cpp
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\treebuilder\l-system.cpp(6): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-  LTree.cpp
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\treebuilder\ltree.cpp(106): warning C4316: 'Model': object allocated on the heap may not be aligned 16
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\treebuilder\ltree.cpp(184): warning C4316: 'Model': object allocated on the heap may not be aligned 16
-  Model.cpp
-  main.cpp
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\treebuilder\main.cpp(6): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-  Generating Code...
+﻿  Model.cpp
   TreeBuilder.vcxproj -> C:\Users\Scott\Documents\Uni\Abertay\CMP505\Assignment\Engine\Debug\TreeBuilder.exe

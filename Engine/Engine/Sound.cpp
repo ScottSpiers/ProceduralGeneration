@@ -230,7 +230,7 @@ bool Sound::PlayWaveFile()
 	if (FAILED(res))
 		return false;
 
-	res = m_secondaryBuffer->SetVolume(DSBVOLUME_MIN);
+	res = m_secondaryBuffer->SetVolume(DSBVOLUME_MAX);
 	if (FAILED(res))
 		return false;
 

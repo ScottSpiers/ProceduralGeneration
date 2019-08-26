@@ -5,14 +5,14 @@ c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\procedurals
 c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(71): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
 c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(71): warning C4316: 'Terrain': object allocated on the heap may not be aligned 16
 c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(87): warning C4316: 'Text': object allocated on the heap may not be aligned 16
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(218): warning C4244: '=': conversion from 'float' to 'UINT', possible loss of data
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(219): warning C4244: '=': conversion from 'float' to 'UINT', possible loss of data
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(256): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(256): warning C4316: 'Quad': object allocated on the heap may not be aligned 16
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(320): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(323): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(222): warning C4244: '=': conversion from 'float' to 'UINT', possible loss of data
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(223): warning C4244: '=': conversion from 'float' to 'UINT', possible loss of data
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(260): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(260): warning C4316: 'Quad': object allocated on the heap may not be aligned 16
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(324): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\engine\proceduralscene.cpp(327): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
   Generating code
-  1 of 1988 functions (<0.1%) were compiled, the rest were copied from previous compilation.
+  0 of 1988 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code

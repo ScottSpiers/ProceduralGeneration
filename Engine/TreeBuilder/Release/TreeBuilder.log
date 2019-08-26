@@ -1,17 +1,7 @@
-﻿  pch.cpp
-  Cylinder.cpp
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\treebuilder\cylinder.cpp(11): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\treebuilder\cylinder.cpp(121): warning C4018: '<': signed/unsigned mismatch
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\treebuilder\cylinder.cpp(140): warning C4018: '<': signed/unsigned mismatch
-  L-System.cpp
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\treebuilder\l-system.cpp(6): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-  LTree.cpp
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\treebuilder\ltree.cpp(106): warning C4316: 'Model': object allocated on the heap may not be aligned 16
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\treebuilder\ltree.cpp(184): warning C4316: 'Model': object allocated on the heap may not be aligned 16
-  Model.cpp
-  main.cpp
-c:\users\scott\documents\uni\abertay\cmp505\assignment\engine\treebuilder\main.cpp(6): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+﻿  Model.cpp
   Generating code
-  All 1112 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  0 of 1112 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   TreeBuilder.vcxproj -> C:\Users\Scott\Documents\Uni\Abertay\CMP505\Assignment\Engine\Release\TreeBuilder.exe

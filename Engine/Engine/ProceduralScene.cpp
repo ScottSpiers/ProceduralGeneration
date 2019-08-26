@@ -77,8 +77,8 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 
 	m_Light->SetAmbientColour(0.15f, 0.15f, 0.15f, 1.0f);
 	m_Light->SetDiffuseColor(.75f, .75f, .75f, 1.0f);
-	m_Light->SetSpecColour(1.0f, 1.0f, 1.0f, 1.f);
-	m_Light->SetSpecIntensity(30.0f);
+	m_Light->SetSpecColour(0.0f, 0.0f, 0.0f, 0.f);
+	m_Light->SetSpecIntensity(.1f);
 	m_Light->SetDirection(.75f, -.5f, .75f);
 	
 	m_Camera->SetPosition(terrainSize/2.0f - 10.0f, 2.0f, terrainSize/2.0f - 10.0f);
@@ -153,6 +153,7 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 	//float terrainSize = 513.0f;
 	//parameterise radius change for branches and steps 
 
+
 	m_output = m_lsystem->RunSystem(numIts);
 	XMMATRIX newPos = XMMatrixTranslation(terrainSize / 2.0f, 0.0f, terrainSize / 2.0f);
 	m_trees[0]->SetWorldMatrix(newPos);
@@ -160,18 +161,21 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 	m_trees[0]->SetTextures(m_resources->GetTextures(ResourceManager::TREE_TEXTURE));
 	m_trees[0]->Initialise(device);
 
+	float terrainHeight = m_terrain->GetTerrainHeight(terrainSize / 1.5f, terrainSize / 2.5f);
 	stepSize = 0.5f;
 	angleDelta = (20.0f * XM_PI) / 180;
 	m_output = lsystem->RunSystem(5);
-	newPos = XMMatrixTranslation(terrainSize /1.5f, 0.0f, 0.0f);
+	newPos = XMMatrixTranslation(terrainSize /1.5f, terrainHeight, terrainSize/ 2.5f);
 	m_trees[1]->SetWorldMatrix(newPos);
 	m_trees[1]->SetRadius(0.3f);
 	m_trees[1]->InterpretSystem(m_output /*m_lsystem->RunSystem(numIts)*/, stepSize, angleDelta, 0.005f, 0.05f, true);
 	m_trees[1]->SetTextures(m_resources->GetTextures(ResourceManager::TREE_TEXTURE));
 	m_trees[1]->Initialise(device);
 
+	terrainHeight = m_terrain->GetTerrainHeight(terrainSize / 2.5f, terrainSize / 1.5f);
+
 	m_output = lsystem->RunSystem(5);
-	newPos = XMMatrixTranslation(0.0f, 0.0f, terrainSize / 1.5f);
+	newPos = XMMatrixTranslation(terrainSize / 2.5f, terrainHeight, terrainSize / 1.5f);
 	m_trees[2]->SetWorldMatrix(newPos);
 	m_trees[2]->SetRadius(0.3f);
 	m_trees[2]->InterpretSystem(m_output/*m_lsystem->RunSystem(numIts)*/, stepSize, angleDelta, 0.005f, 0.05f, true);
@@ -323,7 +327,8 @@ bool ProceduralScene::RenderScene(D3D* d3d)
 			float rz = (double)rand() / (RAND_MAX + 1);
 			rz *= 512.0f;
 			++m_sphereCount;
-			m_sphere->SetWorldMatrix(XMMatrixTranslation(rx, terrainHeight + 3.0f, rz));		
+			terrainHeight = m_terrain->GetTerrainHeight(rx, rz);
+			m_sphere->SetWorldMatrix(XMMatrixMultiply(XMMatrixScaling(2.0f, 2.0f, 2.0f), XMMatrixTranslation(rx, terrainHeight + 3.0f, rz)));
 		}
 
 		if (m_sphereCount >= 7)
@@ -358,6 +363,13 @@ bool ProceduralScene::RenderScene(D3D* d3d)
 	result = m_shaders->RenderLTree(m_trees[0], m_Camera, m_Light);
 	if (!result)
 		return false;*/
+	
+	/*m_tree->Render(d3d->GetDeviceContext());
+	result = m_shaders->RenderLight(m_tree, m_Camera, m_Light);
+	if (!result)
+	{
+		return false;
+	}*/
 
 	if (m_isSphereAlive)
 	{
