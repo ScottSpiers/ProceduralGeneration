@@ -52,6 +52,13 @@ private:
 	XMMATRIX m_ppView;
 	Quad* m_ppQuad;
 
+	Camera* m_mapCam;
+	ID3D11Texture2D* m_mapRenderTarget;
+	ID3D11ShaderResourceView* m_MapSRV;
+	ID3D11RenderTargetView* m_mapRTV;
+
+	Quad* m_mapQuad;
+
 	bool m_isInitialised;
 	bool m_isSphereAlive;
 	int m_sphereCount;
