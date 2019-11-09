@@ -8,6 +8,16 @@ ProceduralScene::ProceduralScene() : Scene(ResourceManager::PROCEDURAL)
 	m_terrain = 0;
 	m_lsystem = 0;
 	m_ppQuad = 0;
+	m_mapQuad = 0;
+
+
+	m_ppRenderTarget = 0;
+	m_ppRTV = 0;
+	m_ppSRV = 0;
+
+	m_mapRenderTarget = 0;
+	m_mapRTV = 0;
+	m_MapSRV = 0;
 
 	for (int i = 0; i < m_trees.size(); ++i)
 	{
@@ -83,6 +93,10 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 	
 	m_Camera->SetPosition(terrainSize/2.0f - 10.0f, 2.0f, terrainSize/2.0f - 10.0f);
 	m_ppView = GetView();
+
+	m_mapCam = new Camera(Camera::CamType::FPC);
+	m_mapCam->SetPosition(terrainSize / 2.0f - 10.0f, 150.0f, terrainSize / 2.0f - 10.0f);
+	m_mapCam->SetRotation(90.0f, 0.0f, 0.0f);
 
 	m_obj = new Text();
 	result = m_obj->Initialise(device, context, nullptr, 800, 600, m_ppView);
@@ -234,11 +248,22 @@ bool ProceduralScene::InitialiseRenderTexture(ID3D11Device* device, XMFLOAT2 dim
 	if (FAILED(res))
 		return false;
 
+	textureDesc.Width = dimensions.x * 0.25;
+	textureDesc.Height = dimensions.x * 0.25;
+
+	res = device->CreateTexture2D(&textureDesc, 0, &m_mapRenderTarget);
+	if (FAILED(res))
+		return false;
+
 	rtvDesc.Format = textureDesc.Format;
 	rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
 	rtvDesc.Texture2D.MipSlice = 0;
 
 	res = device->CreateRenderTargetView(m_ppRenderTarget, &rtvDesc, &m_ppRTV);
+	if (FAILED(res))
+		return false;
+
+	res = device->CreateRenderTargetView(m_mapRenderTarget, &rtvDesc, &m_mapRTV);
 	if (FAILED(res))
 		return false;
 
@@ -251,45 +276,79 @@ bool ProceduralScene::InitialiseRenderTexture(ID3D11Device* device, XMFLOAT2 dim
 	if(FAILED(res))
 		return false;
 
+	res = device->CreateShaderResourceView(m_mapRenderTarget, &srvDesc, &m_MapSRV);
+	if (FAILED(res))
+		return false;
+
+	m_viewport.Height = dimensions.x * 0.25f;
+	m_viewport.Width = dimensions.x * 0.25f;
+	m_viewport.MinDepth = 0.f;
+	m_viewport.MaxDepth = 1.f;
+	m_viewport.TopLeftX = 0;
+	m_viewport.TopLeftY = 0;
+
 	if (m_ppQuad)
 	{
 		delete m_ppQuad;
 		m_ppQuad = 0;
 	}
 
+	if (m_mapQuad)
+	{
+		delete m_mapQuad;
+		m_mapQuad = 0;
+	}
+
 	m_ppQuad = new Quad(dimensions.x, dimensions.y);
 	if (!m_ppQuad->Initialise(device))
 		return false;
 
-	
+	m_mapQuad = new Quad(dimensions.x * 0.25, dimensions.x * 0.25);
+	if (!m_mapQuad->Initialise(device))
+		return false;
+
 	m_orthoProj = XMMatrixOrthographicLH(dimensions.x, dimensions.y, 0.1f, 1000.0f);
+	m_mapOrtho = XMMatrixOrthographicLH(dimensions.x * 0.25, dimensions.x * 0.25, 0.1f, 1000.0f);
 	return true;
 }
 
-bool ProceduralScene::RenderToTexture(D3D* d3d)
+bool ProceduralScene::RenderToTexture(D3D* d3d, Camera* cam, ID3D11RenderTargetView* rTarget)
 {
+	//Want to move this I guess, isn't pretty
 	if (!m_isInitialised)
 	{
 		InitialiseRenderTexture(d3d->GetDevice(), d3d->GetScreenDimensions());
 		m_isInitialised = true;
 	}
-	d3d->GetDeviceContext()->OMSetRenderTargets(1, &m_ppRTV, d3d->getDepthStencilView());
 
-	float colour[4]{ 0.0f, 0.0f, 1.0f, 1.0f };
-	d3d->GetDeviceContext()->ClearRenderTargetView(m_ppRTV, colour);
-	d3d->GetDeviceContext()->ClearDepthStencilView(d3d->getDepthStencilView(), D3D11_CLEAR_DEPTH, 1.0f, 0);
+	D3D11_VIEWPORT vport;
+	UINT num_viewps = 1;
+	ID3D11RenderTargetView* defRTV = d3d->getRenderTargetView();
+	ID3D11DepthStencilView* defDSV = d3d->getDepthStencilView();
+	d3d->GetDeviceContext()->RSGetViewports(&(num_viewps), &vport);
 
-	RenderScene(d3d);
-
-	m_ppQuad->SetTexture(m_ppSRV);
-
-	ID3D11RenderTargetView* rtv = d3d->getRenderTargetView();
+	//change viewport if minimap cam, important for accuracy
+	if(cam == m_mapCam)
+		d3d->GetDeviceContext()->RSSetViewports(1, &(m_viewport));
+	ID3D11RenderTargetView* rtv = rTarget;
 	d3d->GetDeviceContext()->OMSetRenderTargets(1, &rtv, d3d->getDepthStencilView());
 
+	float colour[4]{ 0.0f, 0.0f, 1.0f, 1.0f };
+	
+	d3d->GetDeviceContext()->ClearRenderTargetView(rtv, colour);
+	d3d->GetDeviceContext()->ClearDepthStencilView(d3d->getDepthStencilView(), D3D11_CLEAR_DEPTH, 1.0f, 0);
+
+	RenderScene(d3d, cam);
+
+	rtv = d3d->getRenderTargetView();
+	d3d->GetDeviceContext()->RSSetViewports(1, &vport);
+	d3d->GetDeviceContext()->OMSetRenderTargets(1, &rtv, d3d->getDepthStencilView());
+	d3d->GetDeviceContext()->ClearRenderTargetView(defRTV, colour);
+	d3d->GetDeviceContext()->ClearDepthStencilView(defDSV, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	return true;
 }
 
-bool ProceduralScene::RenderScene(D3D* d3d)
+bool ProceduralScene::RenderScene(D3D* d3d, Camera* cam)
 {
 	XMMATRIX viewMatrix, projMatrix;
 	bool result;
@@ -299,8 +358,10 @@ bool ProceduralScene::RenderScene(D3D* d3d)
 	// Set the initial position of the camera.
 
 	d3d->GetProjectionMatrix(projMatrix);
-	m_Camera->setProjMatrix(projMatrix);
-	m_Camera->Render();
+	cam->setProjMatrix(projMatrix);
+	cam->Render();
+	
+
 
 	float x = m_Camera->GetPosition().x;
 	float z = m_Camera->GetPosition().z;
@@ -310,6 +371,7 @@ bool ProceduralScene::RenderScene(D3D* d3d)
 	float terrainHeight = m_terrain->GetTerrainHeight(x, z);
 	m_skySphere->SetWorldMatrix(XMMatrixTranslation(cameraPos.x, cameraPos.y , cameraPos.z));
 	m_Camera->SetPosition(x, terrainHeight + heightOffset, z);
+	m_mapCam->SetPosition(x, 150.0f, z);
 
 	XMVECTOR spherePos = m_sphere->GetWorldMatrix().r[3];
 	XMVECTOR camPos = XMLoadFloat3(&m_Camera->GetPosition());
@@ -344,7 +406,7 @@ bool ProceduralScene::RenderScene(D3D* d3d)
 	if (!result)
 		return false;
 
-	result = m_shaders->RenderTerrain(m_terrain, m_Camera, m_Light);
+	result = m_shaders->RenderTerrain(m_terrain, cam, m_Light);
 	if (!result)
 		return false;
 
@@ -352,7 +414,7 @@ bool ProceduralScene::RenderScene(D3D* d3d)
 	for (LTree* lt : m_trees)
 	{
 		lt->Render(d3d->GetDeviceContext());
-		result = m_shaders->RenderLTree(lt, m_Camera, m_Light);
+		result = m_shaders->RenderLTree(lt, cam, m_Light);
 		if (!result)
 			return false;
 	}
@@ -375,7 +437,7 @@ bool ProceduralScene::RenderScene(D3D* d3d)
 	{
 		
 		m_sphere->Render(d3d->GetDeviceContext());
-		m_shaders->RenderLight(m_sphere, m_Camera, m_Light);
+		m_shaders->RenderLight(m_sphere, cam, m_Light);
 	}
 
 	d3d->TurnOffCulling();
@@ -384,7 +446,7 @@ bool ProceduralScene::RenderScene(D3D* d3d)
 
 	m_skySphere->Render(d3d->GetDeviceContext());
 	//different var for skyFactor?
-	result = m_shaders->RenderSkySphere(m_skySphere, m_Camera, m_lightFactor);
+	result = m_shaders->RenderSkySphere(m_skySphere, cam, m_lightFactor);
 	if (!result)
 	{
 		return false;
@@ -398,16 +460,27 @@ bool ProceduralScene::RenderScene(D3D* d3d)
 bool ProceduralScene::Render(D3D* d3d)
 {
 	bool res;
-	res = RenderToTexture(d3d);
+
+	res = RenderToTexture(d3d, m_mapCam, m_mapRTV);
+	if (!res)
+		return false;
+	res = RenderToTexture(d3d, m_Camera, m_ppRTV);
 	if (!res)
 		return false;
 
+
+	m_ppQuad->SetTexture(m_ppSRV);
+	m_mapQuad->SetTexture(m_MapSRV);
 	d3d->BeginScene(0.0f, 0.0f, .8f, 1.0f);
 
 	d3d->TurnZBufferOff();
 
 	m_ppQuad->Render(d3d->GetDeviceContext());
 	m_shaders->RenderTexture(m_ppQuad, m_ppView, m_orthoProj);
+
+	m_mapQuad->SetWorldMatrix(XMMatrixTranslation(-250.5f, -150.5f, 0.0f));
+	m_mapQuad->Render(d3d->GetDeviceContext());
+	m_shaders->RenderTexture(m_mapQuad, m_ppView, m_orthoProj);
 
 	d3d->TurnOnAlphaBlending();
 
@@ -471,5 +544,6 @@ void ProceduralScene::MoveCamera(XMFLOAT3 mov)
 	if (!IsCollidingTree(mov))
 	{
 		m_Camera->Move(mov);
+		
 	}
 }

@@ -26,8 +26,8 @@ public:
 
 private:
 	bool InitialiseRenderTexture(ID3D11Device*, XMFLOAT2);
-	bool RenderToTexture(D3D*);
-	bool RenderScene(D3D*);
+	bool RenderToTexture(D3D*, Camera*, ID3D11RenderTargetView*);
+	bool RenderScene(D3D*, Camera*);
 
 	void UpdateLight();
 
@@ -56,8 +56,11 @@ private:
 	ID3D11Texture2D* m_mapRenderTarget;
 	ID3D11ShaderResourceView* m_MapSRV;
 	ID3D11RenderTargetView* m_mapRTV;
-
+	XMMATRIX m_mapOrtho;
+	XMMATRIX m_mapView;
 	Quad* m_mapQuad;
+
+	D3D11_VIEWPORT m_viewport;
 
 	bool m_isInitialised;
 	bool m_isSphereAlive;
