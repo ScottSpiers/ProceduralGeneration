@@ -8,6 +8,7 @@ LTree::LTree()
 	m_bigModel = 0;
 	m_worldMatrix = XMMatrixIdentity();
 	m_isModel = false;
+	m_isModelInitialised = false;
 }
 
 LTree::LTree(bool isModel) : LTree()
@@ -48,9 +49,11 @@ LTree::~LTree()
 
 bool LTree::Initialise(ID3D11Device* device)
 {
-	if (m_isModel)
+	//added initialised bool to prevent mem leak due to multiple inits, should proabbaly source this leak in model.cpp
+	if (m_isModel && !m_isModelInitialised)
 	{		
 		m_bigModel->InitializeBuffers(device);
+		m_isModelInitialised = true;
 	}
 	else
 	{

@@ -19,7 +19,7 @@ c:\users\scott\documents\uni\msc\cmp505\assignment\engine\engine\proceduralscene
 c:\users\scott\documents\uni\msc\cmp505\assignment\engine\engine\proceduralscene.cpp(389): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
 LINK : warning LNK4075: ignoring '/INCREMENTAL' due to '/LTCG' specification
   Generating code
-  1 of 1972 functions (<0.1%) were compiled, the rest were copied from previous compilation.
+  4 of 1972 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code

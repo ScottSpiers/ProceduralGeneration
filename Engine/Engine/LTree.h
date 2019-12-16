@@ -74,4 +74,7 @@ private:
 	XMMATRIX m_worldMatrix;
 	bool m_isModel;
 	float m_radius;
+
+	//Hacky solution
+	bool m_isModelInitialised;
 };

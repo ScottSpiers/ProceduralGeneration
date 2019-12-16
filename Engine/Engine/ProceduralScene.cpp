@@ -333,7 +333,7 @@ bool ProceduralScene::RenderToTexture(D3D* d3d, Camera* cam, ID3D11RenderTargetV
 	ID3D11RenderTargetView* rtv = rTarget;
 	d3d->GetDeviceContext()->OMSetRenderTargets(1, &rtv, d3d->getDepthStencilView());
 
-	float colour[4]{ 0.0f, 0.0f, 1.0f, 1.0f };
+	float colour[4]{ 0.0f, 0.0f, 0.0f, 0.0f };
 	
 	d3d->GetDeviceContext()->ClearRenderTargetView(rtv, colour);
 	d3d->GetDeviceContext()->ClearDepthStencilView(d3d->getDepthStencilView(), D3D11_CLEAR_DEPTH, 1.0f, 0);
@@ -469,20 +469,22 @@ bool ProceduralScene::Render(D3D* d3d)
 		return false;
 
 
+	d3d->BeginScene(0.0f, 0.0f, .8f, 1.0f);
 	m_ppQuad->SetTexture(m_ppSRV);
 	m_mapQuad->SetTexture(m_MapSRV);
-	d3d->BeginScene(0.0f, 0.0f, .8f, 1.0f);
 
 	d3d->TurnZBufferOff();
 
 	m_ppQuad->Render(d3d->GetDeviceContext());
 	m_shaders->RenderTexture(m_ppQuad, m_ppView, m_orthoProj);
 
+
+	d3d->TurnOnAlphaBlending();
+
 	m_mapQuad->SetWorldMatrix(XMMatrixTranslation(-250.5f, -150.5f, 0.0f));
 	m_mapQuad->Render(d3d->GetDeviceContext());
 	m_shaders->RenderTexture(m_mapQuad, m_ppView, m_orthoProj);
 
-	d3d->TurnOnAlphaBlending();
 
 	XMMATRIX worldMatrix, orthoMatrix;
 	d3d->GetOrthoMatrix(orthoMatrix);
