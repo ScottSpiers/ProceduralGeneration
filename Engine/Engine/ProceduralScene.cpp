@@ -483,7 +483,7 @@ bool ProceduralScene::Render(D3D* d3d)
 
 	m_mapQuad->SetWorldMatrix(XMMatrixTranslation(-250.5f, -150.5f, 0.0f));
 	m_mapQuad->Render(d3d->GetDeviceContext());
-	m_shaders->RenderTexture(m_mapQuad, m_ppView, m_orthoProj);
+	m_shaders->RenderMap(m_mapQuad, m_ppView, m_orthoProj);
 
 
 	XMMATRIX worldMatrix, orthoMatrix;

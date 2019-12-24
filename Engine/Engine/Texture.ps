@@ -57,7 +57,7 @@ float4 DoF(PixelInputType input, float oWeight)
 	c += shaderTexture[0].Sample(SampleType, input.n7) * adjWeight;
 	c += shaderTexture[0].Sample(SampleType, input.n8) * diagWeight;
 
-	c.a = 0.5f;
+	c.a = 1.0f;
 	return saturate(c);
 }
 

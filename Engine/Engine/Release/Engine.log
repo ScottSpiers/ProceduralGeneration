@@ -1,4 +1,9 @@
-﻿  ProceduralScene.cpp
+﻿  MapShader.cpp
+c:\users\scott\documents\uni\msc\cmp505\assignment\engine\engine\mapshader.cpp(24): warning C4101: 'screenBufDesc': unreferenced local variable
+c:\users\scott\documents\uni\msc\cmp505\assignment\engine\engine\mapshader.cpp(73): warning C4101: 'result': unreferenced local variable
+c:\users\scott\documents\uni\msc\cmp505\assignment\engine\engine\mapshader.cpp(75): warning C4101: 'bufferNumber': unreferenced local variable
+c:\users\scott\documents\uni\msc\cmp505\assignment\engine\engine\mapshader.cpp(74): warning C4101: 'mappedResource': unreferenced local variable
+  ProceduralScene.cpp
 c:\users\scott\documents\uni\msc\cmp505\assignment\engine\engine\proceduralscene.cpp(6): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
 c:\users\scott\documents\uni\msc\cmp505\assignment\engine\engine\proceduralscene.cpp(22): warning C4018: '<': signed/unsigned mismatch
 c:\users\scott\documents\uni\msc\cmp505\assignment\engine\engine\proceduralscene.cpp(24): warning C4316: 'LTree': object allocated on the heap may not be aligned 16
@@ -17,9 +22,11 @@ c:\users\scott\documents\uni\msc\cmp505\assignment\engine\engine\proceduralscene
 c:\users\scott\documents\uni\msc\cmp505\assignment\engine\engine\proceduralscene.cpp(311): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
 c:\users\scott\documents\uni\msc\cmp505\assignment\engine\engine\proceduralscene.cpp(386): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
 c:\users\scott\documents\uni\msc\cmp505\assignment\engine\engine\proceduralscene.cpp(389): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  Shader.cpp
+c:\users\scott\documents\uni\msc\cmp505\assignment\engine\engine\shader.cpp(48): warning C4101: 'samplerDesc': unreferenced local variable
 LINK : warning LNK4075: ignoring '/INCREMENTAL' due to '/LTCG' specification
   Generating code
-  4 of 1972 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
+  0 of 1978 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code

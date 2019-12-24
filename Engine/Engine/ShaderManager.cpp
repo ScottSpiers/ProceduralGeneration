@@ -9,10 +9,17 @@ ShaderManager::ShaderManager(ID3D11Device* device, ID3D11DeviceContext* context)
 	m_terrainShader = new TerrainShader(device, context);
 	m_lTreeShader = new LTreeShader(device, context);
 	m_textureShader = new TextureShader(device, context);
+	m_mapShader = new MapShader(device, context);
 }
 
 ShaderManager::~ShaderManager()
 {
+	if (m_mapShader)
+	{
+		delete m_mapShader;
+		m_mapShader = 0;
+	}
+
 	if (m_textureShader)
 	{
 		delete m_textureShader;
@@ -78,6 +85,10 @@ bool ShaderManager::InitialiseShaders()
 	if (!result)
 		return false;
 
+	result = m_mapShader->Initialise();
+	if (!result)
+		return false;
+
 	return true;
 }
 
@@ -109,4 +120,9 @@ bool ShaderManager::RenderLTree(LTree* t, Camera* cam, Light* light)
 bool ShaderManager::RenderTexture(Quad* q, XMMATRIX view, XMMATRIX ortho)
 {
 	return m_textureShader->Render(q, view, ortho);
+}
+
+bool ShaderManager::RenderMap(Quad* q, XMMATRIX view, XMMATRIX ortho)
+{
+	return m_mapShader->Render(q, view, ortho);
 }

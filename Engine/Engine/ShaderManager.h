@@ -8,6 +8,7 @@
 #include "LTreeShader.h"
 #include "ReflectShader.h"
 #include "FontShader.h"
+#include "MapShader.h"
 #include "SkySphereShader.h"
 #include "TerrainShader.h"
 #include "TextureShader.h"
@@ -25,6 +26,7 @@ public:
 	bool RenderTerrain(Terrain*, Camera*, Light*);
 	bool RenderLTree(LTree*, Camera*, Light*);
 	bool RenderTexture(Quad*, XMMATRIX, XMMATRIX);
+	bool RenderMap(Quad*, XMMATRIX, XMMATRIX);
 	//bool RenderFont();
 
 private:
@@ -34,6 +36,7 @@ private:
 	TerrainShader* m_terrainShader;
 	LTreeShader* m_lTreeShader;
 	TextureShader* m_textureShader;
+	MapShader* m_mapShader;
 	//FontShader* m_fontShader; Do I want this to be managed here?
 	//Font does the shading itself but is that nice?
 	//Do I not want it to be here as it is a shader?
