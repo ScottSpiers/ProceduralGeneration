@@ -12,6 +12,12 @@ ExportedObj/
 *.user
 *.vcxproj
 *.vcxproj.*
+*.tlog
+*.obj
+*.ilk
+*.pdb
+*.exe
+*.opensdf
 .vs/
 
 #=============#
@@ -21,3 +27,5 @@ data/
 
 Engine/Debug/
 Engine/Release/
+Debug/
+Release/
