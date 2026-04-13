@@ -28,10 +28,10 @@ bool Text::Initialise(ID3D11Device* device, ID3D11DeviceContext* deviceContext, 
 	if (!m_font)
 		return false;
 
-	res = m_font->Initialise(device, "../Engine/data/fontdata.txt", L"../Engine/data/font.dds");
+	res = m_font->Initialise(device, "Engine/data/fontdata.txt", L"Engine/data/font.dds");
 	if (!res)
 	{
-		MessageBox(hwnd, L"Could not initialise the font object", L"Error", MB_OK);
+		MessageBox(hwnd, "Could not initialise the font object", "Error", MB_OK);
 		return false;
 	}
 
@@ -42,7 +42,7 @@ bool Text::Initialise(ID3D11Device* device, ID3D11DeviceContext* deviceContext, 
 	res = m_fontShader->Initialise(device, hwnd);
 	if (!res)
 	{
-		MessageBox(hwnd, L"Could not initialise the font shader object", L"Error", MB_OK);
+		MessageBox(hwnd, "Could not initialise the font shader object", "Error", MB_OK);
 		return false;
 	}
 

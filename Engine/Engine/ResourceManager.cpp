@@ -184,7 +184,7 @@ bool ResourceManager::LoadTexture(TextureResource t)
 		{
 			//hasSecond = true;
 			//D3DX11CreateShaderResourceViewFromFile(m_device, L"../Engine/data/seafloor.dds", NULL, NULL, &texture, NULL); 
-			result = CreateDDSTextureFromFile(m_device, L"../Engine/data/crystal.dds", nullptr, &texture, 0 , nullptr);
+			result = CreateDDSTextureFromFile(m_device, L"Engine/data/crystal.dds", nullptr, &texture, 0 , nullptr);
 			if (FAILED(result))
 				return false;
 
@@ -210,7 +210,7 @@ bool ResourceManager::LoadTexture(TextureResource t)
 				return false;
 			
 			//res = D3DX11CreateTextureFromFile(m_device, L"../Engine/data/snowcube1024.dds", &skyMapInfo, 0, (ID3D11Resource**)&texture_sky, 0);
-			res = CreateDDSTextureFromFile(m_device, L"../Engine/data/snowcube1024.dds", (ID3D11Resource**)&texture_sky, nullptr);
+			res = CreateDDSTextureFromFile(m_device, L"Engine/data/snowcube1024.dds", (ID3D11Resource**)&texture_sky, nullptr);
 			if (FAILED(res))
 			{
 				return false;
@@ -235,7 +235,7 @@ bool ResourceManager::LoadTexture(TextureResource t)
 		case TERRAIN_TEXTURE:
 		{
 			//D3DX11CreateShaderResourceViewFromFile(m_device, L"../Engine/data/seafloor.dds", NULL, NULL, &texture, NULL); 
-			result = CreateDDSTextureFromFile(m_device, L"../Engine/data/forestfloor.dds", nullptr, &texture, 0, nullptr);
+			result = CreateDDSTextureFromFile(m_device, L"Engine/data/forestfloor.dds", nullptr, &texture, 0, nullptr);
 			if (FAILED(result))
 				return false;
 			break;
@@ -244,7 +244,7 @@ bool ResourceManager::LoadTexture(TextureResource t)
 		{	
 			//hasSecond = true;
 			//D3DX11CreateShaderResourceViewFromFile(m_device, L"../Engine/data/seafloor.dds", NULL, NULL, &texture, NULL); 
-			result = CreateDDSTextureFromFile(m_device, L"../Engine/data/treebark.dds", nullptr, &texture, 0, nullptr);
+			result = CreateDDSTextureFromFile(m_device, L"Engine/data/treebark.dds", nullptr, &texture, 0, nullptr);
 			if (FAILED(result))
 				return false;
 
@@ -277,9 +277,9 @@ bool ResourceManager::LoadModel(ModelResource m)
 
 	switch (m)
 	{
-		case REFLECTIVE_MODEL: filename = "../Engine/data/sphere.txt"; break;
-		case ORBIT_MODEL: filename = "../Engine/data/sphere.txt"; break;
-		case SKY_DOME_MODEL: filename = "../Engine/data/skydome.txt"; break;
+		case REFLECTIVE_MODEL: filename = "Engine/data/sphere.txt"; break;
+		case ORBIT_MODEL: filename = "Engine/data/sphere.txt"; break;
+		case SKY_DOME_MODEL: filename = "Engine/data/skydome.txt"; break;
 		//case TREE_MODEL: filename = "../Engine/data/test.txt"; incInds = true; break;
 	}
 

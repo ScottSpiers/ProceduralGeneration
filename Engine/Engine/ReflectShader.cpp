@@ -73,7 +73,7 @@ bool ReflectShader::Initialise()
 	// Get a count of the elements in the layout.
 	numElems = sizeof(polygonLayout) / sizeof(polygonLayout[0]);
 
-	Shader::Initialise(L"Reflect.vs", "ReflectVertexShader", L"Reflect.ps", "ReflectPixelShader", polygonLayout, numElems);
+	Shader::Initialise(L"Engine/Engine/Reflect.vs", "ReflectVertexShader", L"Engine/Engine/Reflect.ps", "ReflectPixelShader", polygonLayout, numElems);
 
 	// Create a texture sampler state description.
 	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;

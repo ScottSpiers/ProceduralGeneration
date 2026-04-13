@@ -42,7 +42,7 @@ bool SkySphereShader::Initialise()
 
 	numElems = sizeof(polygonLayout) / sizeof(polygonLayout[0]);
 
-	Shader::Initialise(L"skysphere.vs", "SkySphereVertexShader", L"skysphere.ps", "SkySpherePixelShader", polygonLayout, numElems);
+	Shader::Initialise(L"Engine/Engine/skysphere.vs", "SkySphereVertexShader", L"Engine/Engine/skysphere.ps", "SkySpherePixelShader", polygonLayout, numElems);
 
 	dnBufDesc.Usage = D3D11_USAGE_DYNAMIC;
 	dnBufDesc.ByteWidth = sizeof(DayNightBuffer);

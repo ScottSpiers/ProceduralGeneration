@@ -12,6 +12,10 @@ public:
 	virtual bool Initialise(ID3D11Device*, ID3D11DeviceContext*) final;
 	virtual bool Render(D3D*) final;
 
+	virtual void MoveCamera() final {};
+	virtual void RotateCamera() final {};
+	virtual void Modify(ID3D11Device*) final {};
+
 private:
 	bool RenderCubemap(D3D*);
 	bool RenderScene(D3D*, Camera* cam, bool drawMirror);

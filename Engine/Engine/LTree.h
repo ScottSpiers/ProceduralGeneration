@@ -8,6 +8,7 @@
 #include "LightShader.h"
 #include "Model.h"
 #include "ResourceManager.h"
+#include "Cylinder.h"
 
 
 using namespace DirectX;

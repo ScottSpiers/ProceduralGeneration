@@ -21,7 +21,7 @@ bool Sound::Initialise(HWND hwnd)
 	if (!InitialiseDirectSound(hwnd))
 		return false;
 
-	if (!LoadWaveFile("../Engine/data/Vivaldi_FourSeasons_Winter.wav", &m_secondaryBuffer))
+	if (!LoadWaveFile("Engine/data/Vivaldi_FourSeasons_Winter.wav", &m_secondaryBuffer))
 		return false;
 
 	if (!PlayWaveFile())

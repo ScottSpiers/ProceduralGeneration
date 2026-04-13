@@ -3,7 +3,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "LightShader.h"
 
-
 LightShader::LightShader(ID3D11Device* device, ID3D11DeviceContext* context) : Shader(device, context)
 {
 	m_sampleState = 0;
@@ -100,7 +99,7 @@ bool LightShader::Initialise()
 	// Get a count of the elements in the layout.
 	numElems = sizeof(polygonLayout) / sizeof(polygonLayout[0]);
 
-	result = Shader::Initialise(L"Light.vs", "LightVertexShader", L"Light.ps", "LightPixelShader", polygonLayout, numElems);
+	result = Shader::Initialise(L"Engine/Engine/Light.vs", "LightVertexShader", L"Engine/Engine/Light.ps", "LightPixelShader", polygonLayout, numElems);
 
 	// Create a texture sampler state description.
 	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;

@@ -56,7 +56,7 @@ bool FontShader::Initialise(ID3D11Device* device, HWND hwnd)
 
 	numElems = sizeof(polygonLayout) / sizeof(polygonLayout[0]);
 
-	Shader::Initialise(L"Font.vs", "FontVertexShader", L"Font.ps", "FontPixelShader", polygonLayout, numElems);
+	Shader::Initialise(L"Engine/Engine/Font.vs", "FontVertexShader", L"Engine/Engine/Font.ps", "FontPixelShader", polygonLayout, numElems);
 
 	desc_sampler.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 	desc_sampler.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;

@@ -66,7 +66,7 @@ bool TerrainShader::Initialise()
 	// Get a count of the elements in the layout.
 	numElems = sizeof(polygonLayout) / sizeof(polygonLayout[0]);
 
-	result = Shader::Initialise(L"Terrain.vs", "TerrainVertexShader", L"Terrain.ps", "TerrainPixelShader", polygonLayout, numElems);
+	result = Shader::Initialise(L"Engine/Engine/Terrain.vs", "TerrainVertexShader", L"Engine/Engine/Terrain.ps", "TerrainPixelShader", polygonLayout, numElems);
 	//result = Shader::Initialise(L"Light.vs", "LightVertexShader", L"Light.ps", "LightPixelShader", polygonLayout, numElems);
 	if (FAILED(result))
 		return false;

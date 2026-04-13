@@ -41,7 +41,7 @@ bool MapShader::Initialise()
 
 	numElems = sizeof(polygonLayout) / sizeof(polygonLayout[0]);
 
-	res = Shader::Initialise(L"Map.vs", "MapVertexShader", L"Map.ps", "MapPixelShader", polygonLayout, numElems);
+	res = Shader::Initialise(L"Engine/Engine/Map.vs", "MapVertexShader", L"Engine/Engine/Map.ps", "MapPixelShader", polygonLayout, numElems);
 	if (FAILED(res))
 		return false;
 

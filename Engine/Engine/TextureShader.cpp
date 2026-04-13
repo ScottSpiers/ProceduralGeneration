@@ -41,7 +41,7 @@ bool TextureShader::Initialise()
 
 	numElems = sizeof(polygonLayout) / sizeof(polygonLayout[0]);
 
-	res = Shader::Initialise(L"Texture.vs", "TextureVertexShader", L"Texture.ps", "TexturePixelShader", polygonLayout, numElems);
+	res = Shader::Initialise(L"Engine/Engine/Texture.vs", "TextureVertexShader", L"Engine/Engine/Texture.ps", "TexturePixelShader", polygonLayout, numElems);
 	if (FAILED(res))
 		return false;
 

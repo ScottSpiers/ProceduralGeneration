@@ -54,7 +54,7 @@ bool Graphics::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	result = m_D3D->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
 	if(!result)
 	{
-		MessageBox(hwnd, L"Could not initialize Direct3D.", L"Error", MB_OK);
+		MessageBox(hwnd, "Could not initialize Direct3D.", "Error", MB_OK);
 		return false;
 	}	
 
@@ -63,7 +63,7 @@ bool Graphics::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	result = m_Scene->Initialise(m_D3D->GetDevice(), m_D3D->GetDeviceContext());
 	if (!result)
 	{
-		MessageBox(hwnd, L"Could not initialise the Scene", L"Error", MB_OK);
+		MessageBox(hwnd, "Could not initialise the Scene", "Error", MB_OK);
 		return false;
 	}
 	viewMatrix = m_Scene->GetView();
@@ -72,7 +72,7 @@ bool Graphics::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	result = m_text->Initialise(m_D3D->GetDevice(), m_D3D->GetDeviceContext(), hwnd, screenWidth, screenHeight, viewMatrix);
 	if (!result)
 	{
-		MessageBox(hwnd, L"Could not initialise the text object", L"Error", MB_OK);
+		MessageBox(hwnd, "Could not initialise the text object", "Error", MB_OK);
 		return false;
 	}
 

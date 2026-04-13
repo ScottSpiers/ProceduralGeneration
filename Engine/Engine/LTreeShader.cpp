@@ -75,7 +75,7 @@ bool LTreeShader::Initialise()
 	// Get a count of the elements in the layout.
 	numElems = sizeof(polygonLayout) / sizeof(polygonLayout[0]);
 
-	result = Shader::Initialise(L"Tree.vs", "TreeVertexShader", L"Tree.ps", "TreePixelShader", polygonLayout, numElems);
+	result = Shader::Initialise(L"Engine/Engine/Tree.vs", "TreeVertexShader", L"Engine/Engine/Tree.ps", "TreePixelShader", polygonLayout, numElems);
 	if (!result)
 		return false;
 

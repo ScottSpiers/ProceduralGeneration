@@ -61,12 +61,12 @@ bool Shader::Initialise(WCHAR* vsFilename, LPCSTR vsEntry, WCHAR* psFilename, LP
 		// If the shader failed to compile it should have writen something to the error message.
 		if (errorMessage)
 		{
-			OutputShaderErrorMessage(errorMessage, 0, vsFilename);
+			OutputShaderErrorMessage(errorMessage, 0, (char*) vsFilename);
 		}
 		// If there was nothing in the error message then it simply could not find the shader file itself.
 		else
 		{
-			MessageBox(0, vsFilename, L"Missing Shader File", MB_OK);
+			MessageBox(0, (char*) vsFilename, "Missing Shader File", MB_OK);
 		}
 
 		return false;
@@ -79,12 +79,12 @@ bool Shader::Initialise(WCHAR* vsFilename, LPCSTR vsEntry, WCHAR* psFilename, LP
 		// If the shader failed to compile it should have writen something to the error message.
 		if (errorMessage)
 		{
-			OutputShaderErrorMessage(errorMessage, 0, psFilename);
+			OutputShaderErrorMessage(errorMessage, 0, (char*) psFilename);
 		}
 		// If there was nothing in the error message then it simply could not find the file itself.
 		else
 		{
-			MessageBox(0, psFilename, L"Missing Shader File", MB_OK);
+			MessageBox(0, (char*) psFilename, "Missing Shader File", MB_OK);
 		}
 
 		return false;
@@ -145,7 +145,7 @@ bool Shader::CompileShaderFromFile(WCHAR* filename, LPCSTR entryPoint, LPCSTR ta
 
 	if (FAILED(result))
 	{
-		OutputShaderErrorMessage(errorMsg, 0, filename);
+		OutputShaderErrorMessage(errorMsg, 0, (char*) filename);
 		return false;
 	}
 	
@@ -153,7 +153,7 @@ bool Shader::CompileShaderFromFile(WCHAR* filename, LPCSTR entryPoint, LPCSTR ta
 	return true;
 }
 
-void Shader::OutputShaderErrorMessage(ID3D10Blob* errorMsg, HWND hwnd, WCHAR* shader)
+void Shader::OutputShaderErrorMessage(ID3D10Blob* errorMsg, HWND hwnd, char* shader)
 {
 	char* compileErrors;
 	unsigned long bufferSize, i;
@@ -174,7 +174,7 @@ void Shader::OutputShaderErrorMessage(ID3D10Blob* errorMsg, HWND hwnd, WCHAR* sh
 
 	errorMsg->Release();
 	errorMsg = 0;
-	MessageBox(hwnd, L"Error compiling shader. Check shader-error.txt for message.", shader, MB_OK);
+	MessageBox(hwnd, "Error compiling shader. Check shader-error.txt for message.", shader, MB_OK);
 }
 
 bool Shader::SetMatrixBuffer(XMMATRIX worldMatrix, Camera* cam)

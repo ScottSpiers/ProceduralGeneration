@@ -3,6 +3,8 @@
 #include <unordered_map>
 #include <vector>
 #include <time.h>
+#include <string>
+
 
 class LSystem
 {

@@ -46,7 +46,7 @@ bool System::Initialize()
 	result = m_Input->Initialize(m_hinstance, m_hwnd, screenWidth, screenHeight);
 	if (!result)
 	{
-		MessageBox(m_hwnd, L"Could not initilise the input object.", L"Error", MB_OK);
+		MessageBox(m_hwnd, "Could not initilise the input object.", "Error", MB_OK);
 		return false;
 	}
 
@@ -245,7 +245,7 @@ void System::InitializeWindows(int& screenWidth, int& screenHeight)
 	m_hinstance = GetModuleHandle(NULL);
 
 	// Give the application a name.
-	m_applicationName = L"Engine";
+	m_applicationName = "Engine";
 
 	// Setup the windows class with default settings.
 	wc.style         = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;

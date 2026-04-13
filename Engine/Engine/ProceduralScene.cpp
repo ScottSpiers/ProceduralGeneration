@@ -102,7 +102,7 @@ bool ProceduralScene::Initialise(ID3D11Device* device , ID3D11DeviceContext* con
 	result = m_obj->Initialise(device, context, nullptr, 800, 600, m_ppView);
 	if (!result)
 	{
-		MessageBox(nullptr, L"Could not initialise the text object", L"Error", MB_OK);
+		MessageBox(nullptr, "Could not initialise the text object", "Error", MB_OK);
 		return false;
 	}
 

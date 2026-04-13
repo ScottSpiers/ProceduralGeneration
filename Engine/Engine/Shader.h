@@ -26,7 +26,7 @@ public:
 	bool Initialise(WCHAR*, LPCSTR, WCHAR*, LPCSTR, D3D11_INPUT_ELEMENT_DESC[], UINT);
 
 protected:
-	void OutputShaderErrorMessage(ID3D10Blob*, HWND, WCHAR*);
+	void OutputShaderErrorMessage(ID3D10Blob*, HWND, char*);
 
 	bool CompileShaderFromFile(WCHAR*, LPCSTR, LPCSTR, ID3DBlob**);
 
